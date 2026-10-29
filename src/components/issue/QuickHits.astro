@@ -1,0 +1,92 @@
+---
+import { Image } from 'astro:assets';
+import CategoryTag from '../CategoryTag.astro';
+import Icon from '../Icon.astro';
+import SectionHead from './SectionHead.astro';
+import type { Issue } from '../../lib/utils';
+import { md } from '../../lib/utils';
+
+interface Props {
+  items: Issue['data']['quickHits'];
+}
+const { items } = Astro.props;
+---
+
+<section id="quick-hits" aria-labelledby="quick-hits-title">
+  <SectionHead id="quick-hits-title" icon="list" eyebrow={`${items.length} stories, 1 minute each`} title="Quick Hits" />
+
+  <ol class="mt-6 divide-y divide-line border-y border-line">
+    {
+      items.map((hit) => (
+        <li class:list={['hit py-7', hit.image && 'has-thumb']}>
+          <article>
+            <CategoryTag tag={hit.tag} />
+            <div class="hit-body mt-3">
+              <div>
+                <p>
+                  <strong set:html={md(hit.lead)} /> <span set:html={md(hit.body)} />
+                </p>
+                <p class="so-what mt-4">
+                  <span class="so-what-label">So what:</span>
+                  <span set:html={md(hit.soWhat)} />
+                </p>
+                <p class="mt-2">
+                  <a href={hit.source.url} class="source-link" target="_blank" rel="noopener">
+                    Source: {hit.source.label}
+                    <Icon name="external" size={15} />
+                  </a>
+                </p>
+              </div>
+              {hit.image && (
+                <Image
+                  src={hit.image.src}
+                  alt={hit.image.alt}
+                  widths={[160, 320]}
+                  sizes="160px"
+                  loading="lazy"
+                  class="thumb hidden aspect-square rounded-xl object-cover md:block"
+                />
+              )}
+            </div>
+          </article>
+        </li>
+      ))
+    }
+  </ol>
+</section>
+
+<style>
+  .has-thumb .hit-body {
+    display: grid;
+    gap: 1.5rem;
+  }
+  @media (min-width: 48rem) {
+    .has-thumb .hit-body {
+      grid-template-columns: 1fr 9rem;
+    }
+  }
+  .so-what {
+    padding-inline-start: 1rem;
+    border-inline-start: 2px solid var(--deco);
+    color: var(--heading);
+  }
+  .so-what-label {
+    margin-inline-end: 0.4rem;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 1.2em;
+    color: var(--accent);
+  }
+  .source-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    min-height: 2.75rem;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: var(--muted);
+  }
+  .source-link:hover {
+    color: var(--heading);
+  }
+</style>

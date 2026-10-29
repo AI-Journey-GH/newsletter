@@ -1,0 +1,94 @@
+---
+import Icon from '../Icon.astro';
+import SectionHead from './SectionHead.astro';
+import { links } from '../../config';
+import type { Issue } from '../../lib/utils';
+import { md } from '../../lib/utils';
+
+interface Props {
+  game: Issue['data']['yourTurn'];
+}
+const { game } = Astro.props;
+const pollUrl = game.pollUrl ?? links.poll;
+---
+
+<section id="your-turn" aria-labelledby="your-turn-title">
+  <SectionHead id="your-turn-title" icon="vote" eyebrow="Play along" title="Your Turn" />
+
+  {
+    (game.lastWeek || game.shoutOuts) && (
+      <div class="panel mt-6 p-6">
+        <p class="label flex items-center gap-2 text-heading">
+          <Icon name="check-circle" size={16} class="text-accent" /> Last week’s answer
+        </p>
+        {game.lastWeek && <p class="mt-2" set:html={md(game.lastWeek)} />}
+        {game.shoutOuts && (
+          <p class="mt-3 text-base text-muted">
+            <strong class="font-semibold">Shout-outs:</strong> <span set:html={md(game.shoutOuts)} />
+          </p>
+        )}
+      </div>
+    )
+  }
+
+  <div class="mt-8">
+    <p class="label text-muted">This week</p>
+    <h3 class="display h-card mt-2">{game.title}</h3>
+    <p class="mt-3" set:html={md(game.prompt)} />
+
+    <ul class="mt-6 grid gap-3" aria-label="Options">
+      {
+        game.options.map((o) => (
+          <li>
+            <a href={pollUrl} class="option" target="_blank" rel="noopener">
+              <span class="option-letter display" aria-hidden="true">{o.letter}</span>
+              <span class="sr-only">Option {o.letter}:</span>
+              <span class="flex-1" set:html={md(o.text)} />
+              <Icon name="arrow-right" size={18} class="option-arrow rtl:rotate-180" />
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+
+    <a href={pollUrl} class="btn btn-primary btn-lg btn-block mt-6" target="_blank" rel="noopener">
+      Vote in one click <Icon name="arrow-right" size={18} class="rtl:rotate-180" />
+    </a>
+    <p class="mt-3 text-center text-base text-muted">{game.answerNote}</p>
+  </div>
+</section>
+
+<style>
+  .option {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    min-height: 4rem;
+    padding: 0.9rem 1.1rem;
+    border-radius: 1rem;
+    border: 1px solid var(--border-strong);
+    color: var(--text);
+    text-decoration: none;
+    line-height: 1.45;
+    transition:
+      border-color 150ms ease,
+      background-color 150ms ease;
+  }
+  .option:hover {
+    border-color: var(--heading);
+    background: var(--surface-2);
+    color: var(--text);
+  }
+  .option-letter {
+    flex: none;
+    inline-size: 1.75rem;
+    font-style: italic;
+    font-size: 1.9rem;
+    line-height: 1;
+    color: var(--accent);
+  }
+  .option :global(.option-arrow) {
+    flex: none;
+    color: var(--muted);
+  }
+</style>

@@ -1,0 +1,29 @@
+---
+import Icon from './Icon.astro';
+import { site, social } from '../config';
+import { u } from '../lib/utils';
+---
+
+<footer class="border-t border-line">
+  <div class="wrap flex flex-col items-center gap-6 py-12 text-center md:flex-row md:justify-between md:text-start">
+    <a href={u('/')} class="flex items-center gap-3 no-underline" aria-label={`${site.name} home`}>
+      <img src={u('/logo/mark-navy-cyan-sm.webp')} alt="" width="160" height="85" class="only-light h-auto w-10" loading="lazy" decoding="async" />
+      <img src={u('/logo/mark-light-sm.webp')} alt="" width="160" height="85" class="only-dark h-auto w-10" loading="lazy" decoding="async" />
+      <span class="display text-2xl leading-none">AI Journey</span>
+    </a>
+
+    <ul class="flex gap-1" aria-label="Social links">
+      {
+        social.map((s) => (
+          <li>
+            <a href={s.href} class="icon-btn" target="_blank" rel="noopener" aria-label={`${site.name} on ${s.label}`}>
+              <Icon name={s.icon} size={19} />
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+
+    <p class="text-sm text-muted">© {new Date().getFullYear()} AI Journey. Made by students, for students.</p>
+  </div>
+</footer>

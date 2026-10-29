@@ -1,0 +1,16 @@
+---
+import Icon from './Icon.astro';
+import { categories, type CategoryKey } from '../data/categories';
+
+interface Props {
+  tag: CategoryKey | string;
+  class?: string;
+}
+const { tag, class: className } = Astro.props;
+const cat = categories[tag as CategoryKey] ?? { label: tag, icon: 'tag', tone: 1 };
+---
+
+<span class:list={['tag', `tag--${cat.tone}`, className]}>
+  <Icon name={cat.icon} size={14} />
+  {cat.label}
+</span>

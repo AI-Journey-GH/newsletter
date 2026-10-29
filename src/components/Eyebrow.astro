@@ -1,0 +1,10 @@
+---
+interface Props {
+  line?: boolean;
+  as?: 'p' | 'span' | 'div';
+  class?: string;
+}
+const { line = false, as: Tag = 'p', class: className } = Astro.props;
+---
+
+<Tag class:list={['eyebrow', line && 'eyebrow--line', className]}><slot /></Tag>

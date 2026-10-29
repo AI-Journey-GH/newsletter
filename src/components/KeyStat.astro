@@ -1,0 +1,24 @@
+---
+interface Props {
+  value: string;
+  label: string;
+}
+const { value, label } = Astro.props;
+---
+
+<div class="key-stat">
+  <p class="display key-value">{value}</p>
+  <p class="mt-2 text-base leading-snug text-muted">{label}</p>
+</div>
+
+<style>
+  .key-stat {
+    padding-block-start: 1rem;
+    border-block-start: 1px solid var(--border-strong);
+  }
+  .key-value {
+    font-size: clamp(2.75rem, 2.2rem + 2vw, 3.75rem);
+    line-height: 0.95;
+    color: var(--heading);
+  }
+</style>

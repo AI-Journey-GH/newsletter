@@ -1,0 +1,11 @@
+---
+import Icon from './Icon.astro';
+interface Props {
+  class?: string;
+}
+---
+
+<span class:list={['badge-sample', Astro.props.class]} title="Everything in this issue is invented, for design preview only">
+  <Icon name="sparkles" size={14} />
+  Sample issue
+</span>

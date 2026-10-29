@@ -1,0 +1,55 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import Eyebrow from '../../components/Eyebrow.astro';
+import IssueCard from '../../components/IssueCard.astro';
+import { getIssues, u } from '../../lib/utils';
+
+const issues = await getIssues();
+---
+
+<BaseLayout title="All issues" description="Every AI Journey newsletter issue. Sort by newest or oldest.">
+  <section class="wrap pt-6 md:pt-10">
+    <Breadcrumb items={[{ label: 'Home', href: u('/') }, { label: 'Issues' }]} />
+    <div class="mt-8">
+      <Eyebrow line>The archive</Eyebrow>
+      <h1 class="display h-hero mt-3">All issues</h1>
+    </div>
+
+    <div class="mt-8 flex flex-wrap items-center gap-2" role="group" aria-label="Sort issues">
+      <span class="label me-1 text-muted">Sort</span>
+      <button type="button" class="chip" data-sort="newest" aria-pressed="true">Newest first</button>
+      <button type="button" class="chip" data-sort="oldest" aria-pressed="false">Oldest first</button>
+    </div>
+  </section>
+
+  <section class="wrap pb-20 pt-6" aria-label="Issues">
+    <ul class="issue-list" data-grid>
+      {
+        issues.map((issue) => (
+          <li data-issue={issue.data.issue}>
+            <IssueCard issue={issue} headingLevel="h2" />
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</BaseLayout>
+
+<script>
+  const buttons = document.querySelectorAll<HTMLButtonElement>('[data-sort]');
+  const grid = document.querySelector<HTMLElement>('[data-grid]');
+
+  const apply = (order: string) => {
+    if (!grid) return;
+    const items = [...grid.querySelectorAll<HTMLElement>(':scope > li')];
+    items.sort((a, b) => {
+      const diff = Number(a.dataset.issue) - Number(b.dataset.issue);
+      return order === 'oldest' ? diff : -diff;
+    });
+    grid.append(...items);
+    buttons.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.sort === order)));
+  };
+
+  buttons.forEach((b) => b.addEventListener('click', () => apply(b.dataset.sort ?? 'newest')));
+</script>

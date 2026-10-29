@@ -1,0 +1,32 @@
+---
+// "why": tinted panel (Why it matters to you)
+// "watch": outlined box with an alert icon (Watch out)
+import Icon from './Icon.astro';
+interface Props {
+  variant?: 'why' | 'watch' | 'note';
+  title?: string;
+  class?: string;
+}
+const { variant = 'why', title, class: className } = Astro.props;
+---
+
+{
+  variant === 'watch' ? (
+    <aside class:list={['callout-outline', className]} aria-label={title ?? 'Watch out'}>
+      <p class="label flex items-center gap-2 text-heading">
+        <Icon name="alert" size={16} class="text-accent" />
+        {title ?? 'Watch out'}
+      </p>
+      <div class="mt-2.5">
+        <slot />
+      </div>
+    </aside>
+  ) : (
+    <aside class:list={['callout', className]} aria-label={title}>
+      {title && <p class="label text-accent">{title}</p>}
+      <div class:list={[title && 'mt-2']}>
+        <slot />
+      </div>
+    </aside>
+  )
+}

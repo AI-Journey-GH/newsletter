@@ -1,0 +1,114 @@
+---
+// One issue as a simple horizontal row: number, date, headline, subtitle.
+// Use inside <ul class="issue-list">.
+import { Image } from 'astro:assets';
+import Icon from './Icon.astro';
+import { formatDate, isoDate, issueUrl, type Issue } from '../lib/utils';
+
+interface Props {
+  issue: Issue;
+  headingLevel?: 'h2' | 'h3';
+}
+const { issue, headingLevel: H = 'h3' } = Astro.props;
+const { data } = issue;
+const num = String(data.issue).padStart(2, '0');
+---
+
+<article class="issue-row">
+  {
+    data.cover ? (
+      <Image
+        src={data.cover.src}
+        alt=""
+        widths={[120, 240]}
+        sizes="120px"
+        loading="lazy"
+        class="aspect-square w-full rounded-xl object-cover"
+      />
+    ) : (
+      <span class="row-num display" aria-hidden="true">
+        {num}
+      </span>
+    )
+  }
+  <div class="min-w-0">
+    <p class="meta text-sm">
+      <span class="sr-only">Issue {data.issue},</span>
+      <time datetime={isoDate(data.date)}>{formatDate(data.date, 'short')}</time>
+      <span aria-hidden="true"> · </span>
+      <span class="whitespace-nowrap">{data.readTime} min read</span>
+    </p>
+    <H class="display row-title mt-1.5">
+      <a href={issueUrl(issue)} class="row-link text-heading no-underline">{data.title}</a>
+    </H>
+    <p class="mt-2 line-clamp-2 text-base text-muted">{data.subtitle}</p>
+  </div>
+  <Icon name="arrow-right" size={20} class="row-arrow rtl:rotate-180" />
+</article>
+
+<style>
+  .issue-row {
+    position: relative;
+    display: grid;
+    grid-template-columns: 2.75rem 1fr;
+    gap: 1rem;
+    align-items: start;
+    padding-block: 1.75rem;
+  }
+  @media (min-width: 48rem) {
+    .issue-row {
+      grid-template-columns: 5rem 1fr auto;
+      gap: 2rem;
+      align-items: center;
+      padding-block: 2.25rem;
+    }
+  }
+  .row-num {
+    font-style: italic;
+    font-size: 2.25rem;
+    line-height: 0.9;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+  @media (min-width: 48rem) {
+    .row-num {
+      font-size: 3.5rem;
+    }
+  }
+  .row-title {
+    font-size: clamp(1.625rem, 1.3rem + 1.2vw, 2.25rem);
+    line-height: 1.08;
+  }
+  .row-link::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+  .row-link:focus-visible {
+    outline: none;
+  }
+  .issue-row:focus-within {
+    outline: 2px solid var(--focus);
+    outline-offset: 4px;
+    border-radius: 0.5rem;
+  }
+  .issue-row:hover .row-num {
+    color: var(--accent);
+  }
+  .issue-row :global(.row-arrow) {
+    display: none;
+    color: var(--muted);
+    transition:
+      transform 150ms ease,
+      color 150ms ease;
+  }
+  @media (min-width: 48rem) {
+    .issue-row :global(.row-arrow) {
+      display: block;
+    }
+  }
+  .issue-row:hover :global(.row-arrow) {
+    color: var(--heading);
+    transform: translateX(4px);
+  }
+</style>

@@ -1,0 +1,22 @@
+---
+import Icon from '../Icon.astro';
+import { wildcardTypes } from '../../data/categories';
+import type { Issue } from '../../lib/utils';
+import { md, mdBlock } from '../../lib/utils';
+
+interface Props {
+  wildcard: Issue['data']['wildcard'];
+}
+const { wildcard } = Astro.props;
+const type = wildcardTypes[wildcard.type];
+---
+
+<section id="wildcard" class="panel p-6 sm:p-8 md:p-10" aria-labelledby="wildcard-title">
+  <div class="flex flex-wrap items-center gap-3">
+    <p class="eyebrow eyebrow--line">Wildcard</p>
+    <span class="tag"><Icon name={type.icon} size={13} /> {type.label}</span>
+  </div>
+  <h2 id="wildcard-title" class="display h-section mt-5">{wildcard.headline}</h2>
+  <p class="mt-5 text-[1.08em] font-semibold leading-normal text-heading" set:html={md(wildcard.lead)} />
+  <div class="prose mt-5" set:html={mdBlock(wildcard.body)} />
+</section>

@@ -1,0 +1,104 @@
+---
+import Icon from '../Icon.astro';
+import { u } from '../../lib/utils';
+interface Props {
+  url: string;
+  title: string;
+}
+const { url, title } = Astro.props;
+---
+
+<div class="action-bar" role="region" aria-label="Issue actions">
+  <div class="bar-inner">
+    <a href={u('/issues')} class="bar-btn">
+      <Icon name="arrow-left" size={20} class="rtl:rotate-180" />
+      <span>Issues</span>
+    </a>
+    <a href="#main" class="bar-btn" data-to-top>
+      <Icon name="arrow-up" size={20} />
+      <span>Top</span>
+    </a>
+    <button type="button" class="bar-btn" data-share data-url={url} data-title={title}>
+      <Icon name="share" size={20} />
+      <span>Share</span>
+    </button>
+  </div>
+  <p class="toast" role="status" aria-live="polite" data-share-status></p>
+</div>
+
+<style>
+  .action-bar {
+    position: fixed;
+    inset-inline: 0;
+    inset-block-end: 0;
+    z-index: 45;
+    padding-block-end: env(safe-area-inset-bottom);
+    background: color-mix(in srgb, var(--bg) 94%, transparent);
+    backdrop-filter: blur(10px);
+    border-block-start: 1px solid var(--border);
+  }
+  .bar-inner {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    max-width: 45rem;
+    margin-inline: auto;
+  }
+  .bar-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 3.5rem;
+    color: var(--heading);
+    font-size: 0.9375rem;
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .bar-btn:hover {
+    color: var(--link);
+  }
+  @media (min-width: 48rem) {
+    .action-bar {
+      inset-inline: 0;
+      inset-block-end: 1rem;
+      margin-inline: auto;
+      max-width: 45rem;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      box-shadow: 0 8px 30px -12px rgb(11 26 43 / 0.25);
+    }
+  }
+  .toast {
+    position: absolute;
+    inset-block-end: calc(100% + 0.75rem);
+    inset-inline-start: 50%;
+    translate: -50% 0;
+    padding: 0.5rem 1rem;
+    border-radius: 999px;
+    background: var(--color-navy-950);
+    color: #fff;
+    font-size: 0.875rem;
+    font-weight: 600;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 150ms ease;
+    white-space: nowrap;
+  }
+  .toast:empty {
+    padding: 0;
+  }
+  :global(.toast.is-visible) {
+    opacity: 1;
+  }
+</style>
+
+<script>
+  import '../../scripts/share';
+  document.querySelector('[data-to-top]')?.addEventListener('click', (e) => {
+    e.preventDefault();
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+    document.getElementById('main')?.focus({ preventScroll: true });
+  });
+</script>

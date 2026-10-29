@@ -1,0 +1,75 @@
+---
+import Callout from '../Callout.astro';
+import Figure from '../Figure.astro';
+import Icon from '../Icon.astro';
+import type { Issue } from '../../lib/utils';
+import { md } from '../../lib/utils';
+
+interface Props {
+  tool: Issue['data']['tool'];
+}
+const { tool } = Astro.props;
+---
+
+<section id="tool" aria-labelledby="tool-title">
+  <article class="card overflow-hidden">
+    <header class="flex flex-wrap items-end justify-between gap-4 border-b border-line p-6 md:p-8">
+      <div>
+        <p class="eyebrow eyebrow--line">Tool of the Week</p>
+        <h2 id="tool-title" class="display h-section mt-3">{tool.name}</h2>
+      </div>
+      {
+        tool.url && (
+          <a href={tool.url} class="btn btn-outline" target="_blank" rel="noopener">
+            Try it <Icon name="external" size={15} />
+          </a>
+        )
+      }
+    </header>
+
+    {
+      tool.screenshot && (
+        <div class="px-6 pt-6 md:px-8 md:pt-8">
+          <Figure src={tool.screenshot.src} alt={tool.screenshot.alt} credit={tool.screenshot.credit} />
+        </div>
+      )
+    }
+    <dl class="grid gap-7 p-6 md:p-8">
+
+      <div>
+        <dt class="label text-muted">What it is</dt>
+        <dd class="mt-2" set:html={md(tool.whatItIs)} />
+      </div>
+
+      <div>
+        <dt class="label text-muted">Best for</dt>
+        <dd class="mt-3">
+          <ul class="flex flex-wrap gap-2" aria-label="Majors">
+            {tool.bestFor.map((m) => <li class="chip chip-static">{m}</li>)}
+          </ul>
+          {tool.bestForNote && <p class="mt-3 text-base text-muted" set:html={md(tool.bestForNote)} />}
+        </dd>
+      </div>
+
+      <div>
+        <dt class="label text-muted">Try this in 5 minutes</dt>
+        <dd class="mt-3">
+          <ol class="num-list">
+            {tool.steps.map((s) => <li><span set:html={md(s)} /></li>)}
+          </ol>
+        </dd>
+      </div>
+
+      <div>
+        <dt class="label text-muted">Price</dt>
+        <dd class="mt-2" set:html={md(tool.price)} />
+      </div>
+
+    </dl>
+    <div class="px-6 pb-6 md:px-8 md:pb-8">
+      <Callout variant="watch" title="Watch out">
+        <p set:html={md(tool.watchOut)} />
+      </Callout>
+    </div>
+  </article>
+</section>

@@ -1,0 +1,96 @@
+---
+import Eyebrow from './Eyebrow.astro';
+import Icon from './Icon.astro';
+import { links } from '../config';
+
+interface Props {
+  id?: string;
+}
+const { id = 'join' } = Astro.props;
+---
+
+<section id={id} aria-labelledby={`${id}-title`} class="scroll-mt-16 pb-16 md:pb-28">
+  <div class="wrap">
+    <div class="join panel grid gap-10 p-6 sm:p-10 lg:grid-cols-[1.15fr_1fr] lg:items-center lg:gap-16 lg:p-14">
+      <div>
+        <Eyebrow line>Join the journey</Eyebrow>
+        <h2 id={`${id}-title`} class="display h-section mt-3">Keep up with AI in one short read a week</h2>
+        <p class="mt-5 max-w-xl text-muted">
+          Every week, we help university students keep up with AI: what happened, why it matters to them, and how to use it in
+          their own major. Join us to get the next issue first.
+        </p>
+      </div>
+
+      <div class="grid gap-5">
+        <!-- Opens the external subscribe form in a new tab. No data is stored on this site. -->
+        <form action={links.subscribe} method="get" target="_blank" class="grid gap-2">
+          <label for={`${id}-email`} class="label text-heading">Your email</label>
+          <div class="email-row">
+            <input
+              id={`${id}-email`}
+              name="email"
+              type="email"
+              inputmode="email"
+              autocomplete="email"
+              placeholder="you@mail.aub.edu"
+              class="email-input"
+            />
+            <button type="submit" class="btn btn-primary shrink-0">Subscribe</button>
+          </div>
+          <p class="text-sm text-muted">Opens our sign-up form. One email a week, no spam.</p>
+        </form>
+
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="text-sm text-muted">Or follow along on</span>
+          <a href={links.whatsapp} class="chip" target="_blank" rel="noopener">
+            <Icon name="whatsapp" size={16} /> WhatsApp
+          </a>
+          <a href={links.instagram} class="chip" target="_blank" rel="noopener">
+            <Icon name="instagram" size={16} /> Instagram
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .email-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  @media (min-width: 30rem) {
+    .email-row {
+      flex-direction: row;
+      padding: 0.3rem;
+      border-radius: 999px;
+      border: 1px solid var(--border-strong);
+      background: var(--bg);
+    }
+    .email-row:focus-within {
+      border-color: var(--focus);
+    }
+    .email-row .email-input {
+      border: 0;
+      background: transparent;
+    }
+    .email-row .email-input:focus-visible {
+      outline: none;
+    }
+  }
+  .email-input {
+    flex: 1;
+    min-width: 0;
+    min-height: 2.875rem;
+    padding-inline: 1rem;
+    border-radius: 999px;
+    border: 1px solid var(--border-strong);
+    background: var(--bg);
+    color: var(--text);
+    font-size: 1rem;
+  }
+  .email-input::placeholder {
+    color: var(--muted);
+  }
+</style>

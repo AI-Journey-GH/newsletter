@@ -1,0 +1,12 @@
+---
+interface Props {
+  cite?: string;
+  tone?: 'cyan' | 'navy';
+}
+const { cite, tone = 'cyan' } = Astro.props;
+---
+
+<figure class:list={['pull-quote', tone === 'navy' && 'pull-quote--navy']}>
+  <blockquote><slot /></blockquote>
+  {cite && <figcaption class="mt-3 text-base not-italic text-muted">{cite}</figcaption>}
+</figure>

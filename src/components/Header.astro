@@ -1,0 +1,242 @@
+---
+import Icon from './Icon.astro';
+import { nav, social, site } from '../config';
+import { u } from '../lib/utils';
+
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+const isActive = (href: string) => {
+  if (href.includes('#')) return false;
+  const target = u(href).replace(/\/$/, '') || '/';
+  if (href === '/') return path === target;
+  return path === target || path.startsWith(`${target}/`);
+};
+---
+
+<header class="site-header theme-dark" data-header>
+  <div class="wrap flex h-full items-center gap-3">
+    <a href={u('/')} class="flex min-w-0 items-center gap-3 no-underline" aria-label={`${site.name} home`}>
+      <img src={u('/logo/mark-light-sm.webp')} alt="" width="160" height="85" class="brand-mark" decoding="async" />
+      <span class="flex min-w-0 flex-col">
+        <span class="brand-word display">AI Journey</span>
+        <span class="brand-tag">{site.tagline}</span>
+      </span>
+    </a>
+
+    <nav class="ms-auto hidden md:block" aria-label="Main">
+      <ul class="flex items-center gap-1">
+        {
+          nav.map((item) => (
+            <li>
+              <a href={u(item.href)} class="nav-link" aria-current={isActive(item.href) ? 'page' : undefined}>
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <div class="ms-auto flex items-center gap-1 md:ms-2">
+      <button type="button" class="icon-btn" data-theme-toggle aria-label="Switch color theme">
+        <Icon name="moon" size={19} class="theme-icon-moon" />
+        <Icon name="sun" size={19} class="theme-icon-sun" />
+      </button>
+      <button
+        type="button"
+        class="icon-btn md:hidden"
+        data-menu-toggle
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+        aria-label="Open menu"
+      >
+        <Icon name="menu" size={22} class="menu-icon-open" />
+        <Icon name="x" size={22} class="menu-icon-close" />
+      </button>
+    </div>
+  </div>
+
+  <div id="mobile-menu" class="mobile-menu md:hidden" hidden data-menu>
+    <nav class="wrap pb-6 pt-2" aria-label="Mobile">
+      <ul class="flex flex-col">
+        {
+          nav.map((item) => (
+            <li>
+              <a href={u(item.href)} class="mobile-link display" aria-current={isActive(item.href) ? 'page' : undefined}>
+                {item.label}
+                <Icon name="arrow-right" size={20} class="rtl:rotate-180" />
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <ul class="mt-5 flex flex-wrap gap-2" aria-label="Social links">
+        {
+          social.map((s) => (
+            <li>
+              <a href={s.href} class="chip" target="_blank" rel="noopener">
+                <Icon name={s.icon} size={16} />
+                {s.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    inset-block-start: 0;
+    z-index: 50;
+    block-size: var(--header-h);
+    background: color-mix(in srgb, var(--bg) 94%, transparent);
+    backdrop-filter: saturate(1.4) blur(12px);
+    border-block-end: 1px solid transparent;
+    color: var(--text);
+    transition: border-color 150ms ease;
+  }
+  .site-header.is-scrolled {
+    border-block-end-color: var(--border);
+  }
+  .brand-mark {
+    inline-size: 2.5rem;
+    height: auto;
+    flex: none;
+  }
+  .brand-word {
+    font-size: 1.5rem;
+    line-height: 1;
+    white-space: nowrap;
+  }
+  .brand-tag {
+    margin-block-start: 0.2rem;
+    font-size: 0.65625rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  @media (min-width: 48rem) {
+    .brand-mark {
+      inline-size: 2.875rem;
+    }
+    .brand-word {
+      font-size: 1.75rem;
+    }
+    .brand-tag {
+      font-size: 0.6875rem;
+      letter-spacing: 0.1em;
+    }
+  }
+
+  .nav-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    padding-inline: 0.9rem;
+    border-radius: 999px;
+    color: var(--muted);
+    font-size: 0.9375rem;
+    font-weight: 500;
+    text-decoration: none;
+  }
+  .nav-link:hover,
+  .nav-link[aria-current='page'] {
+    color: var(--heading);
+  }
+  .nav-link[aria-current='page'] {
+    background: var(--surface-2);
+  }
+
+  .mobile-menu {
+    position: absolute;
+    inset-block-start: 100%;
+    inset-inline: 0;
+    background: var(--bg);
+    border-block: 1px solid var(--border);
+  }
+  .mobile-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 3.75rem;
+    font-size: 2rem;
+    color: var(--heading);
+    text-decoration: none;
+    border-block-end: 1px solid var(--border);
+  }
+  .mobile-link[aria-current='page'] {
+    font-style: italic;
+  }
+
+  /* Icons are child components, so these selectors must be global */
+  :global(.menu-icon-close),
+  :global([aria-expanded='true'] .menu-icon-open),
+  :global([data-theme='dark'] .theme-icon-moon),
+  :global(:root:not([data-theme='dark']) .theme-icon-sun) {
+    display: none;
+  }
+  :global([aria-expanded='true'] .menu-icon-close) {
+    display: block;
+  }
+</style>
+
+<script>
+  const header = document.querySelector<HTMLElement>('[data-header]');
+  const menuBtn = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
+  const menu = document.querySelector<HTMLElement>('[data-menu]');
+  const themeBtn = document.querySelector<HTMLButtonElement>('[data-theme-toggle]');
+
+  // Show a hairline under the header once the page scrolls
+  let ticking = false;
+  const onScroll = () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => {
+      header?.classList.toggle('is-scrolled', window.scrollY > 8);
+      ticking = false;
+    });
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  // Mobile menu
+  const setMenu = (open: boolean) => {
+    if (!menuBtn || !menu) return;
+    menuBtn.setAttribute('aria-expanded', String(open));
+    menuBtn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    menu.hidden = !open;
+  };
+  menuBtn?.addEventListener('click', () => setMenu(menuBtn.getAttribute('aria-expanded') !== 'true'));
+  menu?.addEventListener('click', (e) => {
+    if ((e.target as HTMLElement).closest('a')) setMenu(false);
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && menuBtn?.getAttribute('aria-expanded') === 'true') {
+      setMenu(false);
+      menuBtn.focus();
+    }
+  });
+  window.matchMedia('(min-width: 48rem)').addEventListener('change', (e) => e.matches && setMenu(false));
+
+  // Light / dark toggle
+  const root = document.documentElement;
+  const labelTheme = () => {
+    const dark = root.getAttribute('data-theme') === 'dark';
+    themeBtn?.setAttribute('aria-label', dark ? 'Switch to light mode' : 'Switch to dark mode');
+  };
+  themeBtn?.addEventListener('click', () => {
+    const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    try {
+      localStorage.setItem('theme', next);
+    } catch {}
+    labelTheme();
+  });
+  labelTheme();
+</script>

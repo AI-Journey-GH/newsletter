@@ -1,0 +1,68 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Eyebrow from '../components/Eyebrow.astro';
+import Icon from '../components/Icon.astro';
+import IssueCard from '../components/IssueCard.astro';
+import JoinBand from '../components/JoinBand.astro';
+import { site } from '../config';
+import { formatDate, getIssues, isoDate, issueUrl, u } from '../lib/utils';
+
+const issues = await getIssues();
+const latest = issues[0];
+const d = latest?.data;
+---
+
+<BaseLayout>
+  <h1 class="sr-only">{site.name}: {site.tagline}</h1>
+
+  {
+    latest && d && (
+      <section aria-labelledby="hero-title" class="wrap pb-16 pt-12 md:pb-24 md:pt-24">
+        <p class="meta flex flex-wrap items-center gap-x-2 gap-y-1">
+          <span class="font-medium text-heading">Issue {d.issue}</span>
+          <span aria-hidden="true">·</span>
+          <time datetime={isoDate(d.date)}>{formatDate(d.date)}</time>
+          <span aria-hidden="true">·</span>
+          <span class="whitespace-nowrap">{d.readTime} min read</span>
+        </p>
+        <h2 id="hero-title" class="display h-hero mt-5 max-w-4xl">
+          <a href={issueUrl(latest)} class="text-heading no-underline hover:text-heading">
+            {d.bigStory?.headline ?? d.title}
+          </a>
+        </h2>
+        <p class="lead mt-6 max-w-2xl">{d.subtitle}</p>
+        <div class="mt-9 flex flex-wrap gap-3">
+          <a href={issueUrl(latest)} class="btn btn-primary btn-lg">
+            Read this week’s issue <Icon name="arrow-right" size={18} class="rtl:rotate-180" />
+          </a>
+          <a href={u('/issues')} class="btn btn-outline btn-lg">All issues</a>
+        </div>
+      </section>
+    )
+  }
+
+  <section class="section-y" aria-labelledby="recent-title">
+    <div class="wrap">
+      <div class="flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <Eyebrow line>The archive</Eyebrow>
+          <h2 id="recent-title" class="display h-section mt-3">Recent issues</h2>
+        </div>
+        <a href={u('/issues')} class="inline-flex min-h-11 items-center gap-1.5 font-medium text-heading no-underline hover:underline">
+          View all <Icon name="arrow-right" size={16} class="rtl:rotate-180" />
+        </a>
+      </div>
+      <ul class="issue-list mt-8 lg:mt-10">
+        {
+          issues.slice(0, 5).map((issue) => (
+            <li>
+              <IssueCard issue={issue} />
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <JoinBand />
+</BaseLayout>

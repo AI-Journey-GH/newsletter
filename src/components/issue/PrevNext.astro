@@ -1,0 +1,52 @@
+---
+import Icon from '../Icon.astro';
+import { issueUrl, type Issue } from '../../lib/utils';
+interface Props {
+  prev?: Issue; // older
+  next?: Issue; // newer
+}
+const { prev, next } = Astro.props;
+---
+
+<nav aria-label="More issues" class="grid gap-3 sm:grid-cols-2">
+  {
+    prev ? (
+      <a href={issueUrl(prev)} class="pn card">
+        <span class="label flex items-center gap-1.5 text-muted">
+          <Icon name="arrow-left" size={14} class="rtl:rotate-180" /> Previous · Issue {prev.data.issue}
+        </span>
+        <span class="display pn-title">{prev.data.title}</span>
+      </a>
+    ) : (
+      <span class="hidden sm:block" />
+    )
+  }
+  {
+    next && (
+      <a href={issueUrl(next)} class="pn card sm:text-end">
+        <span class="label flex items-center gap-1.5 text-muted sm:justify-end">
+          Next · Issue {next.data.issue} <Icon name="arrow-right" size={14} class="rtl:rotate-180" />
+        </span>
+        <span class="display pn-title">{next.data.title}</span>
+      </a>
+    )
+  }
+</nav>
+
+<style>
+  .pn {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    padding: 1.25rem;
+    text-decoration: none;
+    transition: border-color 150ms ease;
+  }
+  .pn:hover {
+    border-color: var(--heading);
+  }
+  .pn-title {
+    font-size: 1.5rem;
+    line-height: 1.1;
+  }
+</style>

@@ -1,0 +1,188 @@
+---
+import { render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import SampleBadge from '../../components/SampleBadge.astro';
+import ActionBar from '../../components/issue/ActionBar.astro';
+import BigStory from '../../components/issue/BigStory.astro';
+import PrevNext from '../../components/issue/PrevNext.astro';
+import QuickHits from '../../components/issue/QuickHits.astro';
+import ReadingProgress from '../../components/issue/ReadingProgress.astro';
+import SectionChips from '../../components/issue/SectionChips.astro';
+import Tldr from '../../components/issue/Tldr.astro';
+import ToolCard from '../../components/issue/ToolCard.astro';
+import Wildcard from '../../components/issue/Wildcard.astro';
+import YourTurn from '../../components/issue/YourTurn.astro';
+import { getIssues, issueUrl, md, mdBlock, plain, u, type Issue } from '../../lib/utils';
+import { getImage } from 'astro:assets';
+
+export async function getStaticPaths() {
+  const issues = await getIssues();
+  return issues.map((issue, i) => ({
+    params: { slug: issue.id },
+    props: { issue, newer: issues[i - 1], older: issues[i + 1] },
+  }));
+}
+
+interface Props {
+  issue: Issue;
+  newer?: Issue;
+  older?: Issue;
+}
+const { issue, newer, older } = Astro.props;
+const { Content, headings } = await render(issue);
+const d = issue.data;
+const url = new URL(issueUrl(issue), Astro.site).href;
+const shareTitle = `AI Journey Issue #${d.issue}: ${d.title}`;
+const ogImage = d.cover ? (await getImage({ src: d.cover.src, width: 1200, height: 630, fit: 'cover' })).src : undefined;
+
+// Issues either use the fixed sections (Big Story, Quick Hits, Tool, Wildcard)
+// or tell the news as "## Story 1: ..." sections in the Markdown body.
+const storyHeadings = d.bigStory ? [] : headings.filter((h) => h.depth === 2);
+const chips = [
+  { id: 'thirty-seconds', label: '30 Seconds' },
+  ...(d.bigStory ? [{ id: 'big-story', label: 'Big Story' }] : []),
+  ...storyHeadings.map((h) => ({ id: h.slug, label: h.text.split(':')[0].trim() })),
+  ...(d.quickHits ? [{ id: 'quick-hits', label: 'Quick Hits' }] : []),
+  ...(d.tool ? [{ id: 'tool', label: 'Tool' }] : []),
+  ...(d.wildcard ? [{ id: 'wildcard', label: 'Wildcard' }] : []),
+  ...(d.yourTurn ? [{ id: 'your-turn', label: 'Your Turn' }] : []),
+];
+---
+
+<BaseLayout
+  title={`Issue #${d.issue}: ${d.title}`}
+  description={plain(d.subtitle)}
+  type="article"
+  publishedTime={d.date}
+  image={ogImage}
+  withActionBar
+>
+  <ReadingProgress slot="top" />
+
+  <article data-article>
+    <div class="wrap-mast pt-6 md:pt-10">
+      <Breadcrumb items={[{ label: 'Home', href: u('/') }, { label: 'Issues', href: u('/issues') }, { label: `Issue ${d.issue}` }]} />
+
+      <header class="mt-8 md:mt-10">
+        <div class="flex flex-wrap items-center gap-3">
+          <p class="eyebrow eyebrow--line">Issue {d.issue}</p>
+          {d.sample && <SampleBadge />}
+        </div>
+        <h1 class="display h-hero mt-4">{d.title}</h1>
+        <p class="lead mt-6 max-w-[42.5rem]">{d.subtitle}</p>
+      </header>
+    </div>
+
+    <SectionChips items={chips} class="mt-8" />
+
+    <div class="wrap-read issue-sections mt-10 grid gap-16 pb-16 md:mt-14 md:gap-24">
+      {d.intro && <div class="prose" set:html={mdBlock(d.intro)} />}
+      <Tldr items={d.tldr} />
+      {
+        d.bigStory ? (
+          <BigStory story={d.bigStory}>
+            <Content />
+          </BigStory>
+        ) : (
+          <div class="prose stories">
+            <Content />
+          </div>
+        )
+      }
+      {d.quickHits && <QuickHits items={d.quickHits} />}
+      {d.tool && <ToolCard tool={d.tool} />}
+      {d.wildcard && <Wildcard wildcard={d.wildcard} />}
+      {d.yourTurn && <YourTurn game={d.yourTurn} />}
+      {d.comingNext && <p class="border-t border-line pt-6" set:html={md(d.comingNext)} />}
+      {
+        d.sources.length > 0 && (
+          <footer class="sources" aria-labelledby="sources-title">
+            <h2 id="sources-title" class="eyebrow eyebrow--line">Sources</h2>
+            <ol class="mt-4 grid gap-1.5">
+              {d.sources.map((s) => (
+                <li>
+                  <a href={s.url} target="_blank" rel="noopener">
+                    {s.label}
+                  </a>
+                </li>
+              ))}
+            </ol>
+          </footer>
+        )
+      }
+      <PrevNext prev={older} next={newer} />
+    </div>
+  </article>
+
+  <ActionBar slot="bottom" url={url} title={shareTitle} />
+</BaseLayout>
+
+<style>
+  .issue-sections :global(section[id]),
+  .stories :global(h2[id]) {
+    scroll-margin-top: calc(var(--header-h-condensed) + var(--chips-h) + 1rem);
+  }
+
+  /* Story format: each "## Story" heading starts a new section */
+  .stories :global(h2) {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(2rem, 1.55rem + 2vw, 3rem);
+    line-height: 1.06;
+    letter-spacing: -0.012em;
+    margin-block-start: 4.5rem;
+    padding-block-start: 3rem;
+    border-block-start: 1px solid var(--border);
+  }
+  .stories :global(h2:first-child) {
+    margin-block-start: 0;
+    padding-block-start: 0;
+    border-block-start: 0;
+  }
+  .stories :global(h2 + p:has(img)) {
+    margin-block-start: 1.5rem;
+  }
+  .stories :global(p:has(> img)) {
+    margin-block: 1.75rem;
+  }
+  .stories :global(img) {
+    display: block;
+    inline-size: 100%;
+    height: auto;
+    border-radius: 0.875rem;
+    border: 1px solid var(--border);
+    background: var(--surface-2);
+  }
+
+  /* A picture that links somewhere (for example to the original article) */
+  .stories :global(a:has(> img)) {
+    display: block;
+    border-radius: 0.875rem;
+    transition: opacity 150ms ease;
+  }
+  .stories :global(a:has(> img):hover) {
+    opacity: 0.88;
+  }
+
+  .sources {
+    padding-block-start: 1.5rem;
+    border-block-start: 1px solid var(--border);
+    font-size: 0.875rem;
+    line-height: 1.5;
+  }
+  .sources a {
+    color: var(--muted);
+  }
+  .sources a:hover {
+    color: var(--heading);
+  }
+</style>
+
+<script>
+  // Links inside stories open in a new tab, so readers keep their place in the issue
+  document.querySelectorAll<HTMLAnchorElement>('.stories a[href^="http"]').forEach((a) => {
+    a.target = '_blank';
+    a.rel = 'noopener';
+  });
+</script>

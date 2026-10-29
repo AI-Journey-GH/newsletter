@@ -1,0 +1,24 @@
+---
+import { md } from '../../lib/utils';
+interface Props {
+  items: string[];
+}
+const { items } = Astro.props;
+---
+
+<!-- Always dark, so the 30-second summary stands out at the top of every issue -->
+<section id="thirty-seconds" class="tldr theme-dark p-6 md:p-9" aria-labelledby="tldr-title">
+  <h2 id="tldr-title" class="eyebrow eyebrow--line">This week in 30 seconds</h2>
+  <ol class="num-list mt-6">
+    {items.map((item) => <li><span set:html={md(item)} /></li>)}
+  </ol>
+</section>
+
+<style>
+  .tldr {
+    border-radius: 1.25rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+  }
+</style>

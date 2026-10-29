@@ -1,0 +1,16 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { u } from '../lib/utils';
+---
+
+<BaseLayout title="Page not found" noindex>
+  <section class="wrap-read py-24 text-center md:py-36">
+    <p class="eyebrow justify-center">Error 404</p>
+    <h1 class="display h-hero mt-4">This page took a <em>wrong turn</em></h1>
+    <p class="mt-5 text-muted">The link may be old, or the issue may have moved.</p>
+    <div class="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
+      <a href={u('/')} class="btn btn-primary btn-lg">Go home</a>
+      <a href={u('/issues')} class="btn btn-outline btn-lg">All issues</a>
+    </div>
+  </section>
+</BaseLayout>

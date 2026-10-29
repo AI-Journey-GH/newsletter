@@ -1,0 +1,209 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Callout from '../components/Callout.astro';
+import CategoryTag from '../components/CategoryTag.astro';
+import Eyebrow from '../components/Eyebrow.astro';
+import Icon from '../components/Icon.astro';
+import IssueCard from '../components/IssueCard.astro';
+import KeyStat from '../components/KeyStat.astro';
+import PullQuote from '../components/PullQuote.astro';
+import QuoteBlock from '../components/QuoteBlock.astro';
+import SampleBadge from '../components/SampleBadge.astro';
+import QuickHits from '../components/issue/QuickHits.astro';
+import { categories, wildcardTypes } from '../data/categories';
+import { getIssues } from '../lib/utils';
+
+const issues = await getIssues();
+
+// A sample Quick Hit, so the styleguide works whatever format the real issues use
+const sampleHit = {
+  tag: 'ai-gone-wrong' as const,
+  lead: 'A university paused its AI essay grader after students showed it penalized non-native English writers.',
+  body: 'The polished versions scored up to 12 points higher, with identical arguments.',
+  soWhat: 'If a course uses AI grading, you can ask how it was tested and request a human review.',
+  source: { label: 'Student group report', url: 'https://example.com/essay-grader-report' },
+};
+
+const colors = [
+  { name: 'navy-950', hex: '#0B1A2B', use: 'Headings, buttons, dark mode background', dark: true },
+  { name: 'navy-700', hex: '#1E3D58', use: 'Logo outline, button hover', dark: true },
+  { name: 'blue-600', hex: '#335E91', use: 'Accent text, numbers, labels', dark: true },
+  { name: 'blue-500', hex: '#3E6FA8', use: 'Links', dark: true },
+  { name: 'cyan-400', hex: '#7FCAD6', use: 'The only accent: dots, lines, dark mode', dark: false },
+  { name: 'sky-50', hex: '#F4F7FB', use: 'Subtle panels', dark: false },
+  { name: 'slate-600', hex: '#536A82', use: 'Muted text', dark: true },
+  { name: 'ink', hex: '#15202E', use: 'Body text', dark: true },
+];
+const iconNames = ['newspaper', 'wrench', 'lightbulb', 'vote', 'list', 'clock', 'share', 'link', 'send', 'mail', 'alert', 'check-circle', 'instagram', 'whatsapp', 'linkedin', 'sun', 'moon'];
+const sections = ['Colors', 'Type', 'Tags', 'Buttons', 'Chips', 'Rows', 'Callouts', 'Quotes', 'Numbers', 'Quick hit', 'Icons'];
+const sid = (s: string) => s.toLowerCase().replace(/\s+/g, '-');
+---
+
+<BaseLayout title="Styleguide" noindex>
+  <div class="wrap py-12 md:py-16">
+    <Eyebrow line>Design system</Eyebrow>
+    <h1 class="display h-hero mt-3">Styleguide</h1>
+    <p class="lead measure mt-5">
+      Every color, type style and component on the site. Change the tokens in <code>src/styles/global.css</code> and everything
+      here updates. Use the moon icon in the header to preview dark mode.
+    </p>
+    <nav class="mt-6" aria-label="Styleguide sections">
+      <ul class="flex flex-wrap gap-2">
+        {sections.map((s) => <li><a class="chip" href={`#${sid(s)}`}>{s}</a></li>)}
+      </ul>
+    </nav>
+  </div>
+
+  <div class="wrap grid gap-24 pb-24">
+    <section id="colors" aria-labelledby="colors-h">
+      <h2 id="colors-h" class="display h-section">Colors</h2>
+      <ul class="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
+        {
+          colors.map((c) => (
+            <li class="card overflow-hidden">
+              <div class="flex h-24 items-end p-3" style={{ background: c.hex }}>
+                <span class:list={['text-xs font-medium', c.dark ? 'text-white' : 'text-navy-950']}>{c.hex}</span>
+              </div>
+              <div class="p-3">
+                <p class="font-medium text-heading">{c.name}</p>
+                <p class="text-sm leading-snug text-muted">{c.use}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <section id="type" aria-labelledby="type-h" class="grid gap-10">
+      <h2 id="type-h" class="display h-section">Type</h2>
+      <div class="grid gap-2">
+        <p class="label text-muted">Display: Instrument Serif, 44 to 92px</p>
+        <p class="display h-hero">A laptop-sized model matches <em>last year’s best</em></p>
+      </div>
+      <div class="grid gap-2">
+        <p class="label text-muted">Section title</p>
+        <p class="display h-section">Quick Hits</p>
+      </div>
+      <div class="grid gap-2">
+        <p class="label text-muted">Card title</p>
+        <p class="display h-card">Spot the fake headline</p>
+      </div>
+      <div class="grid max-w-[42.5rem] gap-2">
+        <p class="label text-muted">Lead</p>
+        <p class="lead">Plus: an AI grader that penalized non-native writers, and a tool that turns slides into quizzes.</p>
+      </div>
+      <div class="grid max-w-[42.5rem] gap-2">
+        <p class="label text-muted">Body: Geist, 17px mobile, 19px desktop</p>
+        <p class="measure">
+          <strong>Lead with the point.</strong> The first sentence of every item is bold and says what happened. Sentences stay
+          under 20 words, and paragraphs are 1 to 3 sentences. <a href="#type">Links look like this.</a>
+        </p>
+      </div>
+      <div class="flex flex-wrap items-center gap-6">
+        <Eyebrow>Eyebrow</Eyebrow>
+        <Eyebrow line>Eyebrow with dot</Eyebrow>
+        <span class="label text-heading">Label</span>
+        <span class="caption">Small italic caption. Credit: Source</span>
+      </div>
+    </section>
+
+    <section id="tags" aria-labelledby="tags-h">
+      <h2 id="tags-h" class="display h-section">Tags</h2>
+      <p class="mt-2 text-muted">Defined in <code>src/data/categories.ts</code>.</p>
+      <div class="mt-6 flex flex-wrap gap-2">
+        {Object.keys(categories).map((k) => <CategoryTag tag={k} />)}
+      </div>
+      <div class="mt-4 flex flex-wrap gap-2">
+        {
+          Object.values(wildcardTypes).map((w) => (
+            <span class="tag">
+              <Icon name={w.icon} size={13} /> {w.label}
+            </span>
+          ))
+        }
+        <SampleBadge />
+      </div>
+    </section>
+
+    <section id="buttons" aria-labelledby="buttons-h">
+      <h2 id="buttons-h" class="display h-section">Buttons</h2>
+      <div class="mt-6 flex flex-wrap items-center gap-3">
+        <a href="#buttons" class="btn btn-primary">Primary</a>
+        <a href="#buttons" class="btn btn-outline">Outline</a>
+        <a href="#buttons" class="btn btn-primary btn-lg">Large <Icon name="arrow-right" size={18} /></a>
+        <button type="button" class="icon-btn" aria-label="Icon button"><Icon name="share" /></button>
+      </div>
+    </section>
+
+    <section id="chips" aria-labelledby="chips-h">
+      <h2 id="chips-h" class="display h-section">Chips</h2>
+      <div class="mt-6 flex flex-wrap gap-2">
+        <button type="button" class="chip" aria-pressed="true">Selected</button>
+        <button type="button" class="chip" aria-pressed="false">Not selected</button>
+        <span class="chip chip-static">Engineering</span>
+        <span class="chip chip-static">Business</span>
+      </div>
+    </section>
+
+    <section id="rows" aria-labelledby="rows-h">
+      <h2 id="rows-h" class="display h-section">Issue rows</h2>
+      <ul class="issue-list mt-6">
+        {issues.slice(0, 3).map((issue) => <li><IssueCard issue={issue} /></li>)}
+      </ul>
+    </section>
+
+    <section id="callouts" aria-labelledby="callouts-h" class="grid max-w-[42.5rem] gap-6">
+      <h2 id="callouts-h" class="display h-section">Callouts</h2>
+      <Callout variant="why" title="Why it matters to you">
+        <p>You may soon have a decent coding assistant that works offline and costs nothing. Check its fixes like you’d check a classmate’s.</p>
+      </Callout>
+      <Callout variant="watch" title="Watch out">
+        <p>It sometimes marks a wrong answer as right. Treat it as practice, not as the answer key.</p>
+      </Callout>
+      <div class="panel p-6">
+        <p class="eyebrow eyebrow--line">This week in 30 seconds</p>
+        <ol class="num-list mt-5">
+          <li>A small open model now matches last year’s best at coding.</li>
+          <li>A university paused its AI essay grader.</li>
+          <li>Tool of the Week turns your slides into quizzes.</li>
+        </ol>
+      </div>
+    </section>
+
+    <section id="quotes" aria-labelledby="quotes-h" class="grid max-w-[42.5rem] gap-8">
+      <h2 id="quotes-h" class="display h-section">Quotes</h2>
+      <PullQuote cite="Pull quote">The lab says the trick was data quality, not size.</PullQuote>
+      <QuoteBlock name="Our voice" role="from our writing guide">
+        A smart senior student explaining the week’s AI news to a friend: informed, honest, a little funny, never hype.
+      </QuoteBlock>
+    </section>
+
+    <section id="numbers" aria-labelledby="numbers-h">
+      <h2 id="numbers-h" class="display h-section">Key numbers</h2>
+      <div class="mt-6 grid gap-6 sm:grid-cols-3">
+        <KeyStat value="71%" label="on the coding test, up from 52%" />
+        <KeyStat value="5 GB" label="about the size of the download" />
+        <KeyStat value="16 GB" label="of laptop RAM is enough" />
+      </div>
+    </section>
+
+    <section id="quick-hit" aria-labelledby="qh-h" class="max-w-[42.5rem]">
+      <h2 id="qh-h" class="display h-section">Quick hit</h2>
+      <div class="mt-6"><QuickHits items={[sampleHit]} /></div>
+    </section>
+
+    <section id="icons" aria-labelledby="icons-h">
+      <h2 id="icons-h" class="display h-section">Icons</h2>
+      <ul class="mt-6 grid grid-cols-4 gap-3 sm:grid-cols-6 lg:grid-cols-9">
+        {
+          iconNames.map((n) => (
+            <li class="card flex flex-col items-center gap-2 p-3 text-heading">
+              <Icon name={n} size={22} />
+              <span class="text-xs text-muted">{n}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+  </div>
+</BaseLayout>
