@@ -20,11 +20,18 @@ const { url, title, pdfName } = Astro.props;
       <Icon name="arrow-up" size={20} />
       <span>Top</span>
     </a>
-    <button type="button" class="bar-btn" data-share data-url={url} data-title={title}>
+    <button type="button" class="bar-btn" data-share data-url={url} data-title={title} data-umami-event="Share issue">
       <Icon name="share" size={20} />
       <span>Share</span>
     </button>
-    <button type="button" class="bar-btn" data-print data-pdf-name={pdfName} aria-label="Save this issue as a PDF">
+    <button
+      type="button"
+      class="bar-btn"
+      data-print
+      data-pdf-name={pdfName}
+      data-umami-event="Save as PDF"
+      aria-label="Save this issue as a PDF"
+    >
       <Icon name="download" size={20} />
       <span>PDF</span>
     </button>

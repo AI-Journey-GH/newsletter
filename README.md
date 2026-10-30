@@ -58,6 +58,7 @@ Straight quotes in the issue file become curly quotes on the site automatically.
 | To change | Edit |
 | --- | --- |
 | WhatsApp, Instagram, LinkedIn, subscribe and poll links | `src/config.ts` |
+| Visitor stats (the Umami website ID) | `src/config.ts` |
 | Category tags (add one with a single line) | `src/data/categories.ts` |
 | Colors, fonts, buttons, tags, callouts | `src/styles/global.css` (see them all at `/styleguide`) |
 | Issue page sections | `src/components/issue/` |
@@ -75,13 +76,15 @@ Follow `docs/03-voice-and-personality.md`. Two of its rules are hard rules:
 
 ## Deploy
 
-The build output is a plain folder (`dist/`), so any static host works. Set `SITE_URL` to the final address so share links, RSS and the sitemap are correct.
+The site is live on Vercel at https://ai-journey-newsletter.vercel.app. That address is set in `astro.config.mjs`, and share links, RSS, the sitemap and the visitor stats all use it. If the site moves (for example to your own domain), change it there, or set a `SITE_URL` environment variable on the host.
+
+The build output is a plain folder (`dist/`), so any static host works.
 
 **Vercel or Netlify (easiest)**
 
 1. Push this folder to a GitHub repository.
 2. Import the repository on [vercel.com](https://vercel.com) or [netlify.com](https://netlify.com). Both detect Astro automatically. The build command is `npm run build` and the output folder is `dist`.
-3. Add an environment variable `SITE_URL`, for example `https://ai-journey.vercel.app`.
+3. If the address is not the one in `astro.config.mjs`, add an environment variable `SITE_URL` with the new address.
 
 Every push to the main branch then publishes the site.
 
@@ -101,7 +104,7 @@ Subscribers type their email on the home page. It goes to a Google Form, and the
 
 1. Open the Sheet linked to the form (in the form: Responses, then the green Sheets icon).
 2. Click Extensions, then Apps Script. Delete the sample code, then paste everything from `scripts/google-apps-script/newsletter-mailer.gs`.
-3. At the top of the script, set `SITE_URL` to the live address, for example `https://ai-journey.vercel.app` (no slash at the end). Click the save icon.
+3. At the top of the script, check that `SITE_URL` is the live address with no slash at the end. It is already set to `https://ai-journey-newsletter.vercel.app`. Click the save icon.
 4. In the function menu next to Run, choose `setUpDailyTrigger` and click Run. Google asks for permission: choose your account, click Advanced, then "Go to (project name)", then Allow. This is your own script asking to send email as you.
 5. Choose `sendTestEmail` and click Run. Check your inbox to see the email.
 6. Unsubscribe links (recommended): click Deploy, then New deployment, select type "Web app", set "Execute as" to Me and "Who has access" to Anyone, then Deploy. Copy the web app URL into `UNSUBSCRIBE_URL` at the top of the script and save. Until you do this, the unsubscribe link opens a reply email instead, and you remove people by adding them to the Unsubscribed tab yourself.
@@ -112,12 +115,37 @@ From then on, publishing a new issue on the site is all you do. The email goes o
 
 **Privacy.** The Sheet holds people's email addresses. Keep it private and share it only with team members who need it.
 
+## Visitor stats
+
+The team sees who is visiting on a free [Umami Cloud](https://umami.is) dashboard: views for each issue, how many different people visited, where they came from, phone or desktop, country, and clicks on **Save as PDF**, **Share issue** and **Subscribe**. Umami uses no cookies and never records names, emails or IP addresses, so the site needs no cookie banner.
+
+**One-time setup** (after the site is live):
+
+1. Make a free account on [umami.is](https://umami.is). The free Hobby plan allows up to 100,000 events a month and keeps 6 months of history.
+2. Add a website. Name: `AI Journey`. Domain: the live address without `https://`, for example `ai-journey.vercel.app`.
+3. Copy the site's **Website ID** from its settings and paste it into `analytics.umamiWebsiteId` in `src/config.ts`. Publish the site.
+4. Visits are only counted on the live address set in `astro.config.mjs`, so your own previews never show up.
+5. To give the team access, turn on **Share URL** in the website's settings in Umami and send that link. Anyone with it can see the stats (totals only, nothing personal), so keep it inside the team.
+
+**Tag the links you post.** WhatsApp and Instagram often hide where a click came from. Add a tag to the end of every link you post, and Umami's **UTM** report shows where readers came from.
+
+| Where you post | Add to the end of the link |
+| --- | --- |
+| WhatsApp group or status | `?utm_source=whatsapp` |
+| Instagram (bio, story, post) | `?utm_source=instagram` |
+| LinkedIn | `?utm_source=linkedin` |
+| Weekly email | Added for you by the email script |
+
+For example: `https://ai-journey-newsletter.vercel.app/issues/issue-1?utm_source=whatsapp`. If you pasted the email script into Google before this tag was added, paste it again and keep your own `SITE_URL` and `UNSUBSCRIBE_URL` values.
+
+**Subscriber numbers.** "Subscribe" in Umami counts sign-ups made on the website. The full list of subscribers stays in the Google Sheet (see "Weekly email").
+
 ## Before launch
 
 - Replace every `REPLACE_ME` link in `src/config.ts`, and confirm the WhatsApp invite link.
 - Set up the weekly email script (see "Weekly email").
+- Set up visitor stats (see "Visitor stats").
 - The three invented sample issues are hidden (their file names start with `_`). Delete them whenever you like.
-- Set `SITE_URL` on the host.
 
 ## Notes
 

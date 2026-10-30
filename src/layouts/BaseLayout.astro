@@ -4,7 +4,7 @@ import serifWoff2 from '@fontsource/instrument-serif/files/instrument-serif-lati
 import sansWoff2 from '@fontsource-variable/geist/files/geist-latin-wght-normal.woff2?url';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-import { site } from '../config';
+import { analytics, site } from '../config';
 import { u } from '../lib/utils';
 
 interface Props {
@@ -31,6 +31,8 @@ const {
 const fullTitle = title ? `${title} | ${site.name}` : `${site.name}: ${site.tagline}`;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const ogImage = new URL(image, Astro.site);
+// Umami only counts visits on this address, so local previews never show up in the stats
+const statsDomain = Astro.site?.hostname;
 ---
 
 <!doctype html>
@@ -76,6 +78,18 @@ const ogImage = new URL(image, Astro.site);
         document.documentElement.setAttribute('data-theme', t);
       })();
     </script>
+    <!-- Visitor stats (Umami Cloud): no cookies, nothing that identifies a reader -->
+    {
+      analytics.umamiWebsiteId && import.meta.env.PROD && (
+        <script
+          is:inline
+          defer
+          src="https://cloud.umami.is/script.js"
+          data-website-id={analytics.umamiWebsiteId}
+          data-domains={statsDomain}
+        ></script>
+      )
+    }
     <slot name="head" />
   </head>
   <body class:list={['min-h-dvh flex flex-col', withActionBar && 'pb-20 md:pb-24']}>

@@ -109,6 +109,8 @@ const { id = 'join' } = Astro.props;
 </style>
 
 <script>
+  import { trackEvent } from '../scripts/stats';
+
   // Send the email to the Google Form in the background, so the reader stays on the site.
   // Google does not let other sites read its reply, so a finished request counts as success.
   document.querySelectorAll<HTMLFormElement>('[data-subscribe]').forEach((form) => {
@@ -124,6 +126,7 @@ const { id = 'join' } = Astro.props;
       try {
         await fetch(form.action, { method: 'POST', mode: 'no-cors', body: new FormData(form) });
         form.hidden = true;
+        trackEvent('Subscribe');
         status.textContent = 'You’re in! The next issue will land in your inbox.';
       } catch {
         status.textContent = 'Something went wrong. Please try again in a moment.';

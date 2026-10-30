@@ -6,7 +6,7 @@ import tailwindcss from '@tailwindcss/vite';
 // SITE_URL: the public address of the site (used for RSS, sitemap and share links).
 // BASE_PATH: only needed on GitHub Pages project sites, for example "/newsletter".
 export default defineConfig({
-  site: process.env.SITE_URL || 'https://ai-journey-newsletter.example.com',
+  site: process.env.SITE_URL || 'https://ai-journey-newsletter.vercel.app',
   base: process.env.BASE_PATH || '/',
   trailingSlash: 'ignore',
   // Pictures in issues get responsive sizes (smaller files on phones)

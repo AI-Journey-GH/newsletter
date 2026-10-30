@@ -19,7 +19,7 @@
 
 const CONFIG = {
   // The live website, without a slash at the end, for example 'https://ai-journey.vercel.app'
-  SITE_URL: 'https://YOUR-SITE.vercel.app',
+  SITE_URL: 'https://ai-journey-newsletter.vercel.app',
   // Name shown as the sender
   FROM_NAME: 'AI Journey',
   // Optional: where replies go. Leave empty to use the Google account running the script.
@@ -145,7 +145,8 @@ function fetchLatestIssue_() {
   const match = fullTitle.match(/^Issue #(\d+):\s*(.*)$/);
   return {
     id: path,
-    url: CONFIG.SITE_URL + path,
+    // The tag at the end lets the visitor stats show who came from this email
+    url: `${CONFIG.SITE_URL}${path}?utm_source=email`,
     fullTitle,
     number: match ? match[1] : '',
     title: match ? match[2] : fullTitle,

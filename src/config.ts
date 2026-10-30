@@ -28,6 +28,13 @@ export const subscribeForm = {
   emailField: 'entry.334681311',
 };
 
+// Visitor stats with Umami Cloud (see "Visitor stats" in the README).
+// Paste the site's "Website ID" from umami.is here. While it is empty, no stats code is added.
+// Visits are only counted on the live address (SITE_URL), never on your own computer.
+export const analytics = {
+  umamiWebsiteId: '701333c3-d46b-4608-af91-a3f3fe2393d1',
+};
+
 export const nav = [
   { label: 'Home', href: '/' },
   { label: 'Issues', href: '/issues' },
