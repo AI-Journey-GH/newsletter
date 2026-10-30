@@ -18,7 +18,7 @@ const picture = (image: any) =>
 const link = z.object({ label: text(), url: z.string().url() });
 
 const issues = defineCollection({
-  // Files starting with "_" (like _template.md) are ignored.
+  // Files starting with "_" are ignored.
   loader: glob({ pattern: ['**/*.{md,mdx}', '!**/_*'], base: './src/content/issues' }),
   schema: ({ image }) =>
     z.object({

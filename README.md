@@ -24,22 +24,20 @@ Open http://localhost:4321. The page reloads when you save a file.
 
 Each issue is **one Markdown file** in `src/content/issues/`.
 
-1. Copy `src/content/issues/_template.md` and rename the copy, for example `issue-3.md`. The file name becomes the web address: `/issues/issue-3`.
-2. Fill in every field at the top of the file (the part between the two `---` lines). The comments in the template explain each one.
-3. Write the rest of the Big Story below the second `---`. Normal paragraphs, `**bold**`, `[links](https://...)`, and lines starting with `>` (pull quotes) all work.
-4. Set `sample: false`, and keep `draft: true` until it is ready. Drafts show in `npm run dev` but not on the live site.
-5. Run `npm run check`, then `npm run dev`, and read the issue on your phone width before publishing.
+1. Copy `src/content/issues/issue-1.md` and rename the copy, for example `issue-3.md` (no spaces). The file name becomes the web address: `/issues/issue-3`.
+2. Change every field at the top of the file (the part between the two `---` lines): `issue`, `title`, `subtitle`, `date`, `readTime`, `author`, `intro`, the 3 to 5 `tldr` bullets, `sources`, and optionally `comingNext`.
+3. Write the news below the second `---` as `## Brief 1: ...`, `## Brief 2: ...` sections. Each brief gets its own jump button at the top of the page. Normal paragraphs, `**bold**`, `[links](https://...)`, and lines starting with `>` (pull quotes) all work.
+4. Add pictures as `![description](./images/issue-3/photo.jpg)`, with the files in `src/content/issues/images/issue-3/`.
+5. Keep `draft: true` until it is ready. Drafts show in `npm run dev` but not on the live site.
+6. Run `npm run build` (it fails with a clear message if a field is missing), then `npm run dev`, and read the issue on your phone width before publishing.
 
-Files whose name starts with `_` are ignored, so the template never shows on the site.
+Files whose name starts with `_` are ignored and never show on the site.
 
-**Two ways to write an issue.**
-
-- **Fixed sections:** fill `bigStory`, `quickHits`, `tool` and `wildcard`, as in the template.
-- **Briefs:** leave those out, and write the news in the body as `## Brief 1: ...`, `## Brief 2: ...` sections, with pictures as `![description](./images/issue-3/photo.jpg)`. Each brief gets its own jump button at the top of the page. `src/content/issues/issue-1.md` is a full example, with `intro`, `author`, `comingNext` and `sources`.
+An issue can also use fixed sections instead of briefs (`bigStory`, `quickHits`, `tool`, `wildcard` and `yourTurn`). Their fields are listed in `src/content.config.ts`.
 
 **Things the build checks for you.** If something is wrong, `npm run dev` shows an error naming the field.
 
-- `tldr` has exactly 3 bullets, and there are 3 to 6 `quickHits`.
+- `tldr` has 3 to 5 bullets, and there are 3 to 6 `quickHits`.
 - Every `tag` is one of the category keys (see below).
 - `wildcard.type` is one of `paper-decoded`, `concept-in-60-seconds` or `opportunity-board`.
 - Every picture has `alt` text.
