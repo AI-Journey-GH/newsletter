@@ -17,7 +17,6 @@ tldr:
   - '**Someone turned a popular AI model "evil" by nudging just two of its billions of numbers.** The internet lost its mind.'
   - "**Tesla finally showed its new Roadster:** a car with rocket-style thrusters that jumped over five other Teslas."
 
-comingNext: "**Coming next week:** our first Tool of the Week and a research paper decoded in plain English."
 
 sources:
   - label: "Techloy: Anthropic S-1 numbers"
