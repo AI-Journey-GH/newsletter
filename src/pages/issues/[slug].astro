@@ -38,7 +38,7 @@ const shareTitle = `AI Journey Issue #${d.issue}: ${d.title}`;
 const ogImage = d.cover ? (await getImage({ src: d.cover.src, width: 1200, height: 630, fit: 'cover' })).src : undefined;
 
 // Issues either use the fixed sections (Big Story, Quick Hits, Tool, Wildcard)
-// or tell the news as "## Story 1: ..." sections in the Markdown body.
+// or tell the news as "## Brief 1: ..." sections in the Markdown body.
 const storyHeadings = d.bigStory ? [] : headings.filter((h) => h.depth === 2);
 const chips = [
   { id: 'thirty-seconds', label: '30 Seconds' },
@@ -148,7 +148,7 @@ const chips = [
     scroll-margin-top: calc(var(--header-h-condensed) + var(--chips-h) + 1rem);
   }
 
-  /* Story format: each "## Story" heading starts a new section */
+  /* Brief format: each "## Brief" heading starts a new section */
   .stories :global(h2) {
     font-family: var(--font-display);
     font-weight: 400;
@@ -385,7 +385,7 @@ const chips = [
     a.rel = 'noopener';
   });
 
-  // Wrap the "Story 1" part of each story title, so the PDF can show it as a small label.
+  // Wrap the "Brief 1" part of each brief title, so the PDF can show it as a small label.
   // On screen the title reads exactly as before.
   document.querySelectorAll<HTMLHeadingElement>('.stories h2').forEach((h) => {
     const text = h.firstChild;

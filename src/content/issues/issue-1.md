@@ -47,7 +47,7 @@ sources:
     url: "https://news.lavx.hu/article/anthropic-manager-says-the-coding-interview-is-dead"
 ---
 
-## Story 1: The company behind Claude is going public
+## Brief 1: The company behind Claude is going public
 
 ![The Anthropic logo on a lit wall at an event, with a blurred person in the foreground](./images/issue-1/story-1.webp)
 
@@ -63,7 +63,7 @@ sources:
 
 **Got some money lying around?** Now you know where Wall Street's attention is heading. The shares will trade on Nasdaq under the ticker **ANT**, but not yet: the price and date are not set.
 
-## Story 2: Kimi K3.1, the free AI that "shouldn't" exist
+## Brief 2: Kimi K3.1, the free AI that "shouldn't" exist
 
 ![Bar chart of the Artificial Analysis Intelligence Index with Kimi K3.1 Pro circled at 55, close to Claude Opus 5.5 at 58, and an arrow from the older Kimi K3 at 44](./images/issue-1/story-2-chart.png)
 
@@ -93,7 +93,7 @@ Then, on October 12, Anthropic said its new defenses cut the data copycats can h
 
 So here is the paradox. For years, the story was "Chinese models are only good because they copy us." But if copying just got 90% to 99% harder, how did Kimi get this close? Either the defenses are leakier than claimed, or Chinese labs are simply getting good on their own. Probably a bit of both. Critics also point out that the big labs trained on huge amounts of public internet data without asking either, so this argument is not ending anytime soon.
 
-## Story 3: How two tiny neurons turned an AI evil
+## Brief 3: How two tiny neurons turned an AI evil
 
 ![Post on X by lyra sharing a recipe for steering two neurons in Qwen 3.5 4B to get an evil Qwen, with 4.4 million views](./images/issue-1/story-3-post.png)
 
@@ -128,7 +128,7 @@ There are two ways to read it:
 
 AI safety is no longer just philosophy. It is now an engineering problem you can test on a laptop. If you like signals, control systems or debugging hardware, interpretability is one of the most exciting (and hiring) research areas in AI right now.
 
-## Story 4: "The coding interview is dead," says an Anthropic manager
+## Brief 4: "The coding interview is dead," says an Anthropic manager
 
 [![Post on X by Felix Rieseberg saying the coding interview is dead, at least for his team at Anthropic, linking to his article Hunger beats tenure: Advice for junior engineers](./images/issue-1/story-4.png)](https://felixrieseberg.com/hunger-beats-tenure-advice-for-junior-engineers/)
 
@@ -140,7 +140,7 @@ Felix Rieseberg, who has led development of Claude.ai, says giving you a little 
 
 **Reality check:** most companies still run coding tests, and someone still has to judge whether the AI's code is correct and secure. That someone is you. So keep your LeetCode, and add one weekend project you can demo.
 
-## Story 5: Tesla's Roadster can fly (sort of)
+## Brief 5: Tesla's Roadster can fly (sort of)
 
 ![The Tesla Roadster flipped upside down in the air above a Model Y, a Model 3, a Semi, a Cybertruck and a Cybercab, with clouds of compressed air around it](./images/issue-1/story-5.webp)
 

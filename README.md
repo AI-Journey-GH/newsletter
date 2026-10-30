@@ -35,7 +35,7 @@ Files whose name starts with `_` are ignored, so the template never shows on the
 **Two ways to write an issue.**
 
 - **Fixed sections:** fill `bigStory`, `quickHits`, `tool` and `wildcard`, as in the template.
-- **Stories:** leave those out, and write the news in the body as `## Story 1: ...`, `## Story 2: ...` sections, with pictures as `![description](./images/issue-3/photo.jpg)`. Each story gets its own jump button at the top of the page. `src/content/issues/issue-1.md` is a full example, with `intro`, `author`, `comingNext` and `sources`.
+- **Briefs:** leave those out, and write the news in the body as `## Brief 1: ...`, `## Brief 2: ...` sections, with pictures as `![description](./images/issue-3/photo.jpg)`. Each brief gets its own jump button at the top of the page. `src/content/issues/issue-1.md` is a full example, with `intro`, `author`, `comingNext` and `sources`.
 
 **Things the build checks for you.** If something is wrong, `npm run dev` shows an error naming the field.
 

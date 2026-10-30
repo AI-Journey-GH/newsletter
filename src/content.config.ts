@@ -38,7 +38,7 @@ const issues = defineCollection({
       tldr: z.array(text()).min(3, 'The 30 seconds section needs 3 to 5 bullets').max(5, 'The 30 seconds section needs 3 to 5 bullets'),
 
       // The sections below are optional. An issue can instead tell its news as
-      // "## Story 1: ..." sections in the Markdown body (see issue-1.md).
+      // "## Brief 1: ..." sections in the Markdown body (see issue-1.md).
       bigStory: z.object({
         tag: z.enum(categoryKeys),
         headline: text(),
