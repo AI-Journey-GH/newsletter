@@ -91,15 +91,37 @@ Every push to the main branch then publishes the site.
 2. Add the official Astro workflow from https://docs.astro.build/en/guides/deploy/github/.
 3. If the site lives at `https://<user>.github.io/<repo>/`, set `SITE_URL=https://<user>.github.io` and `BASE_PATH=/<repo>` in the workflow. Every internal link already respects the base path.
 
+## Weekly email
+
+Subscribers type their email on the home page. It goes to a Google Form, and the form saves it to a Google Sheet (File, Download, Microsoft Excel gives you an Excel copy any time). A script inside that Sheet emails each new issue automatically.
+
+**How it works.** Once a day the script reads the site's feed (`/rss.xml`). When there is an issue a subscriber has not received yet, it emails them the title, the "30 seconds" bullets and a "Read this week's issue" button. Every send is written to a **Sent log** tab, so nobody gets the same issue twice. People who unsubscribe are listed in an **Unsubscribed** tab and skipped.
+
+**One-time setup** (after the site is live):
+
+1. Open the Sheet linked to the form (in the form: Responses, then the green Sheets icon).
+2. Click Extensions, then Apps Script. Delete the sample code, then paste everything from `scripts/google-apps-script/newsletter-mailer.gs`.
+3. At the top of the script, set `SITE_URL` to the live address, for example `https://ai-journey.vercel.app` (no slash at the end). Click the save icon.
+4. In the function menu next to Run, choose `setUpDailyTrigger` and click Run. Google asks for permission: choose your account, click Advanced, then "Go to (project name)", then Allow. This is your own script asking to send email as you.
+5. Choose `sendTestEmail` and click Run. Check your inbox to see the email.
+6. Unsubscribe links (recommended): click Deploy, then New deployment, select type "Web app", set "Execute as" to Me and "Who has access" to Anyone, then Deploy. Copy the web app URL into `UNSUBSCRIBE_URL` at the top of the script and save. Until you do this, the unsubscribe link opens a reply email instead, and you remove people by adding them to the Unsubscribed tab yourself.
+
+From then on, publishing a new issue on the site is all you do. The email goes out the next morning at 9 (change `SEND_HOUR` to pick another hour). To send right away, run `sendLatestIssue` from the editor.
+
+**Limits.** A normal Gmail account can send about 100 emails a day from a script (a Google Workspace account allows more). If there are more subscribers than that, the script sends the rest the next day. When the list grows past a few hundred, move to a newsletter service such as Buttondown or Beehiiv: export the Sheet and import it there.
+
+**Privacy.** The Sheet holds people's email addresses. Keep it private and share it only with team members who need it.
+
 ## Before launch
 
 - Replace every `REPLACE_ME` link in `src/config.ts`, and confirm the WhatsApp invite link.
+- Set up the weekly email script (see "Weekly email").
 - The three invented sample issues are hidden (their file names start with `_`). Delete them whenever you like.
 - Set `SITE_URL` on the host.
 
 ## Notes
 
 - Light and dark mode follow the reader's system setting. The moon/sun button in the header saves their choice.
-- The email box on the home page does not store anything. It opens the external subscribe form from `src/config.ts` in a new tab, and passes the address as `?email=` (useful for forms that support prefilling).
+- The email box on the home page does not store anything on the site. It sends the address to the Google Form set in `src/config.ts` (`subscribeForm`), and the form saves it to a Google Sheet. See "Weekly email" above.
 - Layout uses logical CSS properties (`margin-inline`, `inset-inline-start` and so on), so an Arabic right-to-left version can be added later by setting `dir="rtl"`.
 - `public/logo/` holds the three official logo PNGs (untouched) and two small eye-only WebP versions made from them for the header and footer.

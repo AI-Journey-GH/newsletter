@@ -3,9 +3,9 @@
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join, extname, relative } from 'node:path';
 
-const EM_DASH = '—';
-const roots = ['src', 'public', 'README.md', 'astro.config.mjs'];
-const textExt = new Set(['.astro', '.md', '.mdx', '.ts', '.js', '.mjs', '.css', '.json', '.svg', '.html', '.txt', '.xml', '.yml', '.yaml']);
+const EM_DASH = '\u2014'; // written as an escape so this file passes its own check
+const roots = ['src', 'public', 'scripts', 'README.md', 'astro.config.mjs'];
+const textExt = new Set(['.astro', '.md', '.mdx', '.ts', '.js', '.mjs', '.css', '.json', '.svg', '.html', '.txt', '.xml', '.yml', '.yaml', '.gs']);
 
 function* walk(path) {
   let st;

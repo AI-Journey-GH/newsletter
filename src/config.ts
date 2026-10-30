@@ -13,10 +13,19 @@ export const links = {
   instagram: 'https://www.instagram.com/ai.journey.aub/',
   whatsapp: 'https://chat.whatsapp.com/GGwUjQZzhN609XzBsDz3EE', // TO CONFIRM: current group invite link
   linkedin: 'https://www.linkedin.com/company/ai-journey-aub/',
-  // External form that collects email subscriptions (Google Form, Tally, Mailchimp, Substack...)
-  subscribe: 'https://forms.gle/REPLACE_ME_SUBSCRIBE',
+  // The Google Form that collects email subscriptions (its answers go to a Google Sheet)
+  subscribe: 'https://forms.gle/u4hAF2B5KPKryNuG6',
   // Default poll link, used when an issue does not set its own yourTurn.pollUrl
   poll: 'https://forms.gle/REPLACE_ME_POLL',
+};
+
+// The subscribe box on the site sends emails straight into the Google Form above.
+// To find these two values: in the form, open "Get pre-filled link", type any email,
+// and copy the link. The address before "viewform" + "formResponse" is `action`,
+// and the "entry.123..." part is `emailField`.
+export const subscribeForm = {
+  action: 'https://docs.google.com/forms/d/e/1FAIpQLSeT2lkvrOP9sA-kHQoOVfFBKytr4yzeI8s_nk4uB1DpnmapbA/formResponse',
+  emailField: 'entry.334681311',
 };
 
 export const nav = [

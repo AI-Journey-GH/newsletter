@@ -1,7 +1,7 @@
 ---
 import Eyebrow from './Eyebrow.astro';
 import Icon from './Icon.astro';
-import { links } from '../config';
+import { links, subscribeForm } from '../config';
 
 interface Props {
   id?: string;
@@ -22,23 +22,28 @@ const { id = 'join' } = Astro.props;
       </div>
 
       <div class="grid gap-5">
-        <!-- Opens the external subscribe form in a new tab. No data is stored on this site. -->
-        <form action={links.subscribe} method="get" target="_blank" class="grid gap-2">
+        <!--
+          Sends the email to our Google Form (its answers land in a Google Sheet).
+          Nothing is stored on this site. Without JavaScript, Google's own confirmation page opens in a new tab.
+        -->
+        <form action={subscribeForm.action} method="post" target="_blank" class="grid gap-2" data-subscribe>
           <label for={`${id}-email`} class="label text-heading">Your email</label>
           <div class="email-row">
             <input
               id={`${id}-email`}
-              name="email"
+              name={subscribeForm.emailField}
               type="email"
               inputmode="email"
               autocomplete="email"
               placeholder="you@mail.aub.edu"
+              required
               class="email-input"
             />
-            <button type="submit" class="btn btn-primary shrink-0">Subscribe</button>
+            <button type="submit" class="btn btn-primary shrink-0" data-subscribe-button>Subscribe</button>
           </div>
-          <p class="text-sm text-muted">Opens our sign-up form. One email a week, no spam.</p>
+          <p class="text-sm text-muted" data-subscribe-note>One email when a new issue is out. Unsubscribe anytime.</p>
         </form>
+        <p class="subscribe-status" role="status" aria-live="polite" data-subscribe-status hidden></p>
 
         <div class="flex flex-wrap items-center gap-2">
           <span class="text-sm text-muted">Or follow along on</span>
@@ -93,4 +98,39 @@ const { id = 'join' } = Astro.props;
   .email-input::placeholder {
     color: var(--muted);
   }
+  .subscribe-status {
+    padding: 1rem 1.25rem;
+    border-radius: 1rem;
+    background: var(--bg);
+    border: 1px solid var(--border-strong);
+    color: var(--heading);
+    font-weight: 500;
+  }
 </style>
+
+<script>
+  // Send the email to the Google Form in the background, so the reader stays on the site.
+  // Google does not let other sites read its reply, so a finished request counts as success.
+  document.querySelectorAll<HTMLFormElement>('[data-subscribe]').forEach((form) => {
+    const section = form.closest('section');
+    const status = section?.querySelector<HTMLElement>('[data-subscribe-status]');
+    const button = form.querySelector<HTMLButtonElement>('[data-subscribe-button]');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!button || !status) return;
+      button.disabled = true;
+      button.textContent = 'Subscribing...';
+      try {
+        await fetch(form.action, { method: 'POST', mode: 'no-cors', body: new FormData(form) });
+        form.hidden = true;
+        status.textContent = 'You’re in! The next issue will land in your inbox.';
+      } catch {
+        status.textContent = 'Something went wrong. Please try again in a moment.';
+        button.disabled = false;
+        button.textContent = 'Subscribe';
+      }
+      status.hidden = false;
+    });
+  });
+</script>
