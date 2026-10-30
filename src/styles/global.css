@@ -98,27 +98,30 @@
   }
 }
 
-/* Dark theme, and elements that are always dark (.theme-dark, e.g. the header) */
-[data-theme='dark'],
-.theme-dark {
-  color-scheme: dark;
-  --bg: var(--color-navy-950);
-  --bg-alt: var(--color-navy-900);
-  --surface: var(--color-navy-900);
-  --surface-2: var(--color-navy-800);
-  --text: #dce5ec;
-  --heading: #ffffff;
-  --muted: #9fb1c3;
-  --link: var(--color-cyan-400);
-  --link-hover: #ffffff;
-  --border: #1d3450;
-  --border-strong: #2b4866;
-  --accent: var(--color-cyan-400);
-  --deco: var(--color-cyan-400);
-  --focus: var(--color-cyan-400);
-  --btn-bg: var(--color-cyan-400);
-  --btn-fg: var(--color-navy-950);
-  --btn-bg-hover: #a8dde5;
+/* Dark theme, and elements that are always dark (.theme-dark, e.g. the header).
+   Screen only: printed pages and saved PDFs always use the light colors. */
+@media not print {
+  [data-theme='dark'],
+  .theme-dark {
+    color-scheme: dark;
+    --bg: var(--color-navy-950);
+    --bg-alt: var(--color-navy-900);
+    --surface: var(--color-navy-900);
+    --surface-2: var(--color-navy-800);
+    --text: #dce5ec;
+    --heading: #ffffff;
+    --muted: #9fb1c3;
+    --link: var(--color-cyan-400);
+    --link-hover: #ffffff;
+    --border: #1d3450;
+    --border-strong: #2b4866;
+    --accent: var(--color-cyan-400);
+    --deco: var(--color-cyan-400);
+    --focus: var(--color-cyan-400);
+    --btn-bg: var(--color-cyan-400);
+    --btn-fg: var(--color-navy-950);
+    --btn-bg-hover: #a8dde5;
+  }
 }
 
 /* ------------------------------------------------------------------
@@ -467,8 +470,10 @@
     border-radius: 1.25rem;
     --link: var(--color-blue-600);
   }
-  [data-theme='dark'] .panel {
-    --link: var(--color-cyan-400);
+  @media not print {
+    [data-theme='dark'] .panel {
+      --link: var(--color-cyan-400);
+    }
   }
 
   /* Issue list: horizontal rows with hairlines */
@@ -486,8 +491,10 @@
     border-radius: 1rem;
     --link: var(--color-blue-600);
   }
-  [data-theme='dark'] .callout {
-    --link: var(--color-cyan-400);
+  @media not print {
+    [data-theme='dark'] .callout {
+      --link: var(--color-cyan-400);
+    }
   }
   .callout-outline {
     padding: 1.25rem 1.5rem;
@@ -629,4 +636,64 @@
 }
 .no-scrollbar::-webkit-scrollbar {
   display: none;
+}
+
+/* ------------------------------------------------------------------
+   Print and "Save as PDF" (the PDF button on issue pages).
+   Light colors only (see the dark theme above), no site navigation.
+   ------------------------------------------------------------------ */
+@media print {
+  /* Page footer: name on the left, page number on the right (colors are navy-950 and slate-600).
+     The empty top boxes replace the date and title line some browsers add. */
+  @page {
+    margin: 14mm 18mm 16mm;
+    @top-left {
+      content: '';
+    }
+    @top-right {
+      content: '';
+    }
+    @bottom-left {
+      content: 'AI Journey';
+      font-family: 'Instrument Serif', Georgia, serif;
+      font-size: 11pt;
+      color: #0b1a2b;
+    }
+    @bottom-right {
+      content: counter(page);
+      font-family: 'Geist Variable', system-ui, sans-serif;
+      font-size: 8pt;
+      font-weight: 600;
+      color: #536a82;
+    }
+  }
+  .no-print,
+  .skip-link {
+    display: none !important;
+  }
+  body {
+    padding: 0 !important;
+    font-size: 11pt;
+  }
+  /* Backgrounds are not printed by default, so filled buttons become outlines */
+  .btn-primary {
+    background: none;
+    border-color: var(--border-strong);
+    color: var(--heading);
+  }
+  h1,
+  h2,
+  h3,
+  .eyebrow {
+    break-after: avoid;
+  }
+  img,
+  figure,
+  blockquote,
+  .card,
+  .panel,
+  .callout,
+  .num-list > li {
+    break-inside: avoid;
+  }
 }

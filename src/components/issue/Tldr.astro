@@ -21,4 +21,24 @@ const { items } = Astro.props;
     border: 1px solid var(--border);
     color: var(--text);
   }
+
+  /* PDF: a tinted "in brief" box with the four points in two columns */
+  @media print {
+    .tldr {
+      padding: 5mm 6mm;
+      border: 0;
+      border-block-start: 2.5pt solid var(--heading);
+      border-radius: 0;
+      background: var(--color-sky-50);
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    .num-list {
+      grid-template-columns: 1fr 1fr;
+      gap: 3.5mm 7mm;
+      margin-block-start: 3.5mm;
+      font-size: 9.5pt;
+      line-height: 1.45;
+    }
+  }
 </style>

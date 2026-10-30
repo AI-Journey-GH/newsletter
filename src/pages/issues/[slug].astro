@@ -13,7 +13,8 @@ import Tldr from '../../components/issue/Tldr.astro';
 import ToolCard from '../../components/issue/ToolCard.astro';
 import Wildcard from '../../components/issue/Wildcard.astro';
 import YourTurn from '../../components/issue/YourTurn.astro';
-import { getIssues, issueUrl, md, mdBlock, plain, u, type Issue } from '../../lib/utils';
+import { site } from '../../config';
+import { formatDate, getIssues, issueUrl, md, mdBlock, plain, u, type Issue } from '../../lib/utils';
 import { getImage } from 'astro:assets';
 
 export async function getStaticPaths() {
@@ -62,11 +63,27 @@ const chips = [
 
   <article data-article>
     <div class="wrap-mast pt-6 md:pt-10">
-      <Breadcrumb items={[{ label: 'Home', href: u('/') }, { label: 'Issues', href: u('/issues') }, { label: `Issue ${d.issue}` }]} />
+      <div class="no-print">
+        <Breadcrumb items={[{ label: 'Home', href: u('/') }, { label: 'Issues', href: u('/issues') }, { label: `Issue ${d.issue}` }]} />
+      </div>
 
-      <header class="mt-8 md:mt-10">
+      <!-- Only in the PDF: newsletter nameplate and dateline -->
+      <div class="print-mast">
+        <p class="pm-name">
+          <img src={u('/logo/mark-navy-cyan-sm.webp')} alt="" width="160" height="85" />
+          <span class="display">AI Journey</span>
+        </p>
+        <p class="pm-tag">{site.tagline}</p>
+        <p class="pm-dateline">
+          <span>Issue {d.issue}</span>
+          <span>{formatDate(d.date)}</span>
+          <span>{d.readTime} min read</span>
+        </p>
+      </div>
+
+      <header class="issue-head mt-8 md:mt-10">
         <div class="flex flex-wrap items-center gap-3">
-          <p class="eyebrow eyebrow--line">Issue {d.issue}</p>
+          <p class="eyebrow eyebrow--line no-print">Issue {d.issue}</p>
           {d.sample && <SampleBadge />}
         </div>
         <h1 class="display h-hero mt-4">{d.title}</h1>
@@ -74,10 +91,10 @@ const chips = [
       </header>
     </div>
 
-    <SectionChips items={chips} class="mt-8" />
+    <SectionChips items={chips} class="no-print mt-8" />
 
     <div class="wrap-read issue-sections mt-10 grid gap-16 pb-16 md:mt-14 md:gap-24">
-      {d.intro && <div class="prose" set:html={mdBlock(d.intro)} />}
+      {d.intro && <div class="prose intro" set:html={mdBlock(d.intro)} />}
       <Tldr items={d.tldr} />
       {
         d.bigStory ? (
@@ -111,11 +128,18 @@ const chips = [
           </footer>
         )
       }
-      <PrevNext prev={older} next={newer} />
+      <div class="no-print">
+        <PrevNext prev={older} next={newer} />
+      </div>
+      <!-- Only in the PDF: sign-off with a link back to the issue online -->
+      <div class="print-end">
+        <p class="display">Thanks for reading.</p>
+        <p>Read this issue online at <a href={url}>{url.replace(/^https?:\/\//, '')}</a></p>
+      </div>
     </div>
   </article>
 
-  <ActionBar slot="bottom" url={url} title={shareTitle} />
+  <ActionBar slot="bottom" url={url} title={shareTitle} pdfName={`AI Journey Issue ${d.issue}`} />
 </BaseLayout>
 
 <style>
@@ -177,6 +201,181 @@ const chips = [
   .sources a:hover {
     color: var(--heading);
   }
+
+  /* ------------------------------------------------------------------
+     PDF (print) layout: a newsletter page with a nameplate, story labels
+     and smaller pictures. The screen layout is above.
+     ------------------------------------------------------------------ */
+  .print-mast,
+  .print-end {
+    display: none;
+  }
+
+  @media print {
+    /* Nameplate: logo and name, tagline, then issue, date and read time between rules */
+    .print-mast {
+      display: block;
+      margin-block-end: 7mm;
+      text-align: center;
+    }
+    .pm-name {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 3mm;
+    }
+    .pm-name img {
+      inline-size: 15mm;
+      height: auto;
+    }
+    .pm-name .display {
+      font-size: 38pt;
+      line-height: 1;
+    }
+    .pm-tag {
+      margin-block-start: 1.5mm;
+      font-size: 7.5pt;
+      font-weight: 600;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .pm-dateline {
+      display: flex;
+      justify-content: space-between;
+      margin-block-start: 5mm;
+      padding-block: 1.8mm;
+      border-block-start: 2.5pt solid var(--heading);
+      border-block-end: 0.75pt solid var(--heading);
+      font-size: 7.5pt;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--heading);
+    }
+
+    .wrap-mast {
+      padding-block-start: 0;
+    }
+    .issue-head {
+      margin-block-start: 0;
+      text-align: center;
+    }
+    .issue-head h1 {
+      margin-block-start: 0;
+      font-size: 34pt;
+    }
+    .issue-head .lead {
+      margin-block-start: 2.5mm;
+      margin-inline: auto;
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 15pt;
+    }
+
+    /* Plain blocks instead of a grid, so every browser can split them across pages */
+    .issue-sections {
+      display: block;
+      margin-block-start: 7mm;
+      padding-block-end: 0;
+    }
+    .issue-sections > :global(*:not(:first-child)) {
+      margin-block-start: 8mm;
+    }
+
+    /* Drop cap on the first paragraph */
+    .intro {
+      font-size: 11.5pt;
+    }
+    .intro > :global(p:first-child::first-letter) {
+      float: left;
+      padding: 0.05em 0.08em 0 0;
+      font-family: var(--font-display);
+      font-size: 3.6em;
+      font-weight: 400;
+      line-height: 0.8;
+      color: var(--heading);
+    }
+
+    /* Stories */
+    .stories {
+      line-height: 1.55;
+    }
+    .stories :global(h2),
+    .stories :global(h2:first-child) {
+      margin-block: 9mm 4mm;
+      padding-block-start: 3mm;
+      border-block-start: 2pt solid var(--heading);
+      font-size: 22pt;
+      break-inside: avoid;
+      break-after: avoid;
+    }
+    .stories :global(h2:first-child) {
+      margin-block-start: 0;
+    }
+    .stories :global(.story-num) {
+      display: block;
+      margin-block-end: 1.5mm;
+      font-family: var(--font-sans);
+      font-size: 7.5pt;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+    .stories :global(.story-sep) {
+      display: none;
+    }
+    .stories :global(h3) {
+      margin-block-start: 4mm;
+      font-size: 13pt;
+      break-after: avoid;
+    }
+
+    /* Pictures: centered, at most about a third of the page tall */
+    .stories :global(p:has(img)) {
+      margin-block: 2mm 5mm;
+      break-inside: avoid;
+    }
+    .stories :global(img) {
+      inline-size: auto;
+      max-inline-size: 100%;
+      max-block-size: 85mm;
+      margin-inline: auto;
+      border-radius: 2mm;
+    }
+    .stories :global(h2 + p:has(img)) {
+      margin-block-start: 0;
+    }
+    /* The bold opening line under the picture is a little larger */
+    .stories :global(h2 + p:has(img) + p) {
+      font-size: 12pt;
+    }
+
+    .sources {
+      padding-block-start: 4mm;
+      border-block-start: 2pt solid var(--heading);
+      font-size: 8pt;
+    }
+
+    .print-end {
+      display: block;
+      padding-block-start: 4mm;
+      border-block-start: 0.75pt solid var(--heading);
+      text-align: center;
+      font-size: 9pt;
+      color: var(--muted);
+      break-inside: avoid;
+    }
+    .print-end .display {
+      font-size: 18pt;
+      color: var(--heading);
+    }
+    .print-end a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+  }
 </style>
 
 <script>
@@ -184,5 +383,21 @@ const chips = [
   document.querySelectorAll<HTMLAnchorElement>('.stories a[href^="http"]').forEach((a) => {
     a.target = '_blank';
     a.rel = 'noopener';
+  });
+
+  // Wrap the "Story 1" part of each story title, so the PDF can show it as a small label.
+  // On screen the title reads exactly as before.
+  document.querySelectorAll<HTMLHeadingElement>('.stories h2').forEach((h) => {
+    const text = h.firstChild;
+    const match = text?.nodeType === Node.TEXT_NODE ? text.textContent?.match(/^([^:]+):\s/) : null;
+    if (!text || !match) return;
+    const num = document.createElement('span');
+    const sep = document.createElement('span');
+    num.className = 'story-num';
+    sep.className = 'story-sep';
+    sep.textContent = ': ';
+    num.append(match[1], sep);
+    text.textContent = text.textContent!.slice(match[0].length);
+    h.prepend(num);
   });
 </script>

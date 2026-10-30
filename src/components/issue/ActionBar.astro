@@ -4,11 +4,13 @@ import { u } from '../../lib/utils';
 interface Props {
   url: string;
   title: string;
+  /** Suggested file name when the reader saves the issue as a PDF */
+  pdfName: string;
 }
-const { url, title } = Astro.props;
+const { url, title, pdfName } = Astro.props;
 ---
 
-<div class="action-bar" role="region" aria-label="Issue actions">
+<div class="action-bar no-print" role="region" aria-label="Issue actions">
   <div class="bar-inner">
     <a href={u('/issues')} class="bar-btn">
       <Icon name="arrow-left" size={20} class="rtl:rotate-180" />
@@ -21,6 +23,10 @@ const { url, title } = Astro.props;
     <button type="button" class="bar-btn" data-share data-url={url} data-title={title}>
       <Icon name="share" size={20} />
       <span>Share</span>
+    </button>
+    <button type="button" class="bar-btn" data-print data-pdf-name={pdfName} aria-label="Save this issue as a PDF">
+      <Icon name="download" size={20} />
+      <span>PDF</span>
     </button>
   </div>
   <p class="toast" role="status" aria-live="polite" data-share-status></p>
@@ -39,7 +45,7 @@ const { url, title } = Astro.props;
   }
   .bar-inner {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     max-width: 45rem;
     margin-inline: auto;
   }
@@ -100,5 +106,24 @@ const { url, title } = Astro.props;
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
     document.getElementById('main')?.focus({ preventScroll: true });
+  });
+
+  // PDF: opens the browser's print dialog, where readers pick "Save as PDF".
+  // The page title becomes the suggested file name, so swap it while printing.
+  const pdfBtn = document.querySelector<HTMLButtonElement>('[data-print]');
+  pdfBtn?.addEventListener('click', async () => {
+    // Pictures further down load only on scroll: load them now so none are missing from the PDF
+    const waiting = [...document.querySelectorAll<HTMLImageElement>('img[loading="lazy"]')].filter((img) => !img.complete);
+    if (waiting.length) {
+      waiting.forEach((img) => (img.loading = 'eager'));
+      await Promise.race([
+        Promise.all(waiting.map((img) => img.decode().catch(() => {}))),
+        new Promise((resolve) => setTimeout(resolve, 3000)),
+      ]);
+    }
+    const pageTitle = document.title;
+    window.addEventListener('afterprint', () => (document.title = pageTitle), { once: true });
+    document.title = pdfBtn.dataset.pdfName || pageTitle;
+    window.print();
   });
 </script>
