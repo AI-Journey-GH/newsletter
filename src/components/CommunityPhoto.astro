@@ -1,0 +1,35 @@
+---
+import { Image } from 'astro:assets';
+import eventPhoto from '../assets/community/two-labs-one-frontier.jpg';
+
+interface Props {
+  view?: 'panel' | 'community';
+  priority?: boolean;
+}
+
+const { view = 'panel', priority = false } = Astro.props;
+const alt = view === 'panel'
+  ? 'Researchers and student moderators in conversation at the Two Labs, One Frontier event at AUB'
+  : 'AI Journey students and speakers together after Two Labs, One Frontier at AUB';
+---
+
+<div class:list={['community-photo', `community-photo--${view}`]}>
+  <Image
+    src={eventPhoto}
+    alt={alt}
+    widths={[640, 960, 1440, 1920]}
+    sizes="(min-width: 768px) 65vw, 120vw"
+    format="webp"
+    quality={85}
+    loading={priority ? 'eager' : 'lazy'}
+    fetchpriority={priority ? 'high' : 'auto'}
+    class="community-photo-image"
+  />
+</div>
+
+<style>
+  .community-photo { position: relative; overflow: hidden; aspect-ratio: 2.42; background: var(--surface-2); }
+  .community-photo :global(.community-photo-image) { position: absolute; inset-inline-start: -5.5%; inline-size: 111%; max-inline-size: none; block-size: auto; }
+  .community-photo--panel :global(.community-photo-image) { inset-block-start: 0; }
+  .community-photo--community :global(.community-photo-image) { inset-block-end: 0; }
+</style>

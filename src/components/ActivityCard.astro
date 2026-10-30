@@ -1,0 +1,38 @@
+---
+import { Image } from 'astro:assets';
+import CommunityPhoto from './CommunityPhoto.astro';
+import Icon from './Icon.astro';
+import type { Activity } from '../data/activities';
+
+interface Props { activity: Activity; headingLevel?: 'h2' | 'h3'; }
+const { activity, headingLevel: H = 'h3' } = Astro.props;
+---
+
+<article class="activity-card">
+  <a href={activity.sourceUrl} class:list={['activity-image-link', activity.sourceKind !== 'recap' && 'activity-image-link--poster']} target="_blank" rel="noopener" tabindex="-1" aria-label={`View ${activity.title} on Instagram`}>
+    {activity.sourceKind === 'recap' ? <CommunityPhoto /> : <Image src={activity.cover.src} alt={activity.cover.alt} widths={[400, 640, 900]} sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 100vw" format="webp" quality={85} loading="lazy" class="activity-poster" />}
+  </a>
+  <div class="activity-card-copy">
+    <div class="activity-card-meta"><span>{activity.category}</span><span>{activity.periodLabel}</span></div>
+    <H class="activity-card-title"><a href={activity.sourceUrl} target="_blank" rel="noopener">{activity.title}</a></H>
+    <p class="activity-card-description">{activity.summary}</p>
+    <a href={activity.sourceUrl} class="editorial-link" target="_blank" rel="noopener">{activity.sourceKind === 'recap' ? 'View the recap' : 'View the original post'}<Icon name="external" size={16} /></a>
+  </div>
+</article>
+
+<style>
+  .activity-card { min-inline-size: 0; }
+  .activity-image-link { display: block; overflow: hidden; border-radius: 0.75rem; background: #182b49; }
+  .activity-image-link--poster { padding: 0.75rem; }
+  .activity-image-link :global(.community-photo) { aspect-ratio: 1.38; }
+  .activity-image-link :global(.community-photo-image) { inline-size: 190%; inset-inline-start: -45%; }
+  .activity-image-link :global(.activity-poster) { display: block; inline-size: 100%; block-size: auto; aspect-ratio: 1.45; object-fit: contain; }
+  .activity-card-copy { padding-block-start: 1.125rem; }
+  .activity-card-meta { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.5rem 1rem; color: var(--muted); font-size: 0.6875rem; line-height: 1.6; }
+  .activity-card-meta > span:first-child { color: var(--accent); font-weight: 650; text-transform: uppercase; letter-spacing: 0.1em; }
+  .activity-card-title { margin-block-start: 0.625rem; font-family: var(--font-display); font-size: 1.25rem; font-weight: 700; letter-spacing: -0.035em; line-height: 1.35; text-wrap: pretty; }
+  .activity-card-title a { color: var(--heading); text-decoration: none; }
+  .activity-card-title a:hover { color: var(--link); }
+  .activity-card-description { margin-block-start: 0.625rem; color: var(--muted); font-size: 0.9375rem; line-height: 1.7; }
+  .activity-card-copy .editorial-link { margin-block-start: 0.5rem; font-size: 0.8125rem; }
+</style>

@@ -1,55 +1,78 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
-import Eyebrow from '../../components/Eyebrow.astro';
+import Icon from '../../components/Icon.astro';
 import IssueCard from '../../components/IssueCard.astro';
 import { getIssues, u } from '../../lib/utils';
 
 const issues = await getIssues();
 ---
 
-<BaseLayout title="All issues" description="Every AI Journey newsletter issue. Sort by newest or oldest.">
-  <section class="wrap pt-6 md:pt-10">
-    <Breadcrumb items={[{ label: 'Home', href: u('/') }, { label: 'Issues' }]} />
-    <div class="mt-8">
-      <Eyebrow line>The archive</Eyebrow>
-      <h1 class="display h-hero mt-3">All issues</h1>
-    </div>
-
-    <div class="mt-8 flex flex-wrap items-center gap-2" role="group" aria-label="Sort issues">
-      <span class="label me-1 text-muted">Sort</span>
-      <button type="button" class="chip" data-sort="newest" aria-pressed="true">Newest first</button>
-      <button type="button" class="chip" data-sort="oldest" aria-pressed="false">Oldest first</button>
+<BaseLayout title="The newsletter" description="Read the published AI Journey newsletter issues from our student community at AUB.">
+  <section class="wrap newsletter-intro" aria-labelledby="newsletter-title">
+    <Breadcrumb items={[{ label: 'Home', href: u('/') }, { label: 'Newsletter' }]} />
+    <div class="newsletter-heading">
+      <div>
+        <p class="eyebrow">From AI Journey at AUB</p>
+        <h1 id="newsletter-title" class="display">The newsletter.</h1>
+        <p class="newsletter-description">Our weekly read, written by students. Explore every issue we’ve published so far.</p>
+      </div>
+      <a href={u('/#join')} class="btn btn-primary">Get the next issue <Icon name="arrow-right" size={18} /></a>
     </div>
   </section>
 
-  <section class="wrap pb-20 pt-6" aria-label="Issues">
-    <ul class="issue-list" data-grid>
-      {
-        issues.map((issue) => (
-          <li data-issue={issue.data.issue}>
-            <IssueCard issue={issue} headingLevel="h2" />
-          </li>
-        ))
-      }
-    </ul>
+  <section class="wrap issue-archive" aria-labelledby="issues-title">
+    <div class="archive-toolbar">
+      <div class="archive-label"><h2 id="issues-title">Published issues</h2><span>{issues.length} {issues.length === 1 ? 'issue' : 'issues'}</span></div>
+      {issues.length > 1 && (
+        <div class="archive-sort" role="group" aria-label="Sort issues">
+          <button type="button" class="chip" data-sort="newest" aria-pressed="true">Newest first</button>
+          <button type="button" class="chip" data-sort="oldest" aria-pressed="false">Oldest first</button>
+        </div>
+      )}
+    </div>
+    {issues.length > 0 ? (
+      <ul class="issue-list" data-issues>
+        {issues.map((issue) => <li data-issue={issue.data.issue}><IssueCard issue={issue} headingLevel="h3" /></li>)}
+      </ul>
+    ) : (
+      <div class="issue-empty">
+        <h3 class="display">Our first issue is on the way.</h3>
+        <p>Subscribe and we’ll send it to your inbox when it’s published.</p>
+        <a href={u('/#join')} class="editorial-link">Join the newsletter <Icon name="arrow-right" size={18} /></a>
+      </div>
+    )}
   </section>
 </BaseLayout>
 
+<style>
+  .newsletter-intro { padding-block-start: 1.5rem; }
+  .newsletter-heading { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 1.75rem; padding-block: clamp(2.25rem, 5vw, 4.5rem); }
+  .newsletter-heading h1 { margin-block-start: 0.875rem; font-size: clamp(2.5rem, 1.75rem + 2.3vw, 3.75rem); font-weight: 750; line-height: 1.12; letter-spacing: -0.045em; }
+  .newsletter-description { max-inline-size: 35rem; margin-block-start: 1.25rem; color: var(--muted); font-size: 1.0625rem; line-height: 1.75; }
+  .issue-archive { padding-block: 0 5rem; }
+  .archive-toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; margin-block-end: 1.25rem; }
+  .archive-label { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem; }
+  .archive-label h2 { font-family: var(--font-display); color: var(--heading); font-size: 1rem; font-weight: 650; line-height: 1.4; letter-spacing: -0.025em; }
+  .archive-label span { padding-inline-start: 1rem; border-inline-start: 1px solid var(--border-strong); color: var(--muted); font-size: 0.8125rem; }
+  .archive-sort { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .issue-empty { display: grid; justify-items: start; gap: 0.875rem; padding: 2rem; border: 1px solid var(--border); border-radius: 0.75rem; background: var(--bg-alt); }
+  .issue-empty h3 { font-size: 1.5rem; font-weight: 700; }
+  .issue-empty p { max-inline-size: 30rem; color: var(--muted); font-size: 0.9375rem; line-height: 1.7; }
+</style>
+
 <script>
-  const buttons = document.querySelectorAll<HTMLButtonElement>('[data-sort]');
-  const grid = document.querySelector<HTMLElement>('[data-grid]');
-
-  const apply = (order: string) => {
-    if (!grid) return;
-    const items = [...grid.querySelectorAll<HTMLElement>(':scope > li')];
+  const buttons = [...document.querySelectorAll<HTMLButtonElement>('[data-sort]')];
+  const list = document.querySelector<HTMLElement>('[data-issues]');
+  buttons.forEach((button) => button.addEventListener('click', () => {
+    if (!list) return;
+    const order = button.dataset.sort;
+    const items = [...list.querySelectorAll<HTMLElement>(':scope > li')];
     items.sort((a, b) => {
-      const diff = Number(a.dataset.issue) - Number(b.dataset.issue);
-      return order === 'oldest' ? diff : -diff;
+      const difference = Number(a.dataset.issue) - Number(b.dataset.issue);
+      return order === 'oldest' ? difference : -difference;
     });
-    grid.append(...items);
-    buttons.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.sort === order)));
-  };
-
-  buttons.forEach((b) => b.addEventListener('click', () => apply(b.dataset.sort ?? 'newest')));
+    list.append(...items);
+    buttons.forEach((item) => item.setAttribute('aria-pressed', String(item === button)));
+  }));
 </script>

@@ -1,0 +1,96 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+import CommunityPhoto from '../components/CommunityPhoto.astro';
+import Icon from '../components/Icon.astro';
+import JoinBand from '../components/JoinBand.astro';
+import { links } from '../config';
+import { u } from '../lib/utils';
+
+const entryPoints = [
+  { title: 'Join the conversation', description: 'Find our announcements, connect with the community, and hear what is coming next.', label: 'Join on WhatsApp', href: links.whatsapp, icon: 'users', external: true },
+  { title: 'Read the newsletter', description: 'Read our first issue and get a little perspective from the AI Journey team.', label: 'Explore the newsletter', href: u('/issues'), icon: 'newspaper', external: false },
+  { title: 'Explore our gatherings', description: 'See the conversations, bootcamps, and learning sessions that bring us together.', label: 'See our events', href: u('/events'), icon: 'calendar', external: false },
+];
+---
+
+<BaseLayout title="Our community" description="Meet AI Journey, a student AI community at the American University of Beirut. A place to learn, connect, and explore what comes next together.">
+  <div class="wrap community-page">
+    <Breadcrumb items={[{ label: 'Home', href: u('/') }, { label: 'Community' }]} />
+    <section class="community-hero" aria-labelledby="community-title">
+      <div class="hero-copy">
+        <p class="eyebrow">AI Journey at AUB</p>
+        <h1 id="community-title" class="display community-title">Find your people.<br />Explore what’s next.</h1>
+        <p class="hero-description">A student community for curious minds at the American University of Beirut. We learn about AI, ask better questions, and share the journey.</p>
+        <div class="hero-actions"><a href={links.whatsapp} class="btn btn-primary" target="_blank" rel="noopener">Join the community <Icon name="arrow-right" size={18} /></a><a href={links.instagram} class="editorial-link" target="_blank" rel="noopener">Meet us on Instagram <Icon name="instagram" size={18} /></a></div>
+      </div>
+      <figure class="hero-photo">
+        <CommunityPhoto view="community" priority />
+        <figcaption>AI Journey students and speakers at AUB.</figcaption>
+      </figure>
+    </section>
+
+    <section class="entry-section" aria-labelledby="entry-title">
+      <div class="section-intro"><p class="eyebrow">Make yourself at home</p><h2 id="entry-title" class="display section-title">There’s a way in for everyone.</h2></div>
+      <div class="entry-grid">
+        {entryPoints.map((entry) => (
+          <article class="entry">
+            <Icon name={entry.icon} size={28} />
+            <h3 class="display entry-title">{entry.title}</h3>
+            <p>{entry.description}</p>
+            <a href={entry.href} target={entry.external ? '_blank' : undefined} rel={entry.external ? 'noopener' : undefined} class="entry-link">{entry.label}<Icon name="arrow-right" size={18} /></a>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section id="about" class="about-community" aria-labelledby="about-title">
+      <div class="about-heading"><p class="eyebrow">What brings us together</p><h2 class="display section-title" id="about-title">A shared curiosity.<br />An open conversation.</h2><p>You don’t need to have all the answers to join. Bring an interest in AI and a willingness to learn.</p></div>
+      <div class="principle-list">
+        <article class="principle"><span class="principle-icon"><Icon name="book" size={22} /></span><div><h3>Learn together</h3><p>Start with the fundamentals or follow an idea further. Our conversations, sessions, and writing make room for different backgrounds.</p></div></article>
+        <article class="principle"><span class="principle-icon"><Icon name="users" size={22} /></span><div><h3>Connect through ideas</h3><p>Meet other students, hear from researchers, and share the questions you are thinking about.</p></div></article>
+        <article class="principle"><span class="principle-icon"><Icon name="wrench" size={22} /></span><div><h3>Put curiosity to work</h3><p>Take something from a talk, a bootcamp, or the newsletter and try it in your own learning and projects.</p></div></article>
+      </div>
+    </section>
+
+    <div class="community-social-note"><Icon name="instagram" size={22} /><p>See the people and moments behind AI Journey.</p><a href={links.instagram} target="_blank" rel="noopener">Follow @ai.journey.aub <Icon name="external" size={15} /></a></div>
+  </div>
+  <JoinBand />
+</BaseLayout>
+
+<style>
+  .community-page { padding-block: 1.5rem 3rem; }
+  .community-hero { display: grid; align-items: center; gap: 2rem; padding-block: 2.5rem 3rem; }
+  .community-title { max-inline-size: 18ch; margin-block-start: 1rem; font-size: clamp(2.25rem, 1.35rem + 3.5vw, 4rem); font-weight: 730; line-height: 1.1; letter-spacing: -0.045em; }
+  .hero-description { max-inline-size: 36rem; margin-block-start: 1.25rem; color: var(--muted); font-size: 1.0625rem; line-height: 1.75; }
+  .hero-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1.5rem; margin-block-start: 1.5rem; }
+  .hero-actions .btn { min-block-size: 3rem; }
+  .hero-photo { min-inline-size: 0; }
+  .hero-photo :global(.community-photo) { border-radius: 0.875rem; }
+  .hero-photo figcaption { margin-block-start: 0.75rem; color: var(--muted); font-size: 0.75rem; line-height: 1.5; }
+  .section-intro { margin-block-end: 1.5rem; }
+  .section-title { margin-block-start: 0.75rem; font-size: clamp(1.5rem, 1.1rem + 1.5vw, 2.125rem); font-weight: 700; line-height: 1.3; letter-spacing: -0.035em; }
+  .entry-grid { display: grid; gap: 1rem; }
+  .entry { display: flex; flex-direction: column; align-items: start; min-inline-size: 0; padding: 1.5rem; border: 1px solid var(--border); border-radius: 0.75rem; background: var(--surface); }
+  .entry > :global(svg) { color: var(--accent); }
+  .entry-title { margin-block-start: 1.25rem; font-size: 1.25rem; font-weight: 700; line-height: 1.35; letter-spacing: -0.025em; }
+  .entry > p { margin-block: 0.75rem 1.25rem; color: var(--muted); font-size: 0.9375rem; line-height: 1.7; }
+  .entry-link { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; inline-size: 100%; min-block-size: 2.75rem; margin-block-start: auto; color: var(--heading); font-size: 0.875rem; font-weight: 600; text-decoration: none; }
+  .entry-link:hover { text-decoration: underline; text-underline-offset: 0.3em; }
+  .entry-link :global(svg) { flex: none; }
+  .about-community { display: grid; gap: 2rem 4rem; margin-block-start: 3rem; padding-block: 2.5rem; border-block-start: 1px solid var(--border); }
+  .about-heading { max-inline-size: 33rem; }
+  .about-heading > p:last-child { margin-block-start: 1rem; color: var(--muted); line-height: 1.75; }
+  .principle-list { display: grid; gap: 1.75rem; }
+  .principle { display: grid; grid-template-columns: auto 1fr; align-items: start; gap: 1rem; }
+  .principle-icon { display: flex; align-items: center; justify-content: center; inline-size: 2.75rem; block-size: 2.75rem; border-radius: 0.625rem; background: var(--bg-alt); color: var(--accent); }
+  .principle h3 { font-family: var(--font-display); font-size: 1rem; font-weight: 700; line-height: 1.4; letter-spacing: -0.02em; }
+  .principle p { max-inline-size: 39rem; margin-block-start: 0.5rem; color: var(--muted); font-size: 0.9375rem; line-height: 1.75; }
+  .community-social-note { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1rem; padding-block: 1.5rem; border-block-start: 1px solid var(--border); color: var(--muted); }
+  .community-social-note > :global(svg) { color: var(--heading); flex: none; }
+  .community-social-note p { flex: 1 1 13rem; font-size: 0.9375rem; }
+  .community-social-note a { display: inline-flex; align-items: center; gap: 0.5rem; min-block-size: 2.75rem; color: var(--heading); font-size: 0.875rem; font-weight: 600; text-decoration: none; }
+  .community-social-note a:hover { text-decoration: underline; text-underline-offset: 0.3em; }
+  @media (min-width: 40rem) { .entry-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  @media (min-width: 64rem) { .community-page { padding-block: 2rem 3rem; } .community-hero { grid-template-columns: 1fr 1.05fr; gap: 3rem; padding-block: 3rem 4rem; } .about-community { grid-template-columns: 0.9fr 1.1fr; margin-block-start: 4rem; padding-block: 3rem; } }
+</style>

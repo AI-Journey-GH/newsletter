@@ -1,29 +1,41 @@
 ---
 import Icon from './Icon.astro';
-import { site, social } from '../config';
+import { nav, site, social } from '../config';
 import { u } from '../lib/utils';
 ---
 
-<footer class="no-print border-t border-line">
-  <div class="wrap flex flex-col items-center gap-6 py-12 text-center md:flex-row md:justify-between md:text-start">
-    <a href={u('/')} class="flex items-center gap-3 no-underline" aria-label={`${site.name} home`}>
-      <img src={u('/logo/mark-navy-cyan-sm.webp')} alt="" width="160" height="85" class="only-light h-auto w-10" loading="lazy" decoding="async" />
-      <img src={u('/logo/mark-light-sm.webp')} alt="" width="160" height="85" class="only-dark h-auto w-10" loading="lazy" decoding="async" />
-      <span class="display text-2xl leading-none">AI Journey</span>
-    </a>
-
-    <ul class="flex gap-1" aria-label="Social links">
-      {
-        social.map((s) => (
-          <li>
-            <a href={s.href} class="icon-btn" target="_blank" rel="noopener" aria-label={`${site.name} on ${s.label}`}>
-              <Icon name={s.icon} size={19} />
-            </a>
-          </li>
-        ))
-      }
-    </ul>
-
-    <p class="text-sm text-muted">© {new Date().getFullYear()} AI Journey. Made by students, for students.</p>
+<footer class="site-footer no-print">
+  <div class="wrap footer-main">
+    <div class="footer-identity">
+      <a href={u('/')} class="footer-brand" aria-label={`${site.name} home`}>
+        <img src={u('/logo/mark-navy-cyan-sm.webp')} alt="" width="160" height="85" class="only-light" loading="lazy" decoding="async" />
+        <img src={u('/logo/mark-light-sm.webp')} alt="" width="160" height="85" class="only-dark" loading="lazy" decoding="async" />
+        <span>AI Journey</span>
+      </a>
+      <p>Curious minds. Shared ideas.<br />A student community at AUB.</p>
+    </div>
+    <nav aria-label="Footer"><ul class="footer-nav">{nav.map((item) => <li><a href={u(item.href)}>{item.label}</a></li>)}</ul></nav>
+    <div class="footer-connect">
+      <p class="eyebrow">Keep in touch</p>
+      <ul class="footer-socials" aria-label="Social links">
+        {social.map((s) => <li><a href={s.href} class="icon-btn" target="_blank" rel="noopener" aria-label={`${site.name} on ${s.label}`}><Icon name={s.icon} size={21} /></a></li>)}
+        <li><a href={u('/rss.xml')} class="icon-btn" aria-label="Subscribe with RSS"><Icon name="rss" size={21} /></a></li>
+      </ul>
+    </div>
   </div>
+  <div class="wrap footer-bottom"><p>© {new Date().getFullYear()} AI Journey.</p><p>Made by students, for students.</p></div>
 </footer>
+
+<style>
+  .site-footer { border-block-start: 1px solid var(--border); }
+  .footer-main { display: grid; gap: 2rem; padding-block: 2.5rem; }
+  .footer-brand { display: inline-flex; align-items: center; gap: 0.75rem; color: var(--heading); text-decoration: none; font-family: var(--font-display); font-size: 1.375rem; font-weight: 750; letter-spacing: -0.05em; }
+  .footer-brand img { inline-size: 3rem; block-size: auto; }
+  .footer-identity p { margin-block-start: 1rem; color: var(--muted); font-size: 0.875rem; line-height: 1.7; }
+  .footer-nav { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.25rem 2rem; }
+  .footer-nav a { display: inline-flex; align-items: center; min-block-size: 2.75rem; color: var(--heading); text-decoration: none; font-size: 0.875rem; }
+  .footer-nav a:hover { text-decoration: underline; text-underline-offset: 0.3em; }
+  .footer-socials { display: flex; gap: 0.125rem; margin-block-start: 0.5rem; }
+  .footer-bottom { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.5rem 1.5rem; padding-block: 1.25rem; border-block-start: 1px solid var(--border); color: var(--muted); font-size: 0.75rem; }
+  @media (min-width: 48rem) { .footer-main { grid-template-columns: 1.5fr 1fr 1fr; gap: 3rem; padding-block: 3rem; } .footer-connect { justify-self: end; } }
+</style>

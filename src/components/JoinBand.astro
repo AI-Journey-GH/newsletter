@@ -1,135 +1,71 @@
 ---
-import Eyebrow from './Eyebrow.astro';
 import Icon from './Icon.astro';
 import { links, subscribeForm } from '../config';
 
-interface Props {
-  id?: string;
-}
+interface Props { id?: string; }
 const { id = 'join' } = Astro.props;
 ---
 
-<section id={id} aria-labelledby={`${id}-title`} class="scroll-mt-16 pb-16 md:pb-28">
+<section id={id} aria-labelledby={`${id}-title`} class="newsletter-section no-print">
   <div class="wrap">
-    <div class="join panel grid gap-10 p-6 sm:p-10 lg:grid-cols-[1.15fr_1fr] lg:items-center lg:gap-16 lg:p-14">
-      <div>
-        <Eyebrow line>Join the journey</Eyebrow>
-        <h2 id={`${id}-title`} class="display h-section mt-3">Keep up with AI in one short read a week</h2>
-        <p class="mt-5 max-w-xl text-muted">
-          Every week, we help university students keep up with AI: what happened, why it matters to them, and how to use it in
-          their own major. Join us to get the next issue first.
-        </p>
+    <div class="newsletter-inner">
+      <div class="newsletter-copy">
+        <p class="eyebrow">The AI Journey newsletter</p>
+        <h2 id={`${id}-title`} class="display newsletter-title">A little perspective.<br />Straight to your inbox.</h2>
+        <p>Our student-written newsletter, delivered when a new issue is out. A thoughtful read from the AI Journey team.</p>
       </div>
-
-      <div class="grid gap-5">
-        <!--
-          Sends the email to our Google Form (its answers land in a Google Sheet).
-          Nothing is stored on this site. Without JavaScript, Google's own confirmation page opens in a new tab.
-        -->
-        <form action={subscribeForm.action} method="post" target="_blank" class="grid gap-2" data-subscribe>
-          <label for={`${id}-email`} class="label text-heading">Your email</label>
+      <div class="newsletter-form">
+        <form action={subscribeForm.action} method="post" target="_blank" data-subscribe>
+          <label for={`${id}-email`} class="label">Your email address</label>
           <div class="email-row">
-            <input
-              id={`${id}-email`}
-              name={subscribeForm.emailField}
-              type="email"
-              inputmode="email"
-              autocomplete="email"
-              placeholder="you@mail.aub.edu"
-              required
-              class="email-input"
-            />
-            <button type="submit" class="btn btn-primary shrink-0" data-subscribe-button>Subscribe</button>
+            <input id={`${id}-email`} name={subscribeForm.emailField} type="email" inputmode="email" autocomplete="email" placeholder="you@example.com" required class="email-input" />
+            <button type="submit" class="btn btn-primary" data-subscribe-button>Subscribe <Icon name="arrow-right" size={18} /></button>
           </div>
-          <p class="text-sm text-muted" data-subscribe-note>One email when a new issue is out. Unsubscribe anytime.</p>
+          <p class="subscribe-note">One email when a new issue is out. Unsubscribe anytime.</p>
         </form>
         <p class="subscribe-status" role="status" aria-live="polite" data-subscribe-status hidden></p>
-
-        <div class="flex flex-wrap items-center gap-2">
-          <span class="text-sm text-muted">Or follow along on</span>
-          <a href={links.whatsapp} class="chip" target="_blank" rel="noopener">
-            <Icon name="whatsapp" size={16} /> WhatsApp
-          </a>
-          <a href={links.instagram} class="chip" target="_blank" rel="noopener">
-            <Icon name="instagram" size={16} /> Instagram
-          </a>
-        </div>
+        <a href={links.subscribe} class="form-alternative" target="_blank" rel="noopener">You can also use our sign-up form <Icon name="external" size={14} /></a>
       </div>
     </div>
   </div>
 </section>
 
 <style>
-  .email-row {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-  @media (min-width: 30rem) {
-    .email-row {
-      flex-direction: row;
-      padding: 0.3rem;
-      border-radius: 999px;
-      border: 1px solid var(--border-strong);
-      background: var(--bg);
-    }
-    .email-row:focus-within {
-      border-color: var(--focus);
-    }
-    .email-row .email-input {
-      border: 0;
-      background: transparent;
-    }
-    .email-row .email-input:focus-visible {
-      outline: none;
-    }
-  }
-  .email-input {
-    flex: 1;
-    min-width: 0;
-    min-height: 2.875rem;
-    padding-inline: 1rem;
-    border-radius: 999px;
-    border: 1px solid var(--border-strong);
-    background: var(--bg);
-    color: var(--text);
-    font-size: 1rem;
-  }
-  .email-input::placeholder {
-    color: var(--muted);
-  }
-  .subscribe-status {
-    padding: 1rem 1.25rem;
-    border-radius: 1rem;
-    background: var(--bg);
-    border: 1px solid var(--border-strong);
-    color: var(--heading);
-    font-weight: 500;
-  }
+  .newsletter-section { padding-block: 3rem; background: var(--bg-alt); scroll-margin-top: 1.5rem; }
+  .newsletter-inner { display: grid; align-items: center; gap: 2rem; }
+  .newsletter-title { margin-block-start: 1rem; font-size: clamp(1.75rem, 1.25rem + 1.4vw, 2.5rem); line-height: 1.2; }
+  .newsletter-copy > p:last-child { max-inline-size: 26rem; margin-block-start: 1.25rem; color: var(--muted); line-height: 1.7; }
+  .newsletter-form { min-inline-size: 0; }
+  .newsletter-form label { display: block; color: var(--heading); }
+  .email-row { display: flex; flex-direction: column; gap: 0.625rem; margin-block-start: 0.875rem; }
+  .email-input { flex: 1; min-inline-size: 0; min-block-size: 3.25rem; padding: 0.75rem 1rem; border: 1px solid var(--border-strong); border-radius: 0.5rem; background: var(--bg); color: var(--text); font-size: 1rem; }
+  .email-input::placeholder { color: var(--muted); }
+  .email-row .btn { min-block-size: 3.25rem; }
+  .subscribe-note { margin-block-start: 0.75rem; color: var(--muted); font-size: 0.75rem; line-height: 1.6; }
+  .subscribe-status { padding: 1.25rem; border: 1px solid var(--border-strong); color: var(--heading); font-size: 1rem; }
+  .form-alternative { display: inline-flex; align-items: center; gap: 0.375rem; min-block-size: 2.75rem; margin-block-start: 0.75rem; color: var(--muted); font-size: 0.8125rem; text-underline-offset: 0.25em; }
+  @media (min-width: 30rem) { .email-row { flex-direction: row; } }
+  @media (min-width: 48rem) { .newsletter-section { padding-block: 4rem; } .newsletter-inner { grid-template-columns: 1fr 1fr; gap: 4rem; } }
 </style>
 
 <script>
   import { trackEvent } from '../scripts/stats';
-
-  // Send the email to the Google Form in the background, so the reader stays on the site.
-  // Google does not let other sites read its reply, so a finished request counts as success.
   document.querySelectorAll<HTMLFormElement>('[data-subscribe]').forEach((form) => {
-    const section = form.closest('section');
-    const status = section?.querySelector<HTMLElement>('[data-subscribe-status]');
+    const status = form.closest('section')?.querySelector<HTMLElement>('[data-subscribe-status]');
     const button = form.querySelector<HTMLButtonElement>('[data-subscribe-button]');
-
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      if (!button || !status) return;
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      if (!button || !status || !form.reportValidity()) return;
       button.disabled = true;
-      button.textContent = 'Subscribing...';
+      button.textContent = 'Sending...';
+      status.hidden = true;
       try {
         await fetch(form.action, { method: 'POST', mode: 'no-cors', body: new FormData(form) });
         form.hidden = true;
         trackEvent('Subscribe');
-        status.textContent = 'You’re in! The next issue will land in your inbox.';
+        status.textContent = 'Thanks! Your subscription request has been sent.';
       } catch {
-        status.textContent = 'Something went wrong. Please try again in a moment.';
+        status.textContent = 'We couldn’t send your request. Try again or use the sign-up form below.';
         button.disabled = false;
         button.textContent = 'Subscribe';
       }

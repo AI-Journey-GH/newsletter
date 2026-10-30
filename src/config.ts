@@ -3,9 +3,9 @@
 
 export const site = {
   name: 'AI Journey',
-  tagline: 'The weekly AI newsletter',
+  tagline: 'Curious minds. Shared ideas.',
   description:
-    'Every week, the AI news that matters to university students, in one 10 to 15 minute read. By AI Journey at AUB.',
+    'A student-led AI community at AUB. Explore our talks, bootcamps, learning sessions, and the people behind them.',
   locale: 'en',
 };
 
@@ -13,6 +13,7 @@ export const links = {
   instagram: 'https://www.instagram.com/ai.journey.aub/',
   whatsapp: 'https://chat.whatsapp.com/GGwUjQZzhN609XzBsDz3EE', // TO CONFIRM: current group invite link
   linkedin: 'https://www.linkedin.com/company/ai-journey-aub/',
+  eventRecap: 'https://www.instagram.com/p/De97Al8DbIK/',
   // The Google Form that collects email subscriptions (its answers go to a Google Sheet)
   subscribe: 'https://forms.gle/u4hAF2B5KPKryNuG6',
   // Default poll link, used when an issue does not set its own yourTurn.pollUrl
@@ -36,8 +37,9 @@ export const analytics = {
 };
 
 export const nav = [
-  { label: 'Home', href: '/' },
-  { label: 'Issues', href: '/issues' },
+  { label: 'Activities', href: '/events' },
+  { label: 'Community', href: '/community' },
+  { label: 'Newsletter', href: '/issues' },
 ];
 
 export const social = [

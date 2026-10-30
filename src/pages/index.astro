@@ -1,68 +1,139 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import Eyebrow from '../components/Eyebrow.astro';
+import ActivityCard from '../components/ActivityCard.astro';
+import CommunityPhoto from '../components/CommunityPhoto.astro';
 import Icon from '../components/Icon.astro';
-import IssueCard from '../components/IssueCard.astro';
 import JoinBand from '../components/JoinBand.astro';
-import { site } from '../config';
+import { activities } from '../data/activities';
+import { links } from '../config';
 import { formatDate, getIssues, isoDate, issueUrl, u } from '../lib/utils';
 
-const issues = await getIssues();
-const latest = issues[0];
-const d = latest?.data;
+const latest = (await getIssues())[0];
+const featured = activities.find((activity) => activity.featured) ?? activities[0];
+const programs = activities.filter((activity) => !activity.featured);
 ---
 
 <BaseLayout>
-  <h1 class="sr-only">{site.name}: {site.tagline}</h1>
-
-  {
-    latest && d && (
-      <section aria-labelledby="hero-title" class="wrap pb-16 pt-12 md:pb-24 md:pt-24">
-        <p class="meta flex flex-wrap items-center gap-x-2 gap-y-1">
-          <span class="font-medium text-heading">Issue {d.issue}</span>
-          <span aria-hidden="true">·</span>
-          <time datetime={isoDate(d.date)}>{formatDate(d.date)}</time>
-          <span aria-hidden="true">·</span>
-          <span class="whitespace-nowrap">{d.readTime} min read</span>
-        </p>
-        <h2 id="hero-title" class="display h-hero mt-5 max-w-4xl">
-          <a href={issueUrl(latest)} class="text-heading no-underline hover:text-heading">
-            {d.bigStory?.headline ?? d.title}
-          </a>
-        </h2>
-        <p class="lead mt-6 max-w-2xl">{d.subtitle}</p>
-        <div class="mt-9 flex flex-wrap gap-3">
-          <a href={issueUrl(latest)} class="btn btn-primary btn-lg">
-            Read this week’s issue <Icon name="arrow-right" size={18} class="rtl:rotate-180" />
-          </a>
-          <a href={u('/issues')} class="btn btn-outline btn-lg">All issues</a>
+  <div class="wrap">
+    <section class="club-hero" aria-labelledby="home-title">
+      <div class="club-hero-copy">
+        <p class="eyebrow">AI Journey at AUB</p>
+        <h1 id="home-title" class="display">Learn AI.<br /><span>Build together.</span></h1>
+        <p class="hero-description">A student-led community turning curiosity into conversations, hands-on learning, and shared experiences.</p>
+        <div class="hero-actions">
+          <a href={u('/events')} class="btn btn-primary">Explore our activities <Icon name="arrow-right" size={18} /></a>
+          <a href={u('/community')} class="hero-secondary">Meet the community <Icon name="arrow-right" size={17} /></a>
         </div>
-      </section>
-    )
-  }
-
-  <section class="section-y" aria-labelledby="recent-title">
-    <div class="wrap">
-      <div class="flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <Eyebrow line>The archive</Eyebrow>
-          <h2 id="recent-title" class="display h-section mt-3">Recent issues</h2>
-        </div>
-        <a href={u('/issues')} class="inline-flex min-h-11 items-center gap-1.5 font-medium text-heading no-underline hover:underline">
-          View all <Icon name="arrow-right" size={16} class="rtl:rotate-180" />
-        </a>
       </div>
-      <ul class="issue-list mt-8 lg:mt-10">
-        {
-          issues.slice(0, 5).map((issue) => (
-            <li>
-              <IssueCard issue={issue} />
-            </li>
-          ))
-        }
-      </ul>
+      <figure class="hero-photo">
+        <CommunityPhoto view="community" priority />
+        <figcaption>Curious minds, together at AUB.</figcaption>
+      </figure>
+    </section>
+
+    <section class="club-activities" aria-labelledby="activities-title">
+      <div class="section-heading">
+        <h2 id="activities-title" class="display h-section">What we’ve been up to</h2>
+        <a href={u('/events')} class="editorial-link">All activities <Icon name="arrow-right" size={18} /></a>
+      </div>
+      <article class="featured-activity">
+        <a href={featured.sourceUrl} class="featured-photo" target="_blank" rel="noopener" aria-label={`View the ${featured.title} recap on Instagram`}><CommunityPhoto /></a>
+        <div class="featured-copy">
+          <p class="activity-eyebrow">Featured conversation</p>
+          <h3 class="display">{featured.title}</h3>
+          <p class="featured-description">{featured.summary}</p>
+          <p class="featured-meta"><Icon name="calendar" size={15} /><time datetime={featured.date}>{featured.periodLabel}</time><span aria-hidden="true">·</span><span>At AUB</span></p>
+          <a href={featured.sourceUrl} class="editorial-link" target="_blank" rel="noopener">Take a look back <Icon name="arrow-right" size={18} /></a>
+        </div>
+      </article>
+      <div class="programs-heading"><h3>From the classroom to the community</h3><p>Bootcamps, learning sessions, and ideas explored together.</p></div>
+      <ul class="program-grid">{programs.map((activity) => <li><ActivityCard activity={activity} /></li>)}</ul>
+    </section>
+  </div>
+
+  <section class="community-band" aria-labelledby="community-invite-title">
+    <div class="wrap community-band-inner">
+      <div><p class="eyebrow">There’s a place for your curiosity</p><h2 id="community-invite-title" class="display">Your next idea starts<br />with a conversation.</h2><p>Come for a talk. Try a new skill. Meet people asking the same questions. You don’t need to have it all figured out to join the journey.</p></div>
+      <div class="community-band-actions"><a href={links.whatsapp} class="btn" target="_blank" rel="noopener">Join AI Journey <Icon name="arrow-right" size={18} /></a><a href={u('/community')} class="band-secondary">Get to know us <Icon name="arrow-right" size={17} /></a></div>
     </div>
   </section>
 
+  {
+    latest && (
+      <section class="wrap newsletter-feature" aria-labelledby="newsletter-feature-title">
+        <div class="newsletter-feature-intro"><span class="newsletter-icon"><Icon name="newspaper" size={28} /></span><div><p class="eyebrow">From the team</p><h2 id="newsletter-feature-title" class="display">Our newsletter</h2><p>A little of our perspective, in one thoughtful read.</p></div></div>
+        <article class="newsletter-issue"><p class="issue-meta">Issue {String(latest.data.issue).padStart(2, '0')}<span aria-hidden="true">·</span><time datetime={isoDate(latest.data.date)}>{formatDate(latest.data.date, 'short')}</time><span aria-hidden="true">·</span>{latest.data.readTime} min read</p><h3><a href={issueUrl(latest)}>{latest.data.title}</a></h3><p>{latest.data.subtitle}</p><a href={issueUrl(latest)} class="editorial-link">Read the issue <Icon name="arrow-right" size={18} /></a></article>
+      </section>
+    )
+  }
   <JoinBand />
 </BaseLayout>
+
+<style>
+  .club-hero { display: grid; align-items: center; gap: 2.5rem; padding-block: 2.75rem 2rem; }
+  .club-hero .eyebrow { color: var(--accent); font-size: 0.6875rem; }
+  .club-hero h1 { margin-block-start: 0.875rem; font-size: clamp(2.5rem, 1.3rem + 3.3vw, 3.5rem); line-height: 1.1; letter-spacing: -0.035em; }
+  .club-hero h1 span { color: #005b8d; }
+  :global([data-theme='dark']) .club-hero h1 span { color: var(--color-cyan-400); }
+  .hero-description { max-inline-size: 31rem; margin-block-start: 1.125rem; color: var(--muted); font-size: 1rem; line-height: 1.7; }
+  .hero-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1.5rem; margin-block-start: 1.25rem; }
+  .hero-actions .btn { min-block-size: 3rem; font-size: 0.875rem; }
+  .hero-secondary { display: inline-flex; align-items: center; gap: 0.625rem; min-block-size: 2.75rem; color: var(--heading); font-size: 0.8125rem; font-weight: 550; text-decoration: none; }
+  .hero-secondary:hover { text-decoration: underline; text-underline-offset: 0.3em; }
+  .hero-photo { min-inline-size: 0; }
+  .hero-photo :global(.community-photo) { aspect-ratio: 2.65; border-radius: 0.875rem; }
+  .hero-photo :global(.community-photo-image) { inline-size: 100%; inset-inline-start: 0; }
+  figcaption { margin-block-start: 0.75rem; color: var(--muted); font-size: 0.6875rem; line-height: 1.6; }
+  .club-pillars { display: grid; gap: 0.75rem; padding-block: 1.5rem; border-block: 1px solid var(--border); }
+  .club-pillars p { display: flex; align-items: center; gap: 0.75rem; color: var(--muted); font-size: 0.8125rem; }
+  .club-pillars :global(svg) { color: var(--accent); flex: none; }
+  .club-activities { padding-block: 1.75rem 4rem; }
+  .section-heading { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 1rem; margin-block-end: 1.75rem; }
+  .section-heading h2 { margin-block-start: 0; }
+  .section-heading .editorial-link { font-size: 0.8125rem; }
+  .featured-activity { display: grid; align-items: center; gap: 1.5rem; }
+  .featured-photo { display: block; min-inline-size: 0; overflow: hidden; border-radius: 0.75rem; }
+  .featured-photo :global(.community-photo) { aspect-ratio: 3; }
+  .featured-photo :global(.community-photo-image) { inline-size: 100%; inset-inline-start: 0; }
+  .activity-eyebrow { font-size: 0.6875rem; color: var(--accent); font-weight: 650; letter-spacing: 0.1em; text-transform: uppercase; }
+  .featured-copy h3 { margin-block-start: 0.75rem; font-size: clamp(1.625rem, 1.1rem + 1.4vw, 2.25rem); line-height: 1.2; letter-spacing: -0.04em; }
+  .featured-description { margin-block-start: 1rem; color: var(--muted); font-size: 0.9375rem; line-height: 1.75; }
+  .featured-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; margin-block-start: 1rem; color: var(--muted); font-size: 0.75rem; }
+  .featured-copy .editorial-link { margin-block-start: 0.5rem; font-size: 0.875rem; }
+  .programs-heading { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 0.625rem 2rem; margin-block: 2rem 1.25rem; padding-block-start: 1.5rem; border-block-start: 1px solid var(--border); }
+  .programs-heading h3 { font-family: var(--font-display); font-size: 1.25rem; font-weight: 700; letter-spacing: -0.02em; }
+  .programs-heading p { color: var(--muted); font-size: 0.8125rem; }
+  .program-grid { display: grid; gap: 2.5rem 1.75rem; }
+  .community-band { background: #102e46; color: #d7e6ed; }
+  .community-band-inner { display: grid; align-items: center; gap: 2rem; padding-block: 3.25rem; }
+  .community-band .eyebrow { color: #9dd6df; }
+  .community-band h2 { margin-block-start: 1rem; color: #fff; font-size: clamp(1.75rem, 1.25rem + 1.5vw, 2.5rem); line-height: 1.2; }
+  .community-band p:last-child { max-inline-size: 38rem; margin-block-start: 1rem; font-size: 0.9375rem; line-height: 1.8; }
+  .community-band-actions { display: flex; flex-direction: column; align-items: start; gap: 0.75rem; }
+  .community-band-actions .btn { background: #9dd6df; color: #102e46; min-block-size: 3rem; }
+  .community-band-actions .btn:hover { background: #c0e7ec; }
+  .band-secondary { display: inline-flex; align-items: center; gap: 0.75rem; min-block-size: 2.75rem; color: #fff; text-decoration: none; font-size: 0.875rem; }
+  .band-secondary:hover { text-decoration: underline; text-underline-offset: 0.3em; }
+  .newsletter-feature { display: grid; gap: 2rem; padding-block: 3.5rem; }
+  .newsletter-feature-intro { display: flex; align-items: start; gap: 1.25rem; }
+  .newsletter-icon { display: inline-flex; justify-content: center; align-items: center; flex: none; inline-size: 3.25rem; block-size: 3.25rem; border-radius: 0.75rem; background: var(--bg-alt); color: var(--accent); }
+  .newsletter-feature-intro h2 { margin-block-start: 0.625rem; font-size: 1.75rem; }
+  .newsletter-feature-intro p:last-child { margin-block-start: 0.75rem; color: var(--muted); font-size: 0.875rem; line-height: 1.7; }
+  .newsletter-issue { padding: 1.5rem; border: 1px solid var(--border); border-radius: 0.75rem; }
+  .issue-meta { display: flex; flex-wrap: wrap; gap: 0.5rem; color: var(--muted); font-size: 0.6875rem; }
+  .newsletter-issue h3 { margin-block-start: 0.875rem; font-family: var(--font-display); font-weight: 700; font-size: 1.25rem; line-height: 1.35; letter-spacing: -0.025em; }
+  .newsletter-issue h3 a { color: var(--heading); text-decoration: none; }
+  .newsletter-issue h3 a:hover { color: var(--link); }
+  .newsletter-issue > p:nth-of-type(2) { margin-block-start: 0.625rem; color: var(--muted); font-size: 0.875rem; }
+  .newsletter-issue .editorial-link { margin-block-start: 0.75rem; font-size: 0.8125rem; }
+  @media (min-width: 40rem) { .program-grid { grid-template-columns: repeat(2,minmax(0,1fr)); } .club-pillars { grid-template-columns: repeat(3,minmax(0,1fr)); gap: 1.5rem; } }
+  @media (min-width: 56rem) {
+    .club-hero { grid-template-columns: 0.85fr 1.15fr; gap: 3rem; padding-block: 2rem; }
+    .featured-activity { grid-template-columns: 1.25fr 1fr; gap: 2.75rem; }
+    .program-grid { grid-template-columns: repeat(3,minmax(0,1fr)); }
+    .community-band-inner { grid-template-columns: 1fr auto; gap: 4rem; }
+    .community-band-actions { min-inline-size: 14rem; }
+    .newsletter-feature { grid-template-columns: 1fr 1fr; gap: 4rem; padding-block: 4rem; }
+  }
+  @media (max-width: 39.99rem) { .club-hero { gap: 2rem; padding-block-start: 2rem; } .hero-actions { gap: 0.5rem 1rem; } .hero-actions .btn { inline-size: 100%; } .hero-photo :global(.community-photo) { aspect-ratio: 1.8; } .hero-photo :global(.community-photo-image) { inline-size: 149%; inset-inline-start: -24.5%; } .club-activities { padding-block-start: 2.5rem; } }
+</style>

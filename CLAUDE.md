@@ -19,4 +19,4 @@ Website for the weekly newsletter of AI Journey, the student AI club at AUB (Ame
 
 ## Brand tokens (sampled from the logo)
 - navy #1C3C58 (logo outline), deep blue #004068 (logo wordmark), cyan #7CC8D4 (logo brain and waveform), light #E8ECF0 (light logo)
-- Display font: Instrument Serif (sentence case, italic for emphasis). Body and UI: Geist. (Changed from Anton/Inter in Oct 2026: the user asked for a simpler, more elegant look and is not bound to docs/inspiration.)
+- Display font: Plus Jakarta Sans, 650 to 750 weight. Body and UI: Inter. Use strong, compact sans headings and comfortable reading text.
