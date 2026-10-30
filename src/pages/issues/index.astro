@@ -46,23 +46,26 @@ const issues = await getIssues();
 </BaseLayout>
 
 <style>
-  .newsletter-intro, .issue-archive { max-inline-size: 76rem; }
-  .newsletter-intro { padding-block-start: 1.5rem; }
-  .newsletter-heading { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 1.75rem; padding-block: clamp(2.25rem, 5vw, 4.5rem); }
-  .newsletter-heading h1 { margin-block-start: 0.875rem; font-size: clamp(2.5rem, 1.75rem + 2.3vw, 3.75rem); font-weight: 750; line-height: 1.12; letter-spacing: -0.045em; }
-  .newsletter-description { max-inline-size: 35rem; margin-block-start: 1.25rem; color: var(--muted); font-size: 1.0625rem; line-height: 1.75; }
-  .issue-archive { padding-block: 0 5rem; }
-  .archive-toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; margin-block-end: 1.25rem; }
+  .newsletter-intro, .issue-archive { max-inline-size: 68rem; }
+  .newsletter-intro { padding-block-start: 1.75rem; }
+  .newsletter-heading { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 1.75rem 2.5rem; padding-block: clamp(2.5rem, 5vw, 4.5rem) 2.75rem; border-block-end: 1px solid var(--border-strong); }
+  .newsletter-heading > div { flex: 1 1 28rem; }
+  .newsletter-heading > .btn { flex: none; margin-block-end: 0.25rem; }
+  .newsletter-heading h1 { margin-block-start: 1rem; font-size: clamp(3.25rem, 2rem + 4vw, 5.25rem); font-weight: 750; line-height: 1.05; letter-spacing: -0.06em; }
+  .newsletter-description { max-inline-size: 35rem; margin-block-start: 1.5rem; color: var(--muted); font-size: clamp(1rem, 0.95rem + 0.3vw, 1.125rem); line-height: 1.75; }
+  .issue-archive { padding-block: 2rem 5rem; }
+  .archive-toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; margin-block-end: 1.5rem; }
   .archive-label { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem; }
-  .archive-label h2 { font-family: var(--font-display); color: var(--heading); font-size: 1rem; font-weight: 650; line-height: 1.4; letter-spacing: -0.025em; }
-  .archive-label span { padding-inline-start: 1rem; border-inline-start: 1px solid var(--border-strong); color: var(--muted); font-size: 0.8125rem; }
+  .archive-label h2 { font-family: var(--font-display); color: var(--heading); font-size: 0.9375rem; font-weight: 650; line-height: 1.4; letter-spacing: -0.02em; }
+  .archive-label span { display: inline-flex; align-items: center; min-block-size: 1.75rem; padding-inline: 0.625rem; border: 1px solid var(--border); border-radius: 999px; color: var(--muted); font-size: 0.75rem; font-variant-numeric: tabular-nums; }
   .archive-sort { display: flex; flex-wrap: wrap; gap: 0.5rem; }
   .issue-list { border-block-start: 0; }
   .issue-list > li { border-block-end: 0; }
-  .issue-list > li + li { margin-block-start: 1rem; }
+  .issue-list > li + li { margin-block-start: 1.5rem; }
   .issue-empty { display: grid; justify-items: start; gap: 0.875rem; padding: 2rem; border: 1px solid var(--border); border-radius: 0.75rem; background: var(--bg-alt); }
   .issue-empty h3 { font-size: 1.5rem; font-weight: 700; }
   .issue-empty p { max-inline-size: 30rem; color: var(--muted); font-size: 0.9375rem; line-height: 1.7; }
+  @media (min-width: 48rem) { .issue-archive { padding-block: 2.5rem 6rem; } }
 </style>
 
 <script>

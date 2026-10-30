@@ -43,14 +43,17 @@ const num = String(data.issue).padStart(2, '0');
   .row-action { display: none; align-items: center; justify-content: center; inline-size: 2.75rem; block-size: 2.75rem; color: var(--heading); transition: transform 150ms ease; }
   .issue-row:hover .row-title a { text-decoration: underline; text-underline-offset: 0.2em; text-decoration-thickness: 1px; }
   .issue-row:hover .row-action { transform: translateX(3px); }
-  .issue-row--featured { align-items: start; padding: clamp(1.25rem, 4vw, 3rem); border: 1px solid var(--border); border-radius: 1rem; background: var(--bg-alt); transition: border-color 180ms ease, box-shadow 180ms ease; }
-  .issue-row--featured:hover { border-color: var(--border-strong); box-shadow: 0 8px 24px rgb(11 26 43 / 5%); }
-  .issue-row--featured .issue-index { border-color: var(--border-strong); background: var(--bg); }
-  .issue-feature-label { margin-block-end: 1rem; color: var(--accent); }
-  .issue-row--featured .issue-meta { font-size: 0.75rem; }
-  .issue-row--featured .row-title { max-inline-size: 28ch; margin-block-start: 0.875rem; font-size: clamp(1.5rem, 1.1rem + 1.5vw, 2.25rem); }
-  .issue-row--featured .row-description { margin-block-start: 1rem; font-size: 1rem; }
-  .row-read { display: inline-flex; align-items: center; gap: 0.75rem; min-block-size: 2.75rem; margin-block-start: 1.25rem; color: var(--heading); font-size: 0.875rem; font-weight: 600; }
+  .issue-row--featured { align-items: start; padding: clamp(1.5rem, 4vw, 3rem); border: 1px solid var(--border); border-block-start: 3px solid var(--heading); border-radius: 0.875rem; background: var(--surface); transition: border-color 180ms ease, box-shadow 180ms ease; }
+  .issue-row--featured:hover { border-color: var(--border-strong); border-block-start-color: var(--heading); box-shadow: 0 12px 32px rgb(11 26 43 / 5%); }
+  .issue-row--featured:focus-within { border-radius: 0.875rem; }
+  .issue-row--featured .issue-index { gap: 1rem; block-size: auto; min-block-size: 7rem; border: 0; border-inline-end: 1px solid var(--border); border-radius: 0; background: transparent; }
+  .issue-row--featured .issue-index > span { font-family: var(--font-display); font-size: 2.5rem; font-weight: 650; line-height: 1; letter-spacing: -0.065em; }
+  .issue-row--featured .row-cover { block-size: 5rem; border-radius: 0.5rem; }
+  .issue-feature-label { margin-block-end: 1.25rem; color: var(--accent); font-size: 0.6875rem; letter-spacing: 0.13em; }
+  .issue-row--featured .issue-meta { gap: 0.5rem; font-size: 0.8125rem; }
+  .issue-row--featured .row-title { max-inline-size: 25ch; margin-block-start: 1rem; font-size: clamp(1.75rem, 1.3rem + 2.2vw, 2.75rem); line-height: 1.2; letter-spacing: -0.04em; }
+  .issue-row--featured .row-description { max-inline-size: 42ch; margin-block-start: 1.125rem; font-size: clamp(1rem, 0.95rem + 0.3vw, 1.125rem); line-height: 1.7; }
+  .row-read { display: inline-flex; align-items: center; gap: 0.75rem; min-block-size: 2.75rem; margin-block-start: 1.75rem; color: var(--heading); font-size: 0.875rem; font-weight: 600; text-decoration: underline; text-decoration-color: var(--deco); text-decoration-thickness: 1px; text-underline-offset: 0.45em; }
   .row-read :global(svg) { transition: transform 180ms ease; }
   .issue-row:hover .row-read :global(svg) { transform: translateX(3px); }
   @media (min-width: 48rem) {
@@ -58,7 +61,9 @@ const num = String(data.issue).padStart(2, '0');
     .issue-index { inline-size: 4rem; block-size: 4rem; flex-direction: row; gap: 0.5rem; font-size: 0.8125rem; }
     .issue-meta { font-size: 0.75rem; }
     .row-action { display: inline-flex; }
-    .issue-row--featured { grid-template-columns: 4rem minmax(0, 1fr); gap: 2rem; }
+    .issue-row--featured { grid-template-columns: 5.5rem minmax(0, 1fr); gap: 2.5rem; padding-block: 2.75rem; }
+    .issue-row--featured .issue-index { flex-direction: column; inline-size: 5.5rem; min-block-size: 8rem; padding-inline-end: 1.5rem; }
+    .issue-row--featured .issue-index > span { font-size: 3.25rem; }
   }
   @media (max-width: 29.99rem) { .issue-row--featured { grid-template-columns: minmax(0, 1fr); } .issue-row--featured .issue-index { display: none; } }
 </style>

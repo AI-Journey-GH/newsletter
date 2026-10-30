@@ -55,20 +55,25 @@ const { url, title, pdfName } = Astro.props;
     grid-template-columns: repeat(4, 1fr);
     max-width: 45rem;
     margin-inline: auto;
+    padding: 0.25rem 0.5rem;
   }
   .bar-btn {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    min-height: 3.5rem;
+    min-height: 3rem;
+    border-radius: 0.625rem;
     color: var(--heading);
     font-size: 0.9375rem;
     font-weight: 500;
     text-decoration: none;
     cursor: pointer;
+    transition: background-color 150ms ease, color 150ms ease;
   }
-  .bar-btn:hover {
+  .bar-btn:hover,
+  .bar-btn:focus-visible {
+    background: var(--surface-2);
     color: var(--link);
   }
   @media (min-width: 48rem) {
@@ -76,10 +81,18 @@ const { url, title, pdfName } = Astro.props;
       inset-inline: 0;
       inset-block-end: 1rem;
       margin-inline: auto;
-      max-width: 45rem;
+      max-width: 28rem;
       border: 1px solid var(--border);
-      border-radius: 999px;
+      border-radius: 1rem;
       box-shadow: 0 8px 30px -12px rgb(11 26 43 / 0.25);
+    }
+    .bar-inner {
+      gap: 0.125rem;
+      padding: 0.375rem;
+    }
+    .bar-btn {
+      min-height: 2.75rem;
+      font-size: 0.875rem;
     }
   }
   .toast {

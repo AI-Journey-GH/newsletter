@@ -62,7 +62,7 @@ const chips = [
   <ReadingProgress slot="top" />
 
   <article data-article>
-    <div class="wrap-mast pt-6 md:pt-10">
+    <div class="wrap-mast article-mast">
       <div class="no-print">
         <Breadcrumb items={[{ label: 'Home', href: u('/') }, { label: 'Blogs', href: u('/issues') }, { label: `Issue ${d.issue}` }]} />
       </div>
@@ -99,7 +99,8 @@ const chips = [
       </header>
     </div>
 
-    <SectionChips items={chips} class="no-print mt-6" />
+    <div class="reading-layout">
+    <SectionChips items={chips} class="no-print" />
 
     <div class="wrap-read issue-sections mt-10 grid gap-10 pb-16 md:mt-12 md:gap-14">
       {d.intro && <div class="prose intro" set:html={mdBlock(d.intro)} />}
@@ -145,46 +146,57 @@ const chips = [
         <p>Read this issue online at <a href={url}>{url.replace(/^https?:\/\//, '')}</a></p>
       </div>
     </div>
+    </div>
   </article>
 
   <ActionBar slot="bottom" url={url} title={shareTitle} pdfName={`AI Journey Issue ${d.issue}`} />
 </BaseLayout>
 
 <style>
+  .article-mast {
+    max-inline-size: calc(55rem + 2 * var(--gutter));
+    padding-block-start: 1.5rem;
+  }
   .issue-head {
     margin-block-start: clamp(2rem, 4vw, 3.5rem);
+    text-align: center;
+  }
+  .issue-head > div:first-child {
+    justify-content: center;
   }
   .issue-title {
-    max-inline-size: 20ch;
+    max-inline-size: 18ch;
     margin-block-start: 1.25rem;
-    font-size: clamp(2.5rem, 1.65rem + 3vw, 4.25rem);
+    margin-inline: auto;
+    font-size: clamp(2.5rem, 1.4rem + 4vw, 4.75rem);
     font-weight: 750;
-    line-height: 1.12;
-    letter-spacing: -0.035em;
+    line-height: 1.08;
+    letter-spacing: -0.045em;
     text-wrap: balance;
   }
   .issue-deck {
     max-inline-size: 36rem;
-    margin-block-start: 1.5rem;
+    margin-block-start: 1.25rem;
+    margin-inline: auto;
     font-size: clamp(1.0625rem, 1rem + 0.3vw, 1.25rem);
     line-height: 1.55;
   }
   .issue-byline {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
-    gap: 0.75rem 2rem;
-    margin-block-start: 1.75rem;
-    padding-block: 1.125rem;
+    gap: 0.75rem 1.25rem;
+    margin-block-start: 2rem;
+    padding-block: 1.25rem;
     border-block-start: 1px solid var(--border);
     color: var(--muted);
-    font-size: 0.8125rem;
+    font-size: 0.875rem;
     line-height: 1.6;
   }
   .issue-author span {
     color: var(--heading);
-    font-weight: 500;
+    font-weight: 650;
   }
   .issue-dateline {
     display: flex;
@@ -198,10 +210,22 @@ const chips = [
   .intro {
     color: var(--heading);
   }
+  .reading-layout {
+    margin-block-start: 1.5rem;
+  }
+  .issue-sections {
+    font-size: 1.125rem;
+    row-gap: 3rem;
+  }
   .intro,
   .stories {
-    font-size: 1.125rem;
-    line-height: 1.85;
+    font-size: inherit;
+    line-height: 1.8;
+  }
+  .intro :global(strong),
+  .stories :global(strong) {
+    font-weight: 650;
+    color: var(--heading);
   }
   .stories :global(p),
   .stories :global(li) {
@@ -209,37 +233,77 @@ const chips = [
   }
   .stories :global(h3) {
     font-family: var(--font-display);
-    font-size: 1.25em;
+    font-size: 1.2em;
     font-weight: 700;
     line-height: 1.35;
-    margin-block-start: 1.75em;
-  }
-  @media screen and (min-width: 48rem) {
-    .intro,
-    .stories {
-      font-size: 1.125rem;
-    }
+    margin-block-start: 2em;
+    letter-spacing: -0.025em;
   }
   .issue-sections :global(section[id]),
   .stories :global(h2[id]) {
     scroll-margin-top: calc(var(--chips-h) + 1rem);
   }
-
+  @media screen and (min-width: 48rem) {
+    .article-mast {
+      padding-block-start: 2.5rem;
+    }
+    .issue-sections {
+      font-size: 1.1875rem;
+      row-gap: 4rem;
+    }
+    .intro {
+      font-size: 1.25rem;
+      line-height: 1.75;
+    }
+  }
+  @media screen and (min-width: 72rem) {
+    .reading-layout {
+      display: grid;
+      grid-template-columns: minmax(9rem, 1fr) minmax(0, 42rem) minmax(9rem, 1fr);
+      align-items: start;
+      gap: 2.5rem;
+      max-inline-size: 82rem;
+      margin-inline: auto;
+      margin-block-start: 2rem;
+      padding-inline: var(--gutter);
+    }
+    .issue-sections {
+      grid-column: 2;
+      max-inline-size: none;
+      margin-block-start: 0;
+      padding-inline: 0;
+    }
+    .issue-sections :global(section[id]),
+    .stories :global(h2[id]) {
+      scroll-margin-top: 1.5rem;
+    }
+  }
   /* Brief format: each "## Brief" heading starts a new section */
   .stories :global(h2) {
     font-family: var(--font-display);
     font-weight: 700;
-    font-size: clamp(1.5rem, 1.25rem + 1vw, 2rem);
+    font-size: clamp(1.625rem, 1.25rem + 1.1vw, 2.125rem);
     line-height: 1.3;
-    letter-spacing: -0.02em;
-    margin-block-start: 3rem;
-    padding-block-start: 2rem;
+    letter-spacing: -0.035em;
+    margin-block-start: 4rem;
+    padding-block-start: 2.5rem;
     border-block-start: 1px solid var(--border);
   }
   .stories :global(h2:first-child) {
     margin-block-start: 0;
     padding-block-start: 0;
     border-block-start: 0;
+  }
+  .stories :global(.story-num) {
+    display: block;
+    margin-block-end: 0.875rem;
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    font-weight: 650;
+    line-height: 1.5;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
   }
   .stories :global(h2 + p:has(img)) {
     margin-block-start: 1.5rem;
@@ -251,7 +315,7 @@ const chips = [
     display: block;
     inline-size: 100%;
     height: auto;
-    border-radius: 0.625rem;
+    border-radius: 0.875rem;
     border: 1px solid var(--border);
     background: var(--surface-2);
   }
@@ -267,16 +331,41 @@ const chips = [
   }
 
   .sources {
-    padding-block-start: 1.5rem;
+    padding-block-start: 2rem;
     border-block-start: 1px solid var(--border);
     font-size: 0.875rem;
-    line-height: 1.5;
+    line-height: 1.6;
+  }
+  .sources :global(ol) {
+    gap: 0;
+  }
+  .sources :global(li) {
+    border-block-end: 1px solid var(--border);
   }
   .sources a {
+    display: flex;
+    align-items: center;
+    min-block-size: 2.75rem;
+    padding-block: 0.75rem;
     color: var(--muted);
+    text-decoration: none;
   }
   .sources a:hover {
     color: var(--heading);
+    text-decoration: underline;
+    text-underline-offset: 0.25em;
+  }
+  @media screen and (max-width: 29.99rem) {
+    .issue-title {
+      max-inline-size: 14ch;
+    }
+    .issue-byline {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .issue-head {
+      margin-block-start: 2rem;
+    }
   }
 
   /* ------------------------------------------------------------------
@@ -289,6 +378,9 @@ const chips = [
   }
 
   @media print {
+    .reading-layout {
+      margin-block-start: 0;
+    }
     /* Nameplate: logo and name, tagline, then issue, date and read time between rules */
     .print-mast {
       display: block;
@@ -435,6 +527,17 @@ const chips = [
       padding-block-start: 4mm;
       border-block-start: 2pt solid var(--heading);
       font-size: 8pt;
+    }
+    .sources :global(ol) {
+      gap: 1.5mm;
+    }
+    .sources :global(li) {
+      border-block-end: 0;
+    }
+    .sources a {
+      display: inline;
+      min-block-size: 0;
+      padding: 0;
     }
 
     .print-end {

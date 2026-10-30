@@ -21,6 +21,47 @@ const { items } = Astro.props;
     border: 1px solid var(--border);
     color: var(--text);
   }
+  @media screen {
+    .tldr {
+      padding: clamp(1.5rem, 3vw, 2.25rem);
+      border-radius: 1rem;
+    }
+    .tldr .num-list {
+      gap: 1.25rem;
+    }
+    .tldr .num-list > li {
+      grid-template-columns: 1.75rem minmax(0, 1fr);
+      align-items: start;
+      gap: 0.875rem;
+      font-size: 1rem;
+      line-height: 1.75;
+    }
+    .tldr .num-list > li + li {
+      padding-block-start: 1.25rem;
+      border-block-start: 1px solid var(--border-strong);
+    }
+    .tldr .num-list > li::before {
+      display: grid;
+      place-items: center;
+      inline-size: 1.75rem;
+      block-size: 1.75rem;
+      margin-block-start: 0.125rem;
+      border: 1px solid var(--border-strong);
+      border-radius: 50%;
+      background: var(--surface-2);
+      color: var(--color-cyan-400);
+      font-family: var(--font-sans);
+      font-size: 0.75rem;
+      font-weight: 600;
+      font-style: normal;
+      line-height: 1;
+    }
+  }
+  @media screen and (min-width: 48rem) {
+    .tldr .num-list > li {
+      font-size: 1.0625rem;
+    }
+  }
 
   /* PDF: a tinted "in brief" box with the four points in two columns */
   @media print {
