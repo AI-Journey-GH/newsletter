@@ -5,10 +5,15 @@ subtitle: "Welcome"
 date: 2026-11-12
 readTime: 7
 author: --
+draft: true                  # hidden on the live site; set to false to publish
 
 intro: |
   **This week, a car learned to fly, an AI turned evil because someone poked .
 
+tldr:                        # 3 to 5 bullets for the "30 seconds" box
+  - "**First thing that happened,** in one sentence."
+  - "**Second thing,** in one sentence."
+  - "**Third thing,** in one sentence."
 
 
 sources:
