@@ -30,7 +30,7 @@ Each issue is **one Markdown file** in `src/content/issues/`.
 4. Set `sample: false`, and keep `draft: true` until it is ready. Drafts show in `npm run dev` but not on the live site.
 5. Run `npm run check`, then `npm run dev`, and read the issue on your phone width before publishing.
 
-Files whose name starts with `_` are ignored, so the template never shows on the site. The three invented sample issues are kept as `_sample-issue-*.md` for reference.
+Files whose name starts with `_` are ignored, so the template never shows on the site.
 
 **Two ways to write an issue.**
 
@@ -145,7 +145,6 @@ For example: `https://ai-journey-newsletter.vercel.app/issues/issue-1?utm_source
 - Replace every `REPLACE_ME` link in `src/config.ts`, and confirm the WhatsApp invite link.
 - Set up the weekly email script (see "Weekly email").
 - Set up visitor stats (see "Visitor stats").
-- The three invented sample issues are hidden (their file names start with `_`). Delete them whenever you like.
 
 ## Notes
 
