@@ -6,22 +6,25 @@ import { formatDate, isoDate, issueUrl, type Issue } from '../lib/utils';
 interface Props {
   issue: Issue;
   headingLevel?: 'h2' | 'h3';
+  featured?: boolean;
 }
-const { issue, headingLevel: H = 'h3' } = Astro.props;
+const { issue, headingLevel: H = 'h3', featured = false } = Astro.props;
 const { data } = issue;
 const num = String(data.issue).padStart(2, '0');
 ---
 
-<article class="issue-row">
+<article class:list={['issue-row', featured && 'issue-row--featured']}>
   <div class="issue-index" aria-hidden="true">
     {data.cover ? <Image src={data.cover.src} alt="" widths={[80, 160]} sizes="80px" loading="lazy" class="row-cover" /> : <><Icon name="newspaper" size={21} /><span>{num}</span></>}
   </div>
   <div class="issue-content">
+    {featured && <p class="eyebrow issue-feature-label">Latest post</p>}
     <p class="issue-meta"><span>Issue {num}</span><span aria-hidden="true">·</span><time datetime={isoDate(data.date)}>{formatDate(data.date, 'short')}</time><span aria-hidden="true">·</span><span>{data.readTime} min read</span></p>
     <H class="display row-title"><a href={issueUrl(issue)} class="row-link">{data.title}</a></H>
     <p class="row-description">{data.subtitle}</p>
+    {featured && <span class="row-read" aria-hidden="true">Read the post <Icon name="arrow-right" size={19} /></span>}
   </div>
-  <span class="row-action" aria-hidden="true"><Icon name="arrow-right" size={20} /></span>
+  {!featured && <span class="row-action" aria-hidden="true"><Icon name="arrow-right" size={20} /></span>}
 </article>
 
 <style>
@@ -40,10 +43,22 @@ const num = String(data.issue).padStart(2, '0');
   .row-action { display: none; align-items: center; justify-content: center; inline-size: 2.75rem; block-size: 2.75rem; color: var(--heading); transition: transform 150ms ease; }
   .issue-row:hover .row-title a { text-decoration: underline; text-underline-offset: 0.2em; text-decoration-thickness: 1px; }
   .issue-row:hover .row-action { transform: translateX(3px); }
+  .issue-row--featured { align-items: start; padding: clamp(1.25rem, 4vw, 3rem); border: 1px solid var(--border); border-radius: 1rem; background: var(--bg-alt); transition: border-color 180ms ease, box-shadow 180ms ease; }
+  .issue-row--featured:hover { border-color: var(--border-strong); box-shadow: 0 8px 24px rgb(11 26 43 / 5%); }
+  .issue-row--featured .issue-index { border-color: var(--border-strong); background: var(--bg); }
+  .issue-feature-label { margin-block-end: 1rem; color: var(--accent); }
+  .issue-row--featured .issue-meta { font-size: 0.75rem; }
+  .issue-row--featured .row-title { max-inline-size: 28ch; margin-block-start: 0.875rem; font-size: clamp(1.5rem, 1.1rem + 1.5vw, 2.25rem); }
+  .issue-row--featured .row-description { margin-block-start: 1rem; font-size: 1rem; }
+  .row-read { display: inline-flex; align-items: center; gap: 0.75rem; min-block-size: 2.75rem; margin-block-start: 1.25rem; color: var(--heading); font-size: 0.875rem; font-weight: 600; }
+  .row-read :global(svg) { transition: transform 180ms ease; }
+  .issue-row:hover .row-read :global(svg) { transform: translateX(3px); }
   @media (min-width: 48rem) {
     .issue-row { grid-template-columns: 4rem minmax(0, 1fr) 2.75rem; gap: 1.5rem; padding-block: 1.75rem; }
     .issue-index { inline-size: 4rem; block-size: 4rem; flex-direction: row; gap: 0.5rem; font-size: 0.8125rem; }
     .issue-meta { font-size: 0.75rem; }
     .row-action { display: inline-flex; }
+    .issue-row--featured { grid-template-columns: 4rem minmax(0, 1fr); gap: 2rem; }
   }
+  @media (max-width: 29.99rem) { .issue-row--featured { grid-template-columns: minmax(0, 1fr); } .issue-row--featured .issue-index { display: none; } }
 </style>

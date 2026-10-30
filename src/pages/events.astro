@@ -92,8 +92,8 @@ const categoryCount = (category: string) => category === 'All' ? activities.leng
   .activity-filter:hover { border-color: var(--heading); }
   .activity-filter[aria-pressed='true'] { border-color: var(--btn-bg); background: var(--btn-bg); color: var(--btn-fg); }
   .filter-count { font-size: 0.6875rem; font-weight: 600; opacity: 0.75; }
-  .activity-grid { display: grid; grid-template-columns: minmax(0, 1fr); align-items: start; gap: 2rem 1.5rem; }
-  .activity-grid > li { min-inline-size: 0; }
+  .activity-grid { display: grid; grid-template-columns: minmax(0, 1fr); align-items: stretch; gap: 1.5rem; }
+  .activity-grid > li { display: flex; min-inline-size: 0; }
   .activity-grid > li[hidden] { display: none; }
   .archive-note { margin-block-start: 1.75rem; color: var(--muted); font-size: 0.8125rem; line-height: 1.7; }
   .announcement-band { display: grid; align-items: center; gap: 1.5rem 3rem; margin-block-start: 3rem; padding: 1.75rem; border-radius: 0.875rem; background: var(--bg-alt); }

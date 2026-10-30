@@ -21,18 +21,19 @@ const { activity, headingLevel: H = 'h3' } = Astro.props;
 </article>
 
 <style>
-  .activity-card { min-inline-size: 0; }
-  .activity-image-link { display: block; overflow: hidden; border-radius: 0.75rem; background: #182b49; }
-  .activity-image-link--poster { padding: 0.75rem; }
-  .activity-image-link :global(.community-photo) { aspect-ratio: 1.38; }
+  .activity-card { display: flex; flex-direction: column; inline-size: 100%; min-inline-size: 0; overflow: hidden; border: 1px solid var(--border); border-radius: 1rem; background: var(--surface); transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease; }
+  .activity-card:hover, .activity-card:focus-within { border-color: var(--border-strong); box-shadow: 0 8px 24px rgb(11 26 43 / 7%); transform: translateY(-3px); }
+  .activity-image-link { display: block; flex: none; overflow: hidden; aspect-ratio: 1.45; background: #182b49; }
+  .activity-image-link--poster { padding: 1rem; }
+  .activity-image-link :global(.community-photo) { aspect-ratio: 1.45; }
   .activity-image-link :global(.community-photo-image) { inline-size: 190%; inset-inline-start: -45%; }
-  .activity-image-link :global(.activity-poster) { display: block; inline-size: 100%; block-size: auto; aspect-ratio: 1.45; object-fit: contain; }
-  .activity-card-copy { padding-block-start: 1.125rem; }
-  .activity-card-meta { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.5rem 1rem; color: var(--muted); font-size: 0.6875rem; line-height: 1.6; }
+  .activity-image-link :global(.activity-poster) { display: block; inline-size: 100%; block-size: 100%; object-fit: contain; }
+  .activity-card-copy { display: flex; flex: 1; flex-direction: column; align-items: start; padding: 1.25rem; }
+  .activity-card-meta { display: flex; flex-wrap: wrap; justify-content: space-between; inline-size: 100%; gap: 0.5rem 1rem; color: var(--muted); font-size: 0.75rem; line-height: 1.6; }
   .activity-card-meta > span:first-child { color: var(--accent); font-weight: 650; text-transform: uppercase; letter-spacing: 0.1em; }
   .activity-card-title { margin-block-start: 0.625rem; font-family: var(--font-display); font-size: 1.25rem; font-weight: 700; letter-spacing: -0.035em; line-height: 1.35; text-wrap: pretty; }
   .activity-card-title a { color: var(--heading); text-decoration: none; }
   .activity-card-title a:hover { color: var(--link); }
-  .activity-card-description { margin-block-start: 0.625rem; color: var(--muted); font-size: 0.9375rem; line-height: 1.7; }
-  .activity-card-copy .editorial-link { margin-block-start: 0.5rem; font-size: 0.8125rem; }
+  .activity-card-description { margin-block: 0.75rem 1rem; color: var(--muted); font-size: 0.9375rem; line-height: 1.7; }
+  .activity-card-copy .editorial-link { margin-block-start: auto; font-size: 0.875rem; }
 </style>

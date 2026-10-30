@@ -10,18 +10,18 @@ const { id = 'join' } = Astro.props;
   <div class="wrap">
     <div class="newsletter-inner">
       <div class="newsletter-copy">
-        <p class="eyebrow">The AI Journey newsletter</p>
+        <p class="eyebrow">AI Journey blogs</p>
         <h2 id={`${id}-title`} class="display newsletter-title">A little perspective.<br />Straight to your inbox.</h2>
-        <p>Our student-written newsletter, delivered when a new issue is out. A thoughtful read from the AI Journey team.</p>
+        <p>Student-written perspectives from the AI Journey team. Get an email when a new post is published.</p>
       </div>
       <div class="newsletter-form">
-        <form action={subscribeForm.action} method="post" target="_blank" data-subscribe>
+        <form action={subscribeForm.action} method="post" target="_blank" aria-busy="false" data-subscribe>
           <label for={`${id}-email`} class="label">Your email address</label>
           <div class="email-row">
-            <input id={`${id}-email`} name={subscribeForm.emailField} type="email" inputmode="email" autocomplete="email" placeholder="you@example.com" required class="email-input" />
-            <button type="submit" class="btn btn-primary" data-subscribe-button>Subscribe <Icon name="arrow-right" size={18} /></button>
+            <input id={`${id}-email`} name={subscribeForm.emailField} type="email" inputmode="email" autocomplete="email" placeholder="you@example.com" aria-describedby={`${id}-note`} required class="email-input" />
+            <button type="submit" class="btn btn-primary" data-subscribe-button><span data-subscribe-label>Subscribe</span><Icon name="arrow-right" size={18} /></button>
           </div>
-          <p class="subscribe-note">One email when a new issue is out. Unsubscribe anytime.</p>
+          <p id={`${id}-note`} class="subscribe-note">One email when a new post is out. Unsubscribe anytime.</p>
         </form>
         <p class="subscribe-status" role="status" aria-live="polite" data-subscribe-status hidden></p>
         <a href={links.subscribe} class="form-alternative" target="_blank" rel="noopener">You can also use our sign-up form <Icon name="external" size={14} /></a>
@@ -35,16 +35,20 @@ const { id = 'join' } = Astro.props;
   .newsletter-inner { display: grid; align-items: center; gap: 2rem; }
   .newsletter-title { margin-block-start: 1rem; font-size: clamp(1.75rem, 1.25rem + 1.4vw, 2.5rem); line-height: 1.2; }
   .newsletter-copy > p:last-child { max-inline-size: 26rem; margin-block-start: 1.25rem; color: var(--muted); line-height: 1.7; }
-  .newsletter-form { min-inline-size: 0; }
+  .newsletter-form { min-inline-size: 0; padding: clamp(1.25rem, 2.5vw, 1.75rem); border: 1px solid var(--border-strong); border-radius: 1rem; background: var(--surface); container-type: inline-size; }
   .newsletter-form label { display: block; color: var(--heading); }
   .email-row { display: flex; flex-direction: column; gap: 0.625rem; margin-block-start: 0.875rem; }
   .email-input { flex: 1; min-inline-size: 0; min-block-size: 3.25rem; padding: 0.75rem 1rem; border: 1px solid var(--border-strong); border-radius: 0.5rem; background: var(--bg); color: var(--text); font-size: 1rem; }
   .email-input::placeholder { color: var(--muted); }
-  .email-row .btn { min-block-size: 3.25rem; }
+  .email-row .btn { flex: none; min-inline-size: 9.25rem; min-block-size: 3.25rem; }
+  .email-row .btn:disabled { opacity: 0.7; cursor: wait; }
   .subscribe-note { margin-block-start: 0.75rem; color: var(--muted); font-size: 0.75rem; line-height: 1.6; }
-  .subscribe-status { padding: 1.25rem; border: 1px solid var(--border-strong); color: var(--heading); font-size: 1rem; }
+  .subscribe-status { margin-block-start: 1rem; padding: 0.875rem 1rem; border: 1px solid var(--border); border-inline-start: 3px solid var(--accent); border-radius: 0.5rem; background: var(--bg-alt); color: var(--heading); font-size: 0.875rem; line-height: 1.6; }
+  .subscribe-status[data-state='pending'] { border-inline-start-color: var(--border-strong); color: var(--muted); }
+  .subscribe-status[data-state='error'] { border-color: var(--accent); }
+  .subscribe-status[data-state='success'] { margin-block-start: 0; }
   .form-alternative { display: inline-flex; align-items: center; gap: 0.375rem; min-block-size: 2.75rem; margin-block-start: 0.75rem; color: var(--muted); font-size: 0.8125rem; text-underline-offset: 0.25em; }
-  @media (min-width: 30rem) { .email-row { flex-direction: row; } }
+  @container (min-width: 24rem) { .email-row { flex-direction: row; } }
   @media (min-width: 48rem) { .newsletter-section { padding-block: 4rem; } .newsletter-inner { grid-template-columns: 1fr 1fr; gap: 4rem; } }
 </style>
 
@@ -53,23 +57,30 @@ const { id = 'join' } = Astro.props;
   document.querySelectorAll<HTMLFormElement>('[data-subscribe]').forEach((form) => {
     const status = form.closest('section')?.querySelector<HTMLElement>('[data-subscribe-status]');
     const button = form.querySelector<HTMLButtonElement>('[data-subscribe-button]');
+    const buttonLabel = button?.querySelector<HTMLElement>('[data-subscribe-label]');
     form.addEventListener('submit', async (event) => {
       event.preventDefault();
-      if (!button || !status || !form.reportValidity()) return;
+      if (!button || !buttonLabel || !status || button.disabled || !form.reportValidity()) return;
       button.disabled = true;
-      button.textContent = 'Sending...';
-      status.hidden = true;
+      buttonLabel.textContent = 'Sending...';
+      form.setAttribute('aria-busy', 'true');
+      status.dataset.state = 'pending';
+      status.textContent = 'Sending your subscription request...';
+      status.hidden = false;
       try {
         await fetch(form.action, { method: 'POST', mode: 'no-cors', body: new FormData(form) });
         form.hidden = true;
         trackEvent('Subscribe');
+        status.dataset.state = 'success';
         status.textContent = 'Thanks! Your subscription request has been sent.';
       } catch {
+        status.dataset.state = 'error';
         status.textContent = 'We couldn’t send your request. Try again or use the sign-up form below.';
         button.disabled = false;
-        button.textContent = 'Subscribe';
+        buttonLabel.textContent = 'Subscribe';
+      } finally {
+        form.setAttribute('aria-busy', 'false');
       }
-      status.hidden = false;
     });
   });
 </script>

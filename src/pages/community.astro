@@ -9,7 +9,7 @@ import { u } from '../lib/utils';
 
 const entryPoints = [
   { title: 'Join the conversation', description: 'Find our announcements, connect with the community, and hear what is coming next.', label: 'Join on WhatsApp', href: links.whatsapp, icon: 'users', external: true },
-  { title: 'Read the newsletter', description: 'Read our first issue and get a little perspective from the AI Journey team.', label: 'Explore the newsletter', href: u('/issues'), icon: 'newspaper', external: false },
+  { title: 'Read our blogs', description: 'Explore ideas and perspectives from the AI Journey team.', label: 'Explore the blogs', href: u('/issues'), icon: 'newspaper', external: false },
   { title: 'Explore our gatherings', description: 'See the conversations, bootcamps, and learning sessions that bring us together.', label: 'See our events', href: u('/events'), icon: 'calendar', external: false },
 ];
 ---
@@ -49,7 +49,7 @@ const entryPoints = [
       <div class="principle-list">
         <article class="principle"><span class="principle-icon"><Icon name="book" size={22} /></span><div><h3>Learn together</h3><p>Start with the fundamentals or follow an idea further. Our conversations, sessions, and writing make room for different backgrounds.</p></div></article>
         <article class="principle"><span class="principle-icon"><Icon name="users" size={22} /></span><div><h3>Connect through ideas</h3><p>Meet other students, hear from researchers, and share the questions you are thinking about.</p></div></article>
-        <article class="principle"><span class="principle-icon"><Icon name="wrench" size={22} /></span><div><h3>Put curiosity to work</h3><p>Take something from a talk, a bootcamp, or the newsletter and try it in your own learning and projects.</p></div></article>
+        <article class="principle"><span class="principle-icon"><Icon name="wrench" size={22} /></span><div><h3>Put curiosity to work</h3><p>Take something from a talk, a bootcamp, or a blog post and try it in your own learning and projects.</p></div></article>
       </div>
     </section>
 
@@ -71,7 +71,8 @@ const entryPoints = [
   .section-intro { margin-block-end: 1.5rem; }
   .section-title { margin-block-start: 0.75rem; font-size: clamp(1.5rem, 1.1rem + 1.5vw, 2.125rem); font-weight: 700; line-height: 1.3; letter-spacing: -0.035em; }
   .entry-grid { display: grid; gap: 1rem; }
-  .entry { display: flex; flex-direction: column; align-items: start; min-inline-size: 0; padding: 1.5rem; border: 1px solid var(--border); border-radius: 0.75rem; background: var(--surface); }
+  .entry { display: flex; flex-direction: column; align-items: start; min-inline-size: 0; padding: 1.5rem; border: 1px solid var(--border); border-radius: 1rem; background: var(--surface); transition: border-color 180ms ease, box-shadow 180ms ease; }
+  .entry:hover, .entry:focus-within { border-color: var(--border-strong); box-shadow: 0 8px 24px rgb(11 26 43 / 5%); }
   .entry > :global(svg) { color: var(--accent); }
   .entry-title { margin-block-start: 1.25rem; font-size: 1.25rem; font-weight: 700; line-height: 1.35; letter-spacing: -0.025em; }
   .entry > p { margin-block: 0.75rem 1.25rem; color: var(--muted); font-size: 0.9375rem; line-height: 1.7; }

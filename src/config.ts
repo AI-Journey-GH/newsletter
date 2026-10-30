@@ -39,7 +39,7 @@ export const analytics = {
 export const nav = [
   { label: 'Activities', href: '/events' },
   { label: 'Community', href: '/community' },
-  { label: 'Newsletter', href: '/issues' },
+  { label: 'Blogs', href: '/issues' },
 ];
 
 export const social = [

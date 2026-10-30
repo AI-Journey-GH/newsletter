@@ -1,6 +1,6 @@
-# AI Journey Newsletter
+# AI Journey
 
-The website for the weekly newsletter of **AI Journey** at AUB. Built with [Astro](https://astro.build) and Tailwind CSS. It is a static site: no database, no server, free to host.
+The community website and blogs for **AI Journey** at AUB. Built with [Astro](https://astro.build) and Tailwind CSS. It is a static site: no database, no server, free to host.
 
 ## Run it on your computer
 

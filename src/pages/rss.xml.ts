@@ -8,7 +8,7 @@ import { getIssues, issueUrl, md, plain } from '../lib/utils';
 export async function GET(context: APIContext) {
   const issues = await getIssues();
   return rss({
-    title: `${site.name} newsletter`,
+    title: `${site.name} blogs`,
     description: site.description,
     site: context.site!,
     items: issues.map((issue) => ({

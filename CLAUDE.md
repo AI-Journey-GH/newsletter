@@ -1,6 +1,6 @@
-# AI Journey Newsletter Website
+# AI Journey Community Website
 
-Website for the weekly newsletter of AI Journey, the student AI club at AUB (American University of Beirut). Readers are university students, mostly CS and engineering, reading mainly on phones.
+Community website and blogs for AI Journey, the student AI club at AUB (American University of Beirut). Readers are university students, mostly CS and engineering, reading mainly on phones.
 
 ## Read before working
 - docs/01-what-we-do.md: mission and what every issue contains
