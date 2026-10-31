@@ -42,7 +42,7 @@ An issue can also use fixed sections instead of briefs (`bigStory`, `quickHits`,
 - `wildcard.type` is one of `paper-decoded`, `concept-in-60-seconds` or `opportunity-board`.
 - Every picture has `alt` text.
 
-**Pictures are optional.** The only image on the site right now is the logo. To add a picture to an issue:
+**Pictures are optional.** To add a picture to an issue:
 
 1. Put the file in `src/content/issues/images/`.
 2. Point to it from the issue file, for example `cover: { src: "./images/issue-3.jpg", alt: "What it shows" }`.
@@ -50,6 +50,12 @@ An issue can also use fixed sections instead of briefs (`bigStory`, `quickHits`,
 Astro resizes and lazy-loads it automatically. When an image field is empty, nothing is shown in its place.
 
 Straight quotes in the issue file become curly quotes on the site automatically.
+
+## Community photo gallery
+
+The homepage and community page share a gallery of original club recap images. Add image files to `src/assets/community/gallery/`, import them in `src/data/gallery.ts`, and provide a caption, event, alt text, and original post URL. Record the source and credit in `src/assets/community/gallery/sources.json`. Use `position` to adjust a card's framing; the full-photo viewer shows the complete image.
+
+The gallery advances every six seconds while visible, pauses for interaction, and starts paused for reduced motion. Visitors can swipe, use the arrow controls, or open a photo and browse with the keyboard. Images are bundled with the site and optimized by Astro.
 
 ## Where things live
 
@@ -60,6 +66,7 @@ Straight quotes in the issue file become curly quotes on the site automatically.
 | Category tags (add one with a single line) | `src/data/categories.ts` |
 | Colors, fonts, buttons, tags, callouts | `src/styles/global.css` (see them all at `/styleguide`) |
 | Issue page sections | `src/components/issue/` |
+| Community gallery photos and captions | `src/data/gallery.ts` |
 | Pages | `src/pages/` |
 | Issue fields (the content schema) | `src/content.config.ts` |
 

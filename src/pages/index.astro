@@ -4,6 +4,7 @@ import ActivityCard from '../components/ActivityCard.astro';
 import CommunityPhoto from '../components/CommunityPhoto.astro';
 import Icon from '../components/Icon.astro';
 import JoinBand from '../components/JoinBand.astro';
+import LectureGallery from '../components/LectureGallery.astro';
 import { activities } from '../data/activities';
 import { links } from '../config';
 import { formatDate, getIssues, isoDate, issueUrl, u } from '../lib/utils';
@@ -30,6 +31,8 @@ const programs = activities.filter((activity) => !activity.featured);
         <figcaption>Curious minds, together at AUB.</figcaption>
       </figure>
     </section>
+
+    <LectureGallery />
 
     <section class="club-activities" aria-labelledby="activities-title">
       <div class="section-heading">
