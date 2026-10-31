@@ -1,74 +1,92 @@
 [
   {
-    "file": "frontier-questions.jpg",
+    "file": "frontier-group.jpg",
     "sourcePost": "https://www.instagram.com/p/De97Al8DbIK/",
-    "sourceSlide": 4,
+    "sourceSlide": 7,
     "owner": "ai.journey.aub",
-    "mediaType": "video recap still",
+    "mediaType": "photo collage",
     "credit": "AI Journey at AUB",
     "sourceDimensions": {
-      "height": 900,
-      "width": 720
+      "width": 2353,
+      "height": 2944
+    },
+    "displayFrame": {
+      "x": 0,
+      "y": 0,
+      "width": 2353,
+      "height": 1478
     }
   },
   {
-    "file": "frontier-conversation.jpg",
-    "sourcePost": "https://www.instagram.com/p/De97Al8DbIK/",
+    "file": "bootcamp-in-session.jpg",
+    "sourcePost": "https://www.instagram.com/p/DEic0rGNE6m/",
     "sourceSlide": 5,
     "owner": "ai.journey.aub",
-    "mediaType": "video recap still",
+    "mediaType": "photo",
     "credit": "AI Journey at AUB",
     "sourceDimensions": {
-      "height": 900,
-      "width": 720
+      "width": 1080,
+      "height": 1080
+    },
+    "displayFrame": {
+      "x": 76,
+      "y": 220,
+      "width": 928,
+      "height": 620
     }
   },
   {
-    "file": "bootcamp-neural-networks.jpg",
-    "sourcePost": "https://www.instagram.com/ai.journey.aub/reel/DTOAFsfjdi2/",
-    "sourceSlide": null,
+    "file": "bootcamp-audience.jpg",
+    "sourcePost": "https://www.instagram.com/p/DEnparBN7uP/",
+    "sourceSlide": 2,
     "owner": "ai.journey.aub",
-    "mediaType": "video recap still",
+    "mediaType": "photo",
     "credit": "AI Journey at AUB",
     "sourceDimensions": {
-      "height": 960,
-      "width": 540
+      "width": 1080,
+      "height": 1080
+    },
+    "displayFrame": {
+      "x": 76,
+      "y": 200,
+      "width": 928,
+      "height": 620
     }
   },
   {
-    "file": "bootcamp-classroom.jpg",
-    "sourcePost": "https://www.instagram.com/ai.journey.aub/reel/DSpzYxLDcsq/",
-    "sourceSlide": null,
+    "file": "neural-network-lecture.jpg",
+    "sourcePost": "https://www.instagram.com/p/DEnparBN7uP/",
+    "sourceSlide": 4,
     "owner": "ai.journey.aub",
-    "mediaType": "video recap still",
+    "mediaType": "photo",
     "credit": "AI Journey at AUB",
     "sourceDimensions": {
-      "height": 960,
-      "width": 540
+      "width": 1080,
+      "height": 1080
+    },
+    "displayFrame": {
+      "x": 76,
+      "y": 220,
+      "width": 928,
+      "height": 620
     }
   },
   {
-    "file": "bootcamp-learning.jpg",
-    "sourcePost": "https://www.instagram.com/ai.journey.aub/reel/DSvHwNejcRW/",
-    "sourceSlide": null,
+    "file": "bootcamp-discussion.jpg",
+    "sourcePost": "https://www.instagram.com/p/DEVfCp3txa4/",
+    "sourceSlide": 2,
     "owner": "ai.journey.aub",
-    "mediaType": "video recap still",
+    "mediaType": "photo",
     "credit": "AI Journey at AUB",
     "sourceDimensions": {
-      "height": 960,
-      "width": 540
-    }
-  },
-  {
-    "file": "bootcamp-finale.jpg",
-    "sourcePost": "https://www.instagram.com/ai.journey.aub/reel/DTTYfwIjWoC/",
-    "sourceSlide": null,
-    "owner": "ai.journey.aub",
-    "mediaType": "video recap still",
-    "credit": "AI Journey at AUB",
-    "sourceDimensions": {
-      "height": 960,
-      "width": 540
+      "width": 1080,
+      "height": 1080
+    },
+    "displayFrame": {
+      "x": 76,
+      "y": 200,
+      "width": 928,
+      "height": 620
     }
   }
 ]

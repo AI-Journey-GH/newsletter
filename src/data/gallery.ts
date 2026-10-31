@@ -1,10 +1,9 @@
 import type { ImageMetadata } from 'astro';
-import questions from '../assets/community/gallery/frontier-questions.jpg';
-import neuralNetworks from '../assets/community/gallery/bootcamp-neural-networks.jpg';
-import conversation from '../assets/community/gallery/frontier-conversation.jpg';
-import classroom from '../assets/community/gallery/bootcamp-classroom.jpg';
-import learning from '../assets/community/gallery/bootcamp-learning.jpg';
-import finale from '../assets/community/gallery/bootcamp-finale.jpg';
+import group from '../assets/community/gallery/frontier-group.jpg';
+import inSession from '../assets/community/gallery/bootcamp-in-session.jpg';
+import audience from '../assets/community/gallery/bootcamp-audience.jpg';
+import discussion from '../assets/community/gallery/bootcamp-discussion.jpg';
+import neuralNetworks from '../assets/community/gallery/neural-network-lecture.jpg';
 
 export type GalleryPhoto = {
   id: string;
@@ -14,59 +13,53 @@ export type GalleryPhoto = {
   event: string;
   sourceUrl: string;
   position?: string;
+  frame?: { x: number; y: number; width: number; height: number };
 };
 
 export const galleryPhotos: GalleryPhoto[] = [
   {
-    id: 'frontier-questions',
-    src: questions,
-    alt: 'Students joining a question-and-answer discussion in a tiered lecture hall, with questions from the club’s original recap overlaid.',
-    caption: 'Questions from the room.',
-    event: 'Two Labs, One Frontier',
-    sourceUrl: 'https://www.instagram.com/p/De97Al8DbIK/?img_index=4',
-  },
-  {
-    id: 'bootcamp-neural-networks',
-    src: neuralNetworks,
-    alt: 'Students listening in a classroom during the neural networks bootcamp session, from the club’s original recap.',
-    caption: 'A closer look at neural networks.',
-    event: 'ML Bootcamp',
-    sourceUrl: 'https://www.instagram.com/ai.journey.aub/reel/DTOAFsfjdi2/',
-    position: '50% 55%',
-  },
-  {
-    id: 'frontier-conversation',
-    src: conversation,
-    alt: 'A view across the lecture hall audience toward the researchers’ panel at Two Labs, One Frontier.',
-    caption: 'A conversation at the frontier.',
-    event: 'Two Labs, One Frontier',
-    sourceUrl: 'https://www.instagram.com/p/De97Al8DbIK/?img_index=5',
-  },
-  {
-    id: 'bootcamp-classroom',
-    src: classroom,
-    alt: 'A presenter explaining machine learning to students in a classroom, in a montage from the first bootcamp day.',
-    caption: 'From theory to the classroom.',
-    event: 'ML Bootcamp',
-    sourceUrl: 'https://www.instagram.com/ai.journey.aub/reel/DSpzYxLDcsq/',
-    position: '50% 0%',
-  },
-  {
-    id: 'bootcamp-learning',
-    src: learning,
-    alt: 'Students working at classroom desks while an instructor presents, with the club’s supervised learning recap graphic overlaid.',
+    id: 'bootcamp-in-session',
+    src: inSession,
+    alt: 'Students following a presenter and working on laptops in a sunlit bootcamp classroom.',
     caption: 'Learning, side by side.',
     event: 'ML Bootcamp',
-    sourceUrl: 'https://www.instagram.com/ai.journey.aub/reel/DSvHwNejcRW/',
-    position: '50% 75%',
+    sourceUrl: 'https://www.instagram.com/p/DEic0rGNE6m/?img_index=5',
+    frame: { x: 76, y: 220, width: 928, height: 620 },
   },
   {
-    id: 'bootcamp-finale',
-    src: finale,
-    alt: 'Classroom scenes with an instructor and students from the bootcamp’s final-day recap montage.',
-    caption: 'The final bootcamp session.',
+    id: 'frontier-group',
+    src: group,
+    alt: 'Attendees and speakers gathered together on stage after Two Labs, One Frontier.',
+    caption: 'Together after the conversation.',
+    event: 'Two Labs, One Frontier',
+    sourceUrl: 'https://www.instagram.com/p/De97Al8DbIK/?img_index=7',
+    frame: { x: 0, y: 0, width: 2353, height: 1478 },
+  },
+  {
+    id: 'bootcamp-audience',
+    src: audience,
+    alt: 'A full classroom of students listening to a machine learning lecture with laptops open.',
+    caption: 'Ideas shared across the room.',
     event: 'ML Bootcamp',
-    sourceUrl: 'https://www.instagram.com/ai.journey.aub/reel/DTTYfwIjWoC/',
-    position: '50% 10%',
+    sourceUrl: 'https://www.instagram.com/p/DEnparBN7uP/?img_index=2',
+    frame: { x: 76, y: 200, width: 928, height: 620 },
+  },
+  {
+    id: 'neural-network-lecture',
+    src: neuralNetworks,
+    alt: 'An instructor explaining neural network representations beside a projected diagram.',
+    caption: 'A closer look at neural networks.',
+    event: 'ML Bootcamp',
+    sourceUrl: 'https://www.instagram.com/p/DEnparBN7uP/?img_index=4',
+    frame: { x: 76, y: 220, width: 928, height: 620 },
+  },
+  {
+    id: 'bootcamp-discussion',
+    src: discussion,
+    alt: 'Students attending a bootcamp lecture as their instructor discusses evaluation metrics.',
+    caption: 'From theory to the classroom.',
+    event: 'ML Bootcamp',
+    sourceUrl: 'https://www.instagram.com/p/DEVfCp3txa4/?img_index=2',
+    frame: { x: 76, y: 200, width: 928, height: 620 },
   },
 ];

@@ -53,9 +53,9 @@ Straight quotes in the issue file become curly quotes on the site automatically.
 
 ## Community photo gallery
 
-The homepage and community page share a gallery of original club recap images. Add image files to `src/assets/community/gallery/`, import them in `src/data/gallery.ts`, and provide a caption, event, alt text, and original post URL. Record the source and credit in `src/assets/community/gallery/sources.json`. Use `position` to adjust a card's framing; the full-photo viewer shows the complete image.
+The homepage and community page share a gallery of original club recap images. Add image files to `src/assets/community/gallery/`, import them in `src/data/gallery.ts`, and provide a caption, event, alt text, and original post URL. Record the source and credit in `src/assets/community/gallery/sources.json`. Use an optional `frame` in source pixels to show a clean photograph from a published collage; cards and the full-photo viewer share that framing. Keep the original image unchanged and avoid enlarging beyond its native resolution.
 
-The gallery advances every six seconds while visible, pauses for interaction, and starts paused for reduced motion. Visitors can swipe, use the arrow controls, or open a photo and browse with the keyboard. Images are bundled with the site and optimized by Astro.
+The gallery sweeps continuously in a seamless loop, without playback controls. Keyboard focus and reduced-motion settings provide a static, horizontally scrollable strip. Visitors can open a photo and browse the full-size viewer with the arrow keys or close it with Escape. Images are bundled with the site and optimized by Astro.
 
 ## Where things live
 

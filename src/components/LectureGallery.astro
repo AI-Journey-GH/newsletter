@@ -9,10 +9,17 @@ interface Props {
 }
 
 const { photos = galleryPhotos, id = 'gallery' } = Astro.props;
-const entries = await Promise.all(photos.map(async (photo) => ({
-  ...photo,
-  full: await getImage({ src: photo.src, width: Math.min(1800, photo.src.width), format: 'webp', quality: 90 }),
-})));
+const entries = await Promise.all(photos.map(async (photo) => {
+  const frame = photo.frame;
+  const cardScale = frame ? Math.max(1, frame.width / frame.height / 1.5) : 1;
+  const imageScale = frame ? cardScale * photo.src.width / frame.width : 1;
+  return {
+    ...photo,
+    full: await getImage({ src: photo.src, width: Math.min(1800, photo.src.width), format: 'webp', quality: 90 }),
+    frameStyle: frame ? `--frame-ratio: ${frame.width / frame.height}; --frame-native-width: ${frame.width}px; --frame-card-scale: ${cardScale}; --frame-left: ${-frame.x / frame.width * 100}%; --frame-top: ${-frame.y / frame.height * 100}%; --frame-width: ${photo.src.width / frame.width * 100}%; --frame-height: ${photo.src.height / frame.height * 100}%;` : '',
+    sizes: `(min-width: 640px) ${Math.ceil(360 * imageScale)}px, ${85 * imageScale}vw`,
+  };
+}));
 ---
 
 {entries.length > 0 && (
@@ -20,50 +27,48 @@ const entries = await Promise.all(photos.map(async (photo) => ({
     <div class="gallery-heading">
       <div class="gallery-intro">
         <p class="eyebrow">Life at AI Journey</p>
-        <h2 id={`${id}-title`} class="display h-section">The people behind the journey.</h2>
+        <h2 id={`${id}-title`} class="display h-section">A glance at some activities.</h2>
         <p class="gallery-description">A few moments from our lectures, bootcamps, and conversations.</p>
       </div>
-      <div class="gallery-controls" role="group" aria-label="Photo gallery controls" data-gallery-controls hidden>
-        <span class="gallery-total">{String(entries.length).padStart(2, '0')} photos</span>
-        <button type="button" class="gallery-toggle" aria-label="Pause gallery" data-gallery-toggle>
-          <span data-gallery-pause-icon><Icon name="pause" size={17} /></span>
-          <span data-gallery-play-icon hidden><Icon name="play" size={17} /></span>
-          <span data-gallery-toggle-label>Pause</span>
-        </button>
-        <button type="button" class="gallery-arrow icon-btn" aria-label="Previous photos" data-gallery-prev><Icon name="arrow-left" size={20} /></button>
-        <button type="button" class="gallery-arrow icon-btn" aria-label="Next photos" data-gallery-next><Icon name="arrow-right" size={20} /></button>
-      </div>
     </div>
-    <div class="gallery-shell">
-      <ul class="gallery-track" tabindex="0" aria-label="Lecture and community photos" aria-live="off" data-gallery-track>
-        {entries.map((photo, index) => (
-          <li class="gallery-card" data-gallery-card>
-            <figure>
-              <a
-                href={photo.sourceUrl}
-                class="gallery-photo"
-                target="_blank"
-                rel="noopener"
-                aria-label={`Open photo: ${photo.alt}`}
-                aria-haspopup="dialog"
-                aria-controls={`${id}-viewer`}
-                data-gallery-photo
-                data-photo-index={index}
-                data-photo-src={photo.full.src}
-                data-photo-width={photo.full.attributes.width}
-                data-photo-height={photo.full.attributes.height}
-                data-photo-alt={photo.alt}
-                data-photo-caption={photo.caption}
-                data-photo-event={photo.event}
-              >
-                <Image src={photo.src} alt={photo.alt} widths={[...new Set([320, 480, Math.min(720, photo.src.width)])].filter((width) => width <= photo.src.width)} sizes="(min-width: 1024px) 28vw, (min-width: 640px) 44vw, 86vw" format="webp" quality={85} loading="lazy" style={`object-position: ${photo.position ?? 'center'}`} class="gallery-image" />
-                <span class="gallery-expand" aria-hidden="true"><Icon name="arrows-out" size={19} /></span>
-              </a>
-              <figcaption class="gallery-caption"><p class="gallery-event">{photo.event}</p><p>{photo.caption}</p></figcaption>
-            </figure>
-          </li>
+    <div class="gallery-shell" tabindex="0" role="region" aria-label="Lecture and community photos" aria-live="off" data-gallery-track>
+      <div class="gallery-rail" data-gallery-rail>
+        {[0, 1].map((copy) => (
+          <ul class="gallery-group" aria-hidden={copy === 1 ? 'true' : undefined} data-gallery-group={copy === 0 ? 'original' : 'duplicate'}>
+            {entries.map((photo, index) => (
+                <li class="gallery-card">
+                  <figure>
+                    <a
+                      href={photo.sourceUrl}
+                      class="gallery-photo"
+                      target="_blank"
+                      rel="noopener"
+                      aria-label={copy === 0 ? `Open photo: ${photo.alt}` : undefined}
+                      aria-haspopup={copy === 0 ? 'dialog' : undefined}
+                      aria-controls={copy === 0 ? `${id}-viewer` : undefined}
+                      tabindex={copy === 1 ? -1 : undefined}
+                      data-gallery-photo={copy === 0 ? 'original' : 'duplicate'}
+                      data-photo-index={index}
+                      data-photo-src={photo.full.src}
+                      data-photo-width={photo.full.attributes.width}
+                      data-photo-height={photo.full.attributes.height}
+                      data-photo-alt={photo.alt}
+                      data-photo-caption={photo.caption}
+                      data-photo-event={photo.event}
+                      data-photo-frame={photo.frameStyle}
+                    >
+                      <span class="gallery-card-frame" data-framed={photo.frame ? '' : undefined} style={photo.frameStyle}>
+                        <Image src={photo.src} alt={copy === 0 ? photo.alt : ''} widths={[...new Set([480, 720, Math.min(1080, photo.src.width)])].filter((width) => width <= photo.src.width)} sizes={photo.sizes} format="webp" quality={85} loading="lazy" style={`object-position: ${photo.position ?? 'center'}`} class="gallery-image" />
+                      </span>
+                      <span class="gallery-expand" aria-hidden="true"><Icon name="arrows-out" size={19} /></span>
+                    </a>
+                    <figcaption class="gallery-caption"><p class="gallery-event">{photo.event}</p><p>{photo.caption}</p></figcaption>
+                  </figure>
+                </li>
+            ))}
+          </ul>
         ))}
-      </ul>
+      </div>
     </div>
     <dialog id={`${id}-viewer`} class="gallery-dialog" aria-label="Lecture photo viewer" aria-describedby={`${id}-viewer-caption`} data-gallery-dialog>
       <div class="gallery-dialog-toolbar">
@@ -75,7 +80,7 @@ const entries = await Promise.all(photos.map(async (photo) => ({
         <button type="button" class="icon-btn gallery-dialog-close" aria-label="Close photo viewer" autofocus data-gallery-dialog-close><Icon name="x" size={23} /></button>
       </div>
       <figure>
-        <div class="gallery-dialog-stage"><img alt="" decoding="async" class="gallery-dialog-image" data-gallery-dialog-image /></div>
+        <div class="gallery-dialog-stage"><div class="gallery-dialog-frame" data-gallery-dialog-frame><img alt="" decoding="async" class="gallery-dialog-image" data-gallery-dialog-image /></div></div>
         <figcaption class="gallery-dialog-caption">
           <div aria-live="polite"><p class="gallery-event" data-gallery-dialog-event></p><p id={`${id}-viewer-caption`} data-gallery-dialog-caption></p></div>
           <a href={entries[0].sourceUrl} class="editorial-link" target="_blank" rel="noopener" data-gallery-dialog-source>Original post <Icon name="external" size={16} /></a>
@@ -91,23 +96,24 @@ const entries = await Promise.all(photos.map(async (photo) => ({
   .gallery-intro { max-inline-size: 42rem; }
   .gallery-intro h2 { margin-block-start: 0.875rem; }
   .gallery-description { margin-block-start: 0.875rem; color: var(--muted); font-size: 0.9375rem; line-height: 1.75; }
-  .gallery-controls { display: flex; align-items: center; gap: 0.5rem; flex: none; }
-  .gallery-controls[hidden] { display: none; }
-  .gallery-total { margin-inline-end: 0.5rem; color: var(--muted); font-size: 0.75rem; font-variant-numeric: tabular-nums; white-space: nowrap; }
-  .gallery-toggle { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; min-block-size: 2.75rem; min-inline-size: 5.5rem; padding-inline: 0.875rem; border: 1px solid var(--border-strong); border-radius: 0.625rem; color: var(--heading); font-size: 0.8125rem; font-weight: 550; cursor: pointer; transition: background-color 150ms ease, border-color 150ms ease; }
-  .gallery-toggle > span { display: inline-flex; }
-  .gallery-toggle > span[hidden] { display: none; }
-  .gallery-toggle:hover { background: var(--surface-2); border-color: var(--heading); }
-  .gallery-arrow { border: 1px solid var(--border-strong); border-radius: 0.625rem; cursor: pointer; }
-  .gallery-arrow:disabled { opacity: 0.35; cursor: default; }
-  .gallery-arrow:disabled:hover { background: transparent; }
-  .gallery-track { display: flex; gap: 1rem; margin: 0; padding-block: 0.25rem 1rem; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; scroll-padding-inline: 0; scrollbar-width: thin; scrollbar-color: var(--border-strong) transparent; }
-  .gallery-track:focus-visible { outline-offset: 4px; }
-  .gallery-card { flex: 0 0 86%; min-inline-size: 0; scroll-snap-align: start; }
-  .gallery-photo { position: relative; display: block; overflow: hidden; aspect-ratio: 4 / 5; border-radius: 1rem; background: var(--surface-2); }
+  .gallery-shell { --gallery-gap: 1rem; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; scrollbar-width: thin; scrollbar-color: var(--border-strong) transparent; }
+  .gallery-shell:focus-visible { outline-offset: 4px; }
+  .gallery-rail { display: flex; inline-size: max-content; }
+  .gallery-group { display: flex; flex: none; gap: var(--gallery-gap); margin: 0; padding: 0.25rem var(--gallery-gap) 1rem 0; list-style: none; }
+  .gallery-group[aria-hidden="true"] { display: none; }
+  .gallery-card { flex: none; inline-size: min(85vw, 22.5rem); min-inline-size: 0; scroll-snap-align: start; }
+  .gallery-photo { position: relative; display: block; overflow: hidden; aspect-ratio: 3 / 2; border-radius: 1rem; background: var(--surface-2); }
+  .lecture-gallery:is([data-gallery-motion="running"], [data-gallery-motion="paused"]) .gallery-shell { overflow-x: hidden; scroll-snap-type: none; }
+  .lecture-gallery:is([data-gallery-motion="running"], [data-gallery-motion="paused"]) .gallery-rail { animation: gallery-sweep var(--gallery-duration, 60s) linear infinite; will-change: transform; }
+  .lecture-gallery:is([data-gallery-motion="running"], [data-gallery-motion="paused"]) .gallery-group[aria-hidden="true"] { display: flex; }
+  .lecture-gallery[data-gallery-motion="paused"] .gallery-rail { animation-play-state: paused; }
+  @keyframes gallery-sweep { to { transform: translateX(calc(-1 * var(--gallery-distance, 0px))); } }
   .gallery-photo:focus-visible { outline: 3px solid var(--focus); outline-offset: -5px; }
-  .gallery-photo :global(.gallery-image) { display: block; inline-size: 100%; block-size: 100%; object-fit: cover; transition: transform 350ms ease; }
-  .gallery-photo:hover :global(.gallery-image) { transform: scale(1.025); }
+  .gallery-card-frame { display: block; inline-size: 100%; block-size: 100%; }
+  .gallery-card-frame :global(.gallery-image) { display: block; inline-size: 100%; block-size: 100%; }
+  .gallery-card-frame:not([data-framed]) :global(.gallery-image) { object-fit: cover; }
+  .gallery-card-frame[data-framed] { position: absolute; inset-inline-start: 50%; inset-block-start: 50%; inline-size: calc(100% * var(--frame-card-scale)); block-size: auto; aspect-ratio: var(--frame-ratio); overflow: hidden; transform: translate(-50%, -50%); }
+  .gallery-card-frame[data-framed] :global(.gallery-image), .gallery-dialog-frame[data-framed] .gallery-dialog-image { position: absolute; inset-inline-start: var(--frame-left); inset-block-start: var(--frame-top); inline-size: var(--frame-width); block-size: var(--frame-height); max-inline-size: none; max-block-size: none; }
   .gallery-expand { position: absolute; inset-inline-end: 0.75rem; inset-block-end: 0.75rem; display: grid; place-items: center; inline-size: 2.25rem; block-size: 2.25rem; border: 1px solid rgb(255 255 255 / 20%); border-radius: 50%; background: rgb(11 26 43 / 65%); color: #fff; backdrop-filter: blur(8px); }
   .gallery-caption { padding: 1rem 0.125rem 0; color: var(--muted); font-size: 0.8125rem; line-height: 1.65; }
   .gallery-event { color: var(--accent); font-size: 0.6875rem; font-weight: 650; line-height: 1.5; letter-spacing: 0.08em; text-transform: uppercase; }
@@ -120,30 +126,26 @@ const entries = await Promise.all(photos.map(async (photo) => ({
   .gallery-dialog-navigation .icon-btn, .gallery-dialog-close { cursor: pointer; }
   .gallery-dialog-count { min-inline-size: 3.5rem; color: var(--muted); font-size: 0.8125rem; text-align: center; font-variant-numeric: tabular-nums; }
   .gallery-dialog-stage { display: grid; place-items: center; min-block-size: 8rem; padding: 1rem; background: var(--bg-alt); }
+  .gallery-dialog-frame { display: grid; place-items: center; max-inline-size: 100%; }
+  .gallery-dialog-frame[data-framed] { position: relative; inline-size: min(var(--frame-native-width), 100%, calc((100dvh - 13rem) * var(--frame-ratio))); aspect-ratio: var(--frame-ratio); overflow: hidden; }
   .gallery-dialog-image { display: block; inline-size: auto; block-size: auto; max-inline-size: 100%; max-block-size: calc(100dvh - 13rem); object-fit: contain; }
   .gallery-dialog-caption { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.75rem 2rem; padding: 1rem 1.25rem; }
   .gallery-dialog-caption > div { flex: 1 1 20rem; }
   .gallery-dialog-caption > div > p + p { margin-block-start: 0.375rem; font-size: 0.875rem; line-height: 1.6; }
   .gallery-dialog-caption .editorial-link { font-size: 0.8125rem; }
-  @media (min-width: 40rem) { .gallery-card { flex-basis: 44%; } .gallery-track { gap: 1.5rem; } .lecture-gallery { padding-block-end: 4rem; } }
-  @media (min-width: 64rem) { .gallery-card { flex-basis: 28%; } }
-  @media (max-width: 39.99rem) { .gallery-controls { inline-size: 100%; } .gallery-total { margin-inline-end: auto; } .gallery-dialog-caption { padding: 1rem; } .gallery-dialog-image { max-block-size: calc(100dvh - 15rem); } }
-  @media (prefers-reduced-motion: reduce) { .gallery-photo :global(.gallery-image) { transition: none; } .gallery-photo:hover :global(.gallery-image) { transform: none; } }
+  @media (min-width: 40rem) { .gallery-shell { --gallery-gap: 1.5rem; } .gallery-card { inline-size: 22.5rem; } .lecture-gallery { padding-block-end: 4rem; } }
+  @media (max-width: 39.99rem) { .gallery-dialog-caption { padding: 1rem; } .gallery-dialog-image { max-block-size: calc(100dvh - 15rem); } .gallery-dialog-frame[data-framed] { inline-size: min(var(--frame-native-width), 100%, calc((100dvh - 15rem) * var(--frame-ratio))); } }
+  @media (prefers-reduced-motion: reduce) { .lecture-gallery .gallery-rail { animation: none !important; transform: none; } .lecture-gallery .gallery-shell { overflow-x: auto; scroll-snap-type: x mandatory; } .lecture-gallery .gallery-group[aria-hidden="true"] { display: none; } }
 </style>
 
 <script>
   document.querySelectorAll<HTMLElement>('[data-lecture-gallery]').forEach((root) => {
     if (root.dataset.galleryReady === 'true') return;
     const track = root.querySelector<HTMLElement>('[data-gallery-track]');
-    const controls = root.querySelector<HTMLElement>('[data-gallery-controls]');
-    const previous = root.querySelector<HTMLButtonElement>('[data-gallery-prev]');
-    const next = root.querySelector<HTMLButtonElement>('[data-gallery-next]');
-    const toggle = root.querySelector<HTMLButtonElement>('[data-gallery-toggle]');
-    const toggleLabel = root.querySelector<HTMLElement>('[data-gallery-toggle-label]');
-    const pauseIcon = root.querySelector<HTMLElement>('[data-gallery-pause-icon]');
-    const playIcon = root.querySelector<HTMLElement>('[data-gallery-play-icon]');
+    const originalGroup = root.querySelector<HTMLElement>('[data-gallery-group="original"]');
     const dialog = root.querySelector<HTMLDialogElement>('[data-gallery-dialog]');
     const image = root.querySelector<HTMLImageElement>('[data-gallery-dialog-image]');
+    const dialogFrame = root.querySelector<HTMLElement>('[data-gallery-dialog-frame]');
     const dialogCaption = root.querySelector<HTMLElement>('[data-gallery-dialog-caption]');
     const dialogEvent = root.querySelector<HTMLElement>('[data-gallery-dialog-event]');
     const dialogSource = root.querySelector<HTMLAnchorElement>('[data-gallery-dialog-source]');
@@ -151,125 +153,72 @@ const entries = await Promise.all(photos.map(async (photo) => ({
     const dialogPrevious = root.querySelector<HTMLButtonElement>('[data-gallery-dialog-prev]');
     const dialogNext = root.querySelector<HTMLButtonElement>('[data-gallery-dialog-next]');
     const dialogClose = root.querySelector<HTMLButtonElement>('[data-gallery-dialog-close]');
-    const cards = [...root.querySelectorAll<HTMLElement>('[data-gallery-card]')];
-    const photos = [...root.querySelectorAll<HTMLAnchorElement>('[data-gallery-photo]')];
-    if (!track || !controls || !previous || !next || !toggle || !toggleLabel || !pauseIcon || !playIcon || !dialog || !image || !dialogCaption || !dialogEvent || !dialogSource || !dialogCount || !dialogPrevious || !dialogNext || !dialogClose || !photos.length) return;
+    const photos = [...root.querySelectorAll<HTMLAnchorElement>('[data-gallery-photo="original"]')];
+    const allPhotos = [...root.querySelectorAll<HTMLAnchorElement>('[data-gallery-photo]')];
+    if (!track || !originalGroup || !dialog || !image || !dialogFrame || !dialogCaption || !dialogEvent || !dialogSource || !dialogCount || !dialogPrevious || !dialogNext || !dialogClose || !photos.length) return;
     root.dataset.galleryReady = 'true';
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
-    let userPaused = reduced.matches;
-    let motionOptIn = false;
-    let hovered = false;
-    let focused = false;
+    let keyboardInput = false;
+    let keyboardFocused = false;
     let visible = false;
-    let programmatic = false;
-    let direction = 1;
     let dialogIndex = 0;
     let lastTrigger: HTMLAnchorElement | null = null;
-    let advanceTimer: ReturnType<typeof setTimeout> | undefined;
-    let settleTimer: ReturnType<typeof setTimeout> | undefined;
-    let scrollFrame = 0;
-    const maxScroll = () => Math.max(0, track.scrollWidth - track.clientWidth);
-    const stopTimer = () => {
-      clearTimeout(advanceTimer);
-      advanceTimer = undefined;
+    const updateMotion = () => {
+      const motion = reduced.matches || keyboardFocused || photos.length < 2
+        ? 'static'
+        : dialog.open || document.hidden || !visible ? 'paused' : 'running';
+      if (motion !== 'static' && root.dataset.galleryMotion === 'static') track.scrollLeft = 0;
+      root.dataset.galleryMotion = motion;
     };
-    const updateControls = () => {
-      const maximum = maxScroll();
-      previous.disabled = track.scrollLeft <= 2;
-      next.disabled = track.scrollLeft >= maximum - 2;
-      controls.hidden = maximum <= 2;
-      const paused = userPaused || (reduced.matches && !motionOptIn);
-      toggleLabel.textContent = paused ? 'Play' : 'Pause';
-      toggle.setAttribute('aria-label', paused ? 'Play gallery' : 'Pause gallery');
-      pauseIcon.hidden = paused;
-      playIcon.hidden = !paused;
+    const measure = () => {
+      const distance = originalGroup.getBoundingClientRect().width;
+      root.style.setProperty('--gallery-distance', `${distance}px`);
+      root.style.setProperty('--gallery-duration', `${distance / 30}s`);
     };
-    const stops = () => {
-      const maximum = maxScroll();
-      const left = track.getBoundingClientRect().left;
-      const result = [0];
-      cards.forEach((card) => {
-        const position = Math.min(maximum, Math.max(0, track.scrollLeft + card.getBoundingClientRect().left - left));
-        if (position - result[result.length - 1] > 2) result.push(position);
-      });
-      return result;
+    const revealFocused = () => {
+      const active = document.activeElement;
+      if (!active || !originalGroup.contains(active) || !(active instanceof HTMLElement)) return;
+      const trackRect = track.getBoundingClientRect();
+      const rect = active.getBoundingClientRect();
+      if (rect.left < trackRect.left) track.scrollLeft += rect.left - trackRect.left;
+      else if (rect.right > trackRect.right) track.scrollLeft += rect.right - trackRect.right;
     };
-    const schedule = () => {
-      stopTimer();
-      updateControls();
-      if (userPaused || (reduced.matches && !motionOptIn) || hovered || focused || !visible || document.hidden || dialog.open || programmatic || maxScroll() <= 2) return;
-      advanceTimer = setTimeout(() => {
-        const maximum = maxScroll();
-        if (track.scrollLeft >= maximum - 2) direction = -1;
-        else if (track.scrollLeft <= 2) direction = 1;
-        move(direction, false);
-      }, 6000);
-    };
-    const finishScroll = () => {
-      programmatic = false;
-      schedule();
-    };
-    const scrollTo = (left: number, manual: boolean) => {
-      if (manual) userPaused = true;
-      stopTimer();
-      clearTimeout(settleTimer);
-      programmatic = true;
-      track.scrollTo({ left, behavior: reduced.matches ? 'auto' : 'smooth' });
-      settleTimer = setTimeout(finishScroll, reduced.matches ? 0 : 240);
-      updateControls();
-    };
-    const move = (step: number, manual: boolean) => {
-      const positions = stops();
-      const left = step > 0
-        ? positions.find((position) => position > track.scrollLeft + 2) ?? maxScroll()
-        : [...positions].reverse().find((position) => position < track.scrollLeft - 2) ?? 0;
-      scrollTo(left, manual);
-    };
-    const pauseForInteraction = () => {
-      userPaused = true;
-      schedule();
-    };
-    previous.addEventListener('click', () => move(-1, true));
-    next.addEventListener('click', () => move(1, true));
-    toggle.addEventListener('click', () => {
-      userPaused = !userPaused;
-      if (!userPaused) {
-        focused = false;
-        hovered = false;
-        if (reduced.matches) motionOptIn = true;
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Tab') keyboardInput = true;
+      else if (!dialog.open && root.contains(document.activeElement)) keyboardInput = true;
+      if (keyboardInput && !dialog.open && root.contains(document.activeElement)) {
+        keyboardFocused = true;
+        updateMotion();
+        revealFocused();
       }
-      schedule();
     });
-    track.addEventListener('pointerdown', pauseForInteraction, { passive: true });
-    track.addEventListener('wheel', pauseForInteraction, { passive: true });
-    track.addEventListener('keydown', (event) => {
-      if (['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) pauseForInteraction();
-    });
-    track.addEventListener('scroll', () => {
-      if (!programmatic) userPaused = true;
-      stopTimer();
-      clearTimeout(settleTimer);
-      settleTimer = setTimeout(finishScroll, 160);
-      if (!scrollFrame) scrollFrame = requestAnimationFrame(() => {
-        scrollFrame = 0;
-        updateControls();
-      });
+    document.addEventListener('pointerdown', () => {
+      keyboardInput = false;
+      keyboardFocused = false;
+      updateMotion();
     }, { passive: true });
-    root.addEventListener('pointerenter', () => { hovered = true; schedule(); });
-    root.addEventListener('pointerleave', () => { hovered = false; schedule(); });
-    root.addEventListener('focusin', () => { focused = true; schedule(); });
+    root.addEventListener('focusin', () => {
+      if (!dialog.open && keyboardInput) {
+        keyboardFocused = true;
+        updateMotion();
+        revealFocused();
+      }
+    });
     root.addEventListener('focusout', () => {
-      queueMicrotask(() => { focused = root.contains(document.activeElement); schedule(); });
+      queueMicrotask(() => {
+        if (!root.contains(document.activeElement)) keyboardFocused = false;
+        updateMotion();
+      });
     });
     const showPhoto = (index: number) => {
-      userPaused = true;
-      stopTimer();
       dialogIndex = (index + photos.length) % photos.length;
       const photo = photos[dialogIndex];
       image.src = photo.dataset.photoSrc ?? '';
       image.alt = photo.dataset.photoAlt ?? '';
       image.width = Number(photo.dataset.photoWidth) || 1800;
       image.height = Number(photo.dataset.photoHeight) || 1800;
+      dialogFrame.style.cssText = photo.dataset.photoFrame ?? '';
+      dialogFrame.toggleAttribute('data-framed', Boolean(photo.dataset.photoFrame));
       dialogCaption.textContent = photo.dataset.photoCaption ?? '';
       dialogEvent.textContent = photo.dataset.photoEvent ?? '';
       dialogSource.href = photo.href;
@@ -277,13 +226,18 @@ const entries = await Promise.all(photos.map(async (photo) => ({
       dialogPrevious.disabled = photos.length < 2;
       dialogNext.disabled = photos.length < 2;
       if (!dialog.open) dialog.showModal();
-      updateControls();
+      updateMotion();
     };
-    photos.forEach((photo, index) => photo.addEventListener('click', (event) => {
-      event.preventDefault();
-      lastTrigger = photo;
-      showPhoto(index);
-    }));
+    allPhotos.forEach((photo) => {
+      if (photo.dataset.galleryPhoto === 'duplicate') photo.addEventListener('pointerdown', (event) => event.preventDefault());
+      photo.addEventListener('click', (event) => {
+        if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey || event.button !== 0) return;
+        event.preventDefault();
+        const index = Number(photo.dataset.photoIndex);
+        lastTrigger = photos[index];
+        showPhoto(index);
+      });
+    });
     dialogPrevious.addEventListener('click', () => showPhoto(dialogIndex - 1));
     dialogNext.addEventListener('click', () => showPhoto(dialogIndex + 1));
     dialogClose.addEventListener('click', () => dialog.close());
@@ -301,22 +255,22 @@ const entries = await Promise.all(photos.map(async (photo) => ({
     });
     dialog.addEventListener('close', () => {
       lastTrigger?.focus({ preventScroll: true });
-      schedule();
+      updateMotion();
+      if (keyboardFocused) revealFocused();
     });
-    reduced.addEventListener('change', () => {
-      motionOptIn = false;
-      if (reduced.matches) userPaused = true;
-      schedule();
-    });
-    document.addEventListener('visibilitychange', schedule);
-    window.addEventListener('resize', schedule, { passive: true });
-    window.addEventListener('pagehide', stopTimer);
-    window.addEventListener('pageshow', schedule);
+    reduced.addEventListener('change', updateMotion);
+    document.addEventListener('visibilitychange', updateMotion);
+    window.addEventListener('pagehide', () => { root.dataset.galleryMotion = 'paused'; });
+    window.addEventListener('pageshow', updateMotion);
+    const resizeObserver = new ResizeObserver(measure);
+    resizeObserver.observe(track);
+    resizeObserver.observe(originalGroup);
     const observer = new IntersectionObserver(([entry]) => {
-      visible = entry.isIntersecting && entry.intersectionRatio >= 0.4;
-      schedule();
-    }, { threshold: [0, 0.4] });
+      visible = entry.isIntersecting;
+      updateMotion();
+    }, { threshold: 0 });
     observer.observe(track);
-    updateControls();
+    measure();
+    updateMotion();
   });
 </script>
