@@ -89,7 +89,6 @@ const chips = [
         <h1 class="display issue-title">{d.title}</h1>
         <p class="lead issue-deck">{d.subtitle}</p>
         <div class="issue-byline no-print">
-          <p class="issue-author">By <span>{d.author}</span></p>
           <div class="issue-dateline">
             <time datetime={isoDate(d.date)}>{formatDate(d.date, 'short')}</time>
             <span aria-hidden="true">·</span>
@@ -193,10 +192,6 @@ const chips = [
     color: var(--muted);
     font-size: 0.875rem;
     line-height: 1.6;
-  }
-  .issue-author span {
-    color: var(--heading);
-    font-weight: 650;
   }
   .issue-dateline {
     display: flex;
