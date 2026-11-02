@@ -2,7 +2,7 @@
 issue: 1
 title: "AI Journey's first issue"
 subtitle: "Welcome to the weirdest week in tech"
-date: 2026-10-29
+date: 2026-11-02
 readTime: 7
 author: "@Mohamad"
 
