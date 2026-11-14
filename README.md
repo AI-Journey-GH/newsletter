@@ -74,6 +74,21 @@ The "Next on the calendar" section on the homepage and the Activities page lists
 - Finished events disappear on their own, even before the next deploy. When the list is empty, the section invites visitors to the WhatsApp community instead.
 - Once the event is over, move it to `src/data/activities.ts` so it shows in the archive.
 
+## Activity pages and the Learn page
+
+Every activity in `src/data/activities.ts` gets its own page at `/events/<id>`, with its topics, speakers (`speakers`), photos (gallery photos whose `event` matches `galleryEvent`) and the original post.
+
+To share slides, notebooks or recordings from a session, add `materials` to the activity:
+
+```ts
+materials: [
+  { kind: 'Slides', label: 'Lecture 4 slides', href: 'https://...' },
+  { kind: 'Notebook', label: 'KNN in Colab', href: 'https://colab.research.google.com/...' },
+],
+```
+
+They show on the activity page and on `/learn`. The Learn page steps and their recommended reading live in `src/data/learn.ts`. Each step points to one activity by its `id`.
+
 ## Community photo gallery
 
 The homepage and community page share a gallery of original club recap images. Add image files to `src/assets/community/gallery/`, import them in `src/data/gallery.ts`, and provide a caption, event, alt text, and original post URL. Record the source and credit in `src/assets/community/gallery/sources.json`. Use an optional `frame` in source pixels to show a clean photograph from a published collage; cards and the full-photo viewer share that framing. Keep the original image unchanged and avoid enlarging beyond its native resolution.
@@ -90,6 +105,8 @@ The gallery sweeps continuously in a seamless loop, without playback controls. K
 | Colors, fonts, buttons, tags, callouts | `src/styles/global.css` (see them all at `/styleguide`) |
 | Issue page sections | `src/components/issue/` |
 | Community gallery photos and captions | `src/data/gallery.ts` |
+| Upcoming events | `src/data/upcoming.ts` |
+| Learn page steps and reading | `src/data/learn.ts` |
 | Pages | `src/pages/` |
 | Issue fields (the content schema) | `src/content.config.ts` |
 

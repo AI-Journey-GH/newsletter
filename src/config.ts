@@ -38,6 +38,7 @@ export const analytics = {
 
 export const nav = [
   { label: 'Activities', href: '/events' },
+  { label: 'Learn', href: '/learn' },
   { label: 'Community', href: '/community' },
   { label: 'Blogs', href: '/issues' },
 ];

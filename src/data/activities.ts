@@ -17,6 +17,7 @@ export type Activity = {
   featured?: boolean;
   topics: string[];
   speakers?: { name: string; role: string }[];
+  materials?: { kind: 'Slides' | 'Notebook' | 'Recording'; label: string; href: string }[];
   galleryEvent?: string;
 };
 
@@ -77,5 +78,7 @@ export const activities: Activity[] = [
     topics: ['Transformers', 'Attention', 'Self-attention', 'Large language models'],
   },
 ];
+
+export const materialIcon = { Slides: 'presentation-chart', Notebook: 'code', Recording: 'video' } as const;
 
 export const activityPath = (activity: Activity) => `/events/${activity.id}`;

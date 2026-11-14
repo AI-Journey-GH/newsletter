@@ -6,7 +6,7 @@ import Breadcrumb from '../../components/Breadcrumb.astro';
 import CommunityPhoto from '../../components/CommunityPhoto.astro';
 import Icon from '../../components/Icon.astro';
 import NextUp from '../../components/NextUp.astro';
-import { activities, type Activity } from '../../data/activities';
+import { activities, materialIcon, type Activity } from '../../data/activities';
 import { galleryPhotos } from '../../data/gallery';
 import { u } from '../../lib/utils';
 
@@ -20,7 +20,7 @@ const isRecap = activity.sourceKind === 'recap';
 const photos = activity.galleryEvent ? galleryPhotos.filter((photo) => photo.event === activity.galleryEvent) : [];
 const others = activities.filter((item) => item.id !== activity.id).slice(0, 3);
 const og = await getImage({ src: activity.cover.src, width: 1200, height: 630, fit: 'cover', format: 'jpg', quality: 82 });
-const split = Boolean(activity.speakers?.length);
+const split = Boolean(activity.speakers?.length || activity.materials?.length);
 const frameStyle = (photo: (typeof photos)[number]) => {
   const f = photo.frame;
   if (!f) return undefined;
@@ -64,6 +64,17 @@ const topicsLabel = activity.category === 'Bootcamps' ? 'The sessions' : 'What w
           ))}
         </ol>
       </section>
+
+      {activity.materials && activity.materials.length > 0 && (
+        <section class="detail-block" aria-labelledby="materials-title">
+          <h2 id="materials-title" class="detail-title">Materials</h2>
+          <ul class="material-list">
+            {activity.materials.map((item) => (
+              <li><a href={item.href} target="_blank" rel="noopener"><Icon name={materialIcon[item.kind]} size={20} /><span><span class="material-kind">{item.kind}</span>{item.label}</span><Icon name="external" size={15} /></a></li>
+            ))}
+          </ul>
+        </section>
+      )}
 
       {activity.speakers && activity.speakers.length > 0 && (
         <section class="detail-block" aria-labelledby="speakers-title">
@@ -131,6 +142,11 @@ const topicsLabel = activity.category === 'Bootcamps' ? 'The sessions' : 'What w
   .topic-list { display: grid; gap: 0.625rem; margin-block-start: 1rem; }
   .topic-list li { display: flex; align-items: center; gap: 0.875rem; min-block-size: 3.25rem; padding: 0.625rem 1rem; border: 1px solid var(--border); border-radius: 0.75rem; background: var(--surface); color: var(--heading); font-size: 0.9375rem; font-weight: 550; }
   .topic-index { flex: none; color: var(--accent); font-family: var(--font-display); font-size: 0.8125rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .material-list { display: grid; gap: 0.625rem; margin-block-start: 1rem; }
+  .material-list a { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 0.875rem; padding: 0.75rem 1rem; border: 1px solid var(--border); border-radius: 0.75rem; background: var(--surface); color: var(--heading); font-size: 0.9375rem; font-weight: 550; text-decoration: none; }
+  .material-list a:hover { border-color: var(--border-strong); background: var(--surface-2); }
+  .material-list a > :global(svg:first-child) { color: var(--accent); }
+  .material-kind { display: block; color: var(--muted); font-size: 0.75rem; font-weight: 500; }
   .speaker-list { display: grid; gap: 0.75rem; margin-block-start: 1rem; }
   .speaker-list li { display: flex; align-items: center; gap: 0.875rem; padding: 0.875rem 1rem; border-radius: 0.75rem; background: var(--bg-alt); }
   .speaker-initials { display: inline-flex; align-items: center; justify-content: center; flex: none; inline-size: 2.75rem; block-size: 2.75rem; border-radius: 999px; background: var(--btn-bg); color: var(--btn-fg); font-size: 0.875rem; font-weight: 700; letter-spacing: 0.02em; }
