@@ -4,6 +4,7 @@ import ActivityCard from '../components/ActivityCard.astro';
 import Breadcrumb from '../components/Breadcrumb.astro';
 import CommunityPhoto from '../components/CommunityPhoto.astro';
 import Icon from '../components/Icon.astro';
+import NextUp from '../components/NextUp.astro';
 import { links } from '../config';
 import { activities, activityCategories } from '../data/activities';
 import { u } from '../lib/utils';
@@ -23,6 +24,8 @@ const categoryCount = (category: string) => category === 'All' ? activities.leng
       </div>
       <a href={links.whatsapp} class="btn btn-primary" target="_blank" rel="noopener">Get new announcements <Icon name="arrow-right" size={18} /></a>
     </section>
+
+    <NextUp />
 
     {
       featured && (
@@ -66,6 +69,7 @@ const categoryCount = (category: string) => category === 'All' ? activities.leng
 
 <style>
   .activities-page { padding-block: 1.5rem 4rem; }
+  .activities-page :global(.next-up) { padding-block: 0 3rem; }
   .activities-intro { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 1.5rem 3rem; padding-block: 2.5rem 3rem; }
   .page-title { margin-block-start: 0.875rem; max-inline-size: 19ch; font-size: clamp(2.25rem, 1.35rem + 3.5vw, 4rem); font-weight: 730; line-height: 1.1; letter-spacing: -0.045em; }
   .intro-description { max-inline-size: 40rem; margin-block-start: 1.25rem; color: var(--muted); font-size: 1.0625rem; line-height: 1.75; }

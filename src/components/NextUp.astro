@@ -1,0 +1,183 @@
+---
+import Icon from './Icon.astro';
+import { links } from '../config';
+import { formatEventDay, formatEventTime, getUpcomingEvents, googleCalendarUrl } from '../data/upcoming';
+import { u } from '../lib/utils';
+
+interface Props {
+  id?: string;
+  headingLevel?: 'h2' | 'h3';
+}
+
+const { id = 'next-up', headingLevel: H = 'h2' } = Astro.props;
+const events = getUpcomingEvents().slice(0, 3);
+const pageUrl = new URL(u('/events'), Astro.site).href;
+---
+
+<section class="next-up" aria-labelledby={`${id}-title`} data-next-up>
+  <div class="next-up-heading">
+    <p class="eyebrow">Coming up</p>
+    <H id={`${id}-title`} class="display next-up-title">Next on the calendar</H>
+  </div>
+
+  <ul class="next-up-list" data-next-up-list hidden={events.length === 0}>
+    {events.map((event) => {
+      const day = formatEventDay(event.start);
+      return (
+        <li class="next-card" data-event-start={event.start} data-event-end={event.end}>
+          <div class="next-date" aria-hidden="true">
+            <span class="next-date-month">{day.month}</span>
+            <span class="next-date-day">{day.day}</span>
+            <span class="next-date-weekday">{day.weekday}</span>
+          </div>
+          <div class="next-body">
+            <div class="next-meta-top">
+              <span class="next-category">{event.category}</span>
+              <span class="next-when" data-event-relative hidden></span>
+            </div>
+            <h3 class="next-name">{event.title}</h3>
+            <p class="next-summary">{event.summary}</p>
+            <ul class="next-facts">
+              <li><Icon name="calendar" size={16} /><time datetime={event.start}>{day.long}</time></li>
+              <li><Icon name="clock" size={16} />{formatEventTime(event.start, event.end)}</li>
+              <li><Icon name="pin" size={16} />{event.location}</li>
+            </ul>
+            <div class="next-actions">
+              {event.registerUrl && (
+                <a href={event.registerUrl} class="btn btn-primary" target="_blank" rel="noopener">Register <Icon name="arrow-right" size={18} /></a>
+              )}
+              <details class="cal-menu" data-cal-menu>
+                <summary class:list={['btn', event.registerUrl ? 'btn-outline' : 'btn-primary']}><Icon name="calendar-plus" size={18} />Add to calendar</summary>
+                <div class="cal-menu-list">
+                  <a href={googleCalendarUrl(event, pageUrl)} target="_blank" rel="noopener">Google Calendar <Icon name="external" size={14} /></a>
+                  <a href={u(`/events/${event.id}.ics`)} download={`${event.id}.ics`}>Apple or Outlook (.ics) <Icon name="download" size={14} /></a>
+                </div>
+              </details>
+            </div>
+          </div>
+        </li>
+      );
+    })}
+  </ul>
+
+  <div class="next-empty" data-next-up-empty hidden={events.length > 0}>
+    <span class="next-empty-icon"><Icon name="calendar" size={24} /></span>
+    <div class="next-empty-copy">
+      <p class="next-empty-title">The next session is being planned.</p>
+      <p>Announcements reach our WhatsApp community first, with the date, place and how to register.</p>
+    </div>
+    <div class="next-empty-actions">
+      <a href={links.whatsapp} class="btn btn-primary" target="_blank" rel="noopener"><Icon name="whatsapp" size={19} />Get notified</a>
+      <a href={links.instagram} class="editorial-link" target="_blank" rel="noopener">Follow on Instagram <Icon name="arrow-right" size={17} /></a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .next-up { padding-block: 2.5rem 1.5rem; }
+  .next-up-heading { margin-block-end: 1.25rem; }
+  .next-up-title { margin-block-start: 0.625rem; font-size: clamp(1.5rem, 1.1rem + 1.4vw, 2rem); font-weight: 700; line-height: 1.25; letter-spacing: -0.035em; }
+  .next-up-list { display: grid; gap: 1rem; }
+  .next-card { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 1rem; padding: 1rem; border: 1px solid var(--border); border-radius: 1rem; background: var(--surface); }
+  .next-date { display: flex; flex-direction: column; align-items: center; justify-content: center; inline-size: 4rem; block-size: 4.75rem; border-radius: 0.75rem; background: var(--btn-bg); color: var(--btn-fg); line-height: 1; }
+  .next-date-month { font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; }
+  .next-date-day { margin-block: 0.25rem; font-family: var(--font-display); font-size: 1.75rem; font-weight: 750; letter-spacing: -0.04em; }
+  .next-date-weekday { font-size: 0.6875rem; opacity: 0.8; }
+  .next-body { min-inline-size: 0; }
+  .next-meta-top { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 0.75rem; }
+  .next-category { color: var(--accent); font-size: 0.75rem; font-weight: 650; letter-spacing: 0.1em; text-transform: uppercase; }
+  .next-when { padding: 0.125rem 0.625rem; border-radius: 999px; background: var(--surface-2); color: var(--heading); font-size: 0.75rem; font-weight: 600; }
+  .next-when[data-live] { background: var(--color-cyan-400); color: var(--color-navy-950); }
+  .next-name { margin-block-start: 0.5rem; color: var(--heading); font-family: var(--font-display); font-size: 1.25rem; font-weight: 700; line-height: 1.3; letter-spacing: -0.03em; text-wrap: pretty; }
+  .next-summary { margin-block-start: 0.5rem; color: var(--muted); font-size: 0.9375rem; line-height: 1.7; }
+  .next-facts { display: grid; gap: 0.375rem; margin-block-start: 0.875rem; color: var(--text); font-size: 0.875rem; }
+  .next-facts li { display: flex; align-items: center; gap: 0.5rem; }
+  .next-facts :global(svg) { flex: none; color: var(--accent); }
+  .next-actions { display: flex; flex-wrap: wrap; align-items: start; gap: 0.625rem; margin-block-start: 1.125rem; }
+  .next-actions .btn, .cal-menu summary { min-block-size: 2.75rem; font-size: 0.875rem; }
+  .cal-menu { position: relative; }
+  .cal-menu summary { list-style: none; cursor: pointer; gap: 0.5rem; }
+  .cal-menu summary::-webkit-details-marker { display: none; }
+  .cal-menu-list { position: absolute; z-index: 20; inset-block-start: calc(100% + 0.375rem); inset-inline-start: 0; display: grid; min-inline-size: 15rem; padding: 0.375rem; border: 1px solid var(--border-strong); border-radius: 0.75rem; background: var(--surface); box-shadow: 0 14px 30px -12px rgb(11 26 43 / 0.3); }
+  .cal-menu-list a { display: flex; align-items: center; justify-content: space-between; gap: 1rem; min-block-size: 2.75rem; padding-inline: 0.75rem; border-radius: 0.5rem; color: var(--heading); font-size: 0.875rem; text-decoration: none; }
+  .cal-menu-list a:hover, .cal-menu-list a:focus-visible { background: var(--surface-2); }
+  .next-empty { display: grid; gap: 1rem; padding: 1.25rem; border: 1px dashed var(--border-strong); border-radius: 1rem; background: var(--bg-alt); }
+  .next-empty-icon { display: inline-flex; align-items: center; justify-content: center; inline-size: 3rem; block-size: 3rem; border-radius: 0.75rem; background: var(--surface); color: var(--accent); }
+  .next-empty-title { color: var(--heading); font-family: var(--font-display); font-size: 1.125rem; font-weight: 700; line-height: 1.35; letter-spacing: -0.02em; }
+  .next-empty-copy p:last-child { margin-block-start: 0.375rem; color: var(--muted); font-size: 0.9375rem; line-height: 1.7; }
+  .next-empty-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1.25rem; }
+  .next-empty-actions .btn { min-block-size: 2.75rem; gap: 0.5rem; font-size: 0.875rem; }
+  [hidden] { display: none !important; }
+  @media (max-width: 39.99rem) {
+    .next-card { row-gap: 0; }
+    .next-date { flex-direction: row; gap: 0.375rem; inline-size: auto; block-size: auto; padding: 0.5rem 0.75rem; align-self: center; }
+    .next-date-day { margin: 0; font-size: 1.125rem; }
+    .next-date-weekday { display: none; }
+    .next-body { display: contents; }
+    .next-meta-top { align-self: center; }
+    .next-name, .next-summary, .next-facts, .next-actions { grid-column: 1 / -1; }
+    .next-name { margin-block-start: 0.875rem; }
+  }
+  @media (min-width: 40rem) {
+    .next-card { gap: 1.25rem; padding: 1.25rem; }
+    .next-date { inline-size: 4.75rem; block-size: 5.5rem; }
+    .next-date-day { font-size: 2.125rem; }
+  }
+  @media (min-width: 56rem) {
+    .next-up-list:has(> li:nth-child(2)) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .next-empty { grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 1.25rem 1.5rem; padding: 1.25rem 1.5rem; }
+  }
+</style>
+
+<script>
+  const DAY = 86_400_000;
+  const dayKey = (date: Date) => date.toLocaleDateString('en-CA', { timeZone: 'Asia/Beirut' });
+
+  const relative = (start: Date, end: Date, now: Date) => {
+    if (now >= start && now < end) return { text: 'Happening now', live: true };
+    const days = Math.round((new Date(dayKey(start)).getTime() - new Date(dayKey(now)).getTime()) / DAY);
+    if (days <= 0) return { text: 'Today', live: true };
+    if (days === 1) return { text: 'Tomorrow', live: false };
+    if (days < 14) return { text: `In ${days} days`, live: false };
+    return null;
+  };
+
+  document.querySelectorAll<HTMLElement>('[data-next-up]').forEach((section) => {
+    const now = new Date();
+    const cards = [...section.querySelectorAll<HTMLElement>('[data-event-end]')];
+    cards.forEach((card) => {
+      const start = new Date(card.dataset.eventStart ?? '');
+      const end = new Date(card.dataset.eventEnd ?? '');
+      if (end <= now) {
+        card.remove();
+        return;
+      }
+      const badge = card.querySelector<HTMLElement>('[data-event-relative]');
+      const label = relative(start, end, now);
+      if (badge && label) {
+        badge.textContent = label.text;
+        badge.toggleAttribute('data-live', label.live);
+        badge.hidden = false;
+      }
+    });
+    if (cards.length > 0 && !section.querySelector('[data-event-end]')) {
+      section.querySelector<HTMLElement>('[data-next-up-list]')?.setAttribute('hidden', '');
+      section.querySelector<HTMLElement>('[data-next-up-empty]')?.removeAttribute('hidden');
+    }
+  });
+
+  const menus = [...document.querySelectorAll<HTMLDetailsElement>('[data-cal-menu]')];
+  document.addEventListener('click', (event) => {
+    menus.forEach((menu) => {
+      if (menu.open && event.target instanceof Node && !menu.contains(event.target)) menu.open = false;
+    });
+  });
+  document.addEventListener('keydown', (event) => {
+    if (event.key !== 'Escape') return;
+    menus.forEach((menu) => {
+      if (!menu.open) return;
+      menu.open = false;
+      menu.querySelector('summary')?.focus();
+    });
+  });
+</script>

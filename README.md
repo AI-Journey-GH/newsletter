@@ -51,6 +51,29 @@ Astro resizes and lazy-loads it automatically. When an image field is empty, not
 
 Straight quotes in the issue file become curly quotes on the site automatically.
 
+## Upcoming events
+
+The "Next on the calendar" section on the homepage and the Activities page lists events from `src/data/upcoming.ts`. Add one object per event to `upcomingEvents`:
+
+```ts
+{
+  id: 'diffusion-models',
+  title: 'Diffusion Models, From Noise to Pictures',
+  category: 'Learning series',
+  summary: 'One or two sentences about the session.',
+  start: '2026-12-03T17:00:00+02:00',
+  end: '2026-12-03T18:30:00+02:00',
+  location: 'Bechtel 214, AUB',
+  registerUrl: 'https://forms.gle/...',
+},
+```
+
+- Write `start` and `end` in Beirut time with the offset at the end (`+02:00` in winter, `+03:00` in summer).
+- `registerUrl` is optional. Without it, the card shows only "Add to calendar".
+- Each event gets a calendar file at `/events/<id>.ics` (Apple Calendar, Outlook) and a Google Calendar link.
+- Finished events disappear on their own, even before the next deploy. When the list is empty, the section invites visitors to the WhatsApp community instead.
+- Once the event is over, move it to `src/data/activities.ts` so it shows in the archive.
+
 ## Community photo gallery
 
 The homepage and community page share a gallery of original club recap images. Add image files to `src/assets/community/gallery/`, import them in `src/data/gallery.ts`, and provide a caption, event, alt text, and original post URL. Record the source and credit in `src/assets/community/gallery/sources.json`. Use an optional `frame` in source pixels to show a clean photograph from a published collage; cards and the full-photo viewer share that framing. Keep the original image unchanged and avoid enlarging beyond its native resolution.
