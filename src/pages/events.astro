@@ -6,7 +6,7 @@ import CommunityPhoto from '../components/CommunityPhoto.astro';
 import Icon from '../components/Icon.astro';
 import NextUp from '../components/NextUp.astro';
 import { links } from '../config';
-import { activities, activityCategories } from '../data/activities';
+import { activities, activityCategories, activityPath } from '../data/activities';
 import { u } from '../lib/utils';
 
 const featured = activities.find((activity) => activity.featured);
@@ -32,14 +32,14 @@ const categoryCount = (category: string) => category === 'All' ? activities.leng
         <section class="featured-section" aria-labelledby="featured-title">
           <div class="section-heading"><h2 class="display section-title" id="featured-title">A conversation to look back on</h2><span class="past-label">Past activity</span></div>
           <article class="featured-activity">
-            <a href={featured.sourceUrl} class="featured-photo" target="_blank" rel="noopener" aria-label={`See the ${featured.title} event recap on Instagram`}><CommunityPhoto priority /></a>
+            <a href={u(activityPath(featured))} class="featured-photo" tabindex="-1" aria-hidden="true"><CommunityPhoto priority /></a>
             <div class="featured-copy">
               <p class="eyebrow">{featured.category} / Event recap</p>
               <h3 class="display featured-title">{featured.title}</h3>
               <p class="featured-description">{featured.summary}</p>
               <p class="featured-date"><Icon name="calendar" size={17} />{featured.date ? <time datetime={featured.date}>{featured.periodLabel}</time> : featured.periodLabel}<span aria-hidden="true">·</span>AUB</p>
-              <div class="speakers"><div><p>Ali Saab</p><span>Researcher, OpenAI</span></div><div><p>Mohamad El Hajj</p><span>Security Researcher, Anthropic</span></div></div>
-              <a href={featured.sourceUrl} class="editorial-link" target="_blank" rel="noopener">See the event recap <Icon name="arrow-right" size={18} /></a>
+              {featured.speakers && <div class="speakers">{featured.speakers.map((speaker) => <div><p>{speaker.name}</p><span>{speaker.role}</span></div>)}</div>}
+              <div class="featured-links"><a href={u(activityPath(featured))} class="editorial-link">Read more about it <Icon name="arrow-right" size={18} /></a><a href={featured.sourceUrl} class="editorial-link" target="_blank" rel="noopener">Instagram recap <Icon name="external" size={16} /></a></div>
             </div>
           </article>
         </section>
@@ -57,7 +57,7 @@ const categoryCount = (category: string) => category === 'All' ? activities.leng
       <ul id="activities-grid" class="activity-grid" data-activity-grid>
         {activities.map((activity) => <li data-activity-category={activity.category}><ActivityCard activity={activity} /></li>)}
       </ul>
-      <p class="archive-note">These are past activities. Visit the original posts for each activity’s announcement or recap.</p>
+      <p class="archive-note">These are past activities. Open one to see what we covered, who spoke, and the original post.</p>
     </section>
 
     <section class="announcement-band" aria-labelledby="announcements-title">
@@ -87,6 +87,7 @@ const categoryCount = (category: string) => category === 'All' ? activities.leng
   .speakers { display: grid; gap: 0.875rem; margin-block: 1.25rem 0.75rem; padding-block-start: 1.25rem; border-block-start: 1px solid var(--border); }
   .speakers p { color: var(--heading); font-size: 0.875rem; font-weight: 650; }
   .speakers span { display: block; margin-block-start: 0.25rem; color: var(--muted); font-size: 0.75rem; line-height: 1.6; }
+  .featured-links { display: flex; flex-wrap: wrap; gap: 0.25rem 1.5rem; }
   .archive-section { margin-block-start: 3rem; }
   .archive-heading { align-items: end; }
   .archive-heading .section-title { margin-block-start: 0.75rem; }

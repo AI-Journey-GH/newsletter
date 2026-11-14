@@ -16,6 +16,8 @@ export type Activity = {
   cover: { src: ImageMetadata; alt: string };
   featured?: boolean;
   topics: string[];
+  speakers?: { name: string; role: string }[];
+  galleryEvent?: string;
 };
 
 export const activityCategories = ['All', 'Talks', 'Bootcamps', 'Learning series'] as const;
@@ -33,6 +35,11 @@ export const activities: Activity[] = [
     cover: { src: frontierCover, alt: 'AI Journey’s Two Labs, One Frontier recap with a panel conversation and group photo at AUB' },
     featured: true,
     topics: ['AI research', 'AI safety', 'Frontier models'],
+    speakers: [
+      { name: 'Ali Saab', role: 'Researcher, OpenAI' },
+      { name: 'Mohamad El Hajj', role: 'Security Researcher, Anthropic' },
+    ],
+    galleryEvent: 'Two Labs, One Frontier',
   },
   {
     id: 'summer-ai-bootcamp',
@@ -70,3 +77,5 @@ export const activities: Activity[] = [
     topics: ['Transformers', 'Attention', 'Self-attention', 'Large language models'],
   },
 ];
+
+export const activityPath = (activity: Activity) => `/events/${activity.id}`;

@@ -6,7 +6,7 @@ import Icon from '../components/Icon.astro';
 import JoinBand from '../components/JoinBand.astro';
 import LectureGallery from '../components/LectureGallery.astro';
 import NextUp from '../components/NextUp.astro';
-import { activities } from '../data/activities';
+import { activities, activityPath } from '../data/activities';
 import { links } from '../config';
 import { formatDate, getIssues, isoDate, issueUrl, u } from '../lib/utils';
 
@@ -43,13 +43,13 @@ const programs = activities.filter((activity) => !activity.featured);
         <a href={u('/events')} class="editorial-link">All activities <Icon name="arrow-right" size={18} /></a>
       </div>
       <article class="featured-activity">
-        <a href={featured.sourceUrl} class="featured-photo" target="_blank" rel="noopener" aria-label={`View the ${featured.title} recap on Instagram`}><CommunityPhoto /></a>
+        <a href={u(activityPath(featured))} class="featured-photo" tabindex="-1" aria-hidden="true"><CommunityPhoto /></a>
         <div class="featured-copy">
           <p class="activity-eyebrow">Featured conversation</p>
           <h3 class="display">{featured.title}</h3>
           <p class="featured-description">{featured.summary}</p>
           <p class="featured-meta"><Icon name="calendar" size={15} /><time datetime={featured.date}>{featured.periodLabel}</time><span aria-hidden="true">·</span><span>At AUB</span></p>
-          <a href={featured.sourceUrl} class="editorial-link" target="_blank" rel="noopener">Take a look back <Icon name="arrow-right" size={18} /></a>
+          <a href={u(activityPath(featured))} class="editorial-link" aria-label={`Take a look back at ${featured.title}`}>Take a look back <Icon name="arrow-right" size={18} /></a>
         </div>
       </article>
       <div class="programs-heading"><h3>From the classroom to the community</h3><p>Bootcamps, learning sessions, and ideas explored together.</p></div>
