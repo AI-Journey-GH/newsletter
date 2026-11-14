@@ -6,6 +6,7 @@ import JoinBand from '../../components/JoinBand.astro';
 import SampleBadge from '../../components/SampleBadge.astro';
 import ActionBar from '../../components/issue/ActionBar.astro';
 import BigStory from '../../components/issue/BigStory.astro';
+import CodeBlocks from '../../components/issue/CodeBlocks.astro';
 import PrevNext from '../../components/issue/PrevNext.astro';
 import QuickHits from '../../components/issue/QuickHits.astro';
 import ReadingProgress from '../../components/issue/ReadingProgress.astro';
@@ -150,6 +151,8 @@ const chips = [
   </article>
 
   <JoinBand id="subscribe" />
+
+  <CodeBlocks />
 
   <ActionBar slot="bottom" url={url} title={shareTitle} pdfName={`AI Journey Issue ${d.issue}`} />
 </BaseLayout>

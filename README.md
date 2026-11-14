@@ -26,7 +26,7 @@ Each issue is **one Markdown file** in `src/content/issues/`.
 
 1. Copy `src/content/issues/issue-1.md` and rename the copy, for example `issue-3.md` (no spaces). The file name becomes the web address: `/issues/issue-3`.
 2. Change every field at the top of the file (the part between the two `---` lines): `issue`, `title`, `subtitle`, `date`, `readTime`, `author`, `intro`, the 3 to 5 `tldr` bullets, `sources`, and optionally `comingNext`.
-3. Write the news below the second `---` as `## Brief 1: ...`, `## Brief 2: ...` sections. Each brief gets its own jump button at the top of the page. Normal paragraphs, `**bold**`, `[links](https://...)`, and lines starting with `>` (pull quotes) all work.
+3. Write the news below the second `---` as `## Brief 1: ...`, `## Brief 2: ...` sections. Each brief gets its own jump button at the top of the page. Normal paragraphs, `**bold**`, `[links](https://...)`, and lines starting with `>` (pull quotes) all work. Code works too: `inline code` in backticks, and code blocks fenced with three backticks and a language (```` ```python ````). Blocks get blue syntax colors, a language label and a Copy button.
 4. Add pictures as `![description](./images/issue-3/photo.jpg)`, with the files in `src/content/issues/images/issue-3/`.
 5. Keep `draft: true` until it is ready. Drafts show in `npm run dev` but not on the live site.
 6. Run `npm run build` (it fails with a clear message if a field is missing), then `npm run dev`, and read the issue on your phone width before publishing.

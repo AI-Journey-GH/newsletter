@@ -1,0 +1,66 @@
+---
+import Icon from '../Icon.astro';
+---
+
+<template id="code-head-template">
+  <div class="code-head">
+    <span data-code-lang></span>
+    <button type="button" class="code-copy" data-code-copy>
+      <Icon name="copy" size={16} class="copy-icon" />
+      <Icon name="check" size={16} class="copied-icon" />
+      <span data-code-copy-label>Copy</span>
+    </button>
+  </div>
+</template>
+
+<style is:global>
+  .code-copy .copied-icon, .code-copy[data-copied] .copy-icon { display: none; }
+  .code-copy[data-copied] .copied-icon { display: block; }
+</style>
+
+<script>
+  import { trackEvent } from '../../scripts/stats';
+
+  const template = document.querySelector<HTMLTemplateElement>('#code-head-template');
+  const names: Record<string, string> = { py: 'Python', python: 'Python', js: 'JavaScript', javascript: 'JavaScript', ts: 'TypeScript', typescript: 'TypeScript', sh: 'Terminal', bash: 'Terminal', shell: 'Terminal', zsh: 'Terminal', json: 'JSON', html: 'HTML', css: 'CSS', sql: 'SQL', yaml: 'YAML', yml: 'YAML', md: 'Markdown', cpp: 'C++', c: 'C', java: 'Java', r: 'R', plaintext: 'Text', text: 'Text', txt: 'Text' };
+
+  document.querySelectorAll<HTMLPreElement>('.prose pre').forEach((pre) => {
+    if (!template || pre.closest('.code-block')) return;
+    const wrapper = document.createElement('div');
+    wrapper.className = 'code-block';
+    pre.replaceWith(wrapper);
+    const head = template.content.firstElementChild!.cloneNode(true) as HTMLElement;
+    const lang = (pre.dataset.language ?? '').toLowerCase();
+    const label = head.querySelector<HTMLElement>('[data-code-lang]')!;
+    label.textContent = names[lang] ?? (lang || 'Code');
+    wrapper.append(head, pre);
+    pre.tabIndex = 0;
+    pre.setAttribute('aria-label', `${label.textContent} code`);
+
+    const button = head.querySelector<HTMLButtonElement>('[data-code-copy]')!;
+    const buttonLabel = head.querySelector<HTMLElement>('[data-code-copy-label]')!;
+    button.setAttribute('aria-label', `Copy ${label.textContent} code`);
+    let timer: number | undefined;
+    button.addEventListener('click', async () => {
+      const text = (pre.querySelector('code') ?? pre).textContent ?? '';
+      try {
+        await navigator.clipboard.writeText(text);
+        button.dataset.copied = '';
+        buttonLabel.textContent = 'Copied';
+        trackEvent('Copy code');
+      } catch {
+        buttonLabel.textContent = 'Press Ctrl+C';
+        const range = document.createRange();
+        range.selectNodeContents(pre);
+        const selection = window.getSelection();
+        selection?.removeAllRanges();
+        selection?.addRange(range);
+      }
+      window.clearTimeout(timer);
+      timer = window.setTimeout(() => {
+        delete button.dataset.copied;
+        buttonLabel.textContent = 'Copy';
+      }, 2000);
+    });
+  });
+</script>
