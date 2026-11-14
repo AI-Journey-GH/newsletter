@@ -1,0 +1,57 @@
+---
+import { stats } from '../data/stats';
+---
+
+{stats.length > 0 && (
+  <section class="stats-strip" aria-label="AI Journey in numbers">
+    <dl class="stats-list" data-count-up>
+      {stats.map((stat) => (
+        <div class="stat">
+          <dt class="stat-label">{stat.label}</dt>
+          <dd class="display stat-value"><span data-count-to={stat.value}>{stat.value}</span>{stat.suffix}</dd>
+        </div>
+      ))}
+    </dl>
+  </section>
+)}
+
+<style>
+  .stats-strip { padding-block: 0.75rem 0.25rem; }
+  .stats-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(5.5rem, 1fr)); gap: 1.25rem 0.875rem; }
+  .stat { display: flex; flex-direction: column-reverse; justify-content: start; gap: 0.375rem; min-inline-size: 0; padding-block-start: 0.875rem; border-block-start: 2px solid var(--deco); }
+  .stat-value { color: var(--heading); font-size: clamp(2rem, 1.5rem + 2vw, 3rem); font-weight: 750; line-height: 1; letter-spacing: -0.04em; font-variant-numeric: tabular-nums; }
+  .stat-label { color: var(--muted); font-size: 0.75rem; line-height: 1.5; }
+  @media (min-width: 56rem) {
+    .stats-strip { padding-block: 1.25rem 0.5rem; }
+    .stats-list { grid-template-columns: repeat(auto-fit, minmax(0, 1fr)); gap: 2rem; }
+    .stat-label { font-size: 0.875rem; max-inline-size: 18rem; }
+  }
+</style>
+
+<script>
+  const lists = document.querySelectorAll<HTMLElement>('[data-count-up]');
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!reduce && 'IntersectionObserver' in window) {
+    const run = (list: HTMLElement) => {
+      list.querySelectorAll<HTMLElement>('[data-count-to]').forEach((el) => {
+        const target = Number(el.dataset.countTo);
+        const start = performance.now();
+        const duration = 900;
+        const tick = (now: number) => {
+          const t = Math.min(1, (now - start) / duration);
+          el.textContent = String(Math.round(target * (1 - Math.pow(1 - t, 3))));
+          if (t < 1) requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+      });
+    };
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        observer.unobserve(entry.target);
+        run(entry.target as HTMLElement);
+      });
+    }, { threshold: 0.4 });
+    lists.forEach((list) => observer.observe(list));
+  }
+</script>
