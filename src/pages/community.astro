@@ -5,6 +5,7 @@ import CommunityPhoto from '../components/CommunityPhoto.astro';
 import Icon from '../components/Icon.astro';
 import JoinBand from '../components/JoinBand.astro';
 import LectureGallery from '../components/LectureGallery.astro';
+import TeamSection from '../components/TeamSection.astro';
 import { links } from '../config';
 import { u } from '../lib/utils';
 
@@ -55,6 +56,8 @@ const entryPoints = [
         <article class="principle"><span class="principle-icon"><Icon name="wrench" size={22} /></span><div><h3>Put curiosity to work</h3><p>Take something from a talk, a bootcamp, or a blog post and try it in your own learning and projects.</p></div></article>
       </div>
     </section>
+
+    <TeamSection />
 
     <div class="community-social-note"><Icon name="instagram" size={22} /><p>See the people and moments behind AI Journey.</p><a href={links.instagram} target="_blank" rel="noopener">Follow @ai.journey.aub <Icon name="external" size={15} /></a></div>
   </div>

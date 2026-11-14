@@ -89,6 +89,20 @@ materials: [
 
 They show on the activity page and on `/learn`. The Learn page steps and their recommended reading live in `src/data/learn.ts`. Each step points to one activity by its `id`.
 
+## Team
+
+The Community page lists the team from `src/data/team.ts`. Add one object per person:
+
+```ts
+import sara from '../assets/team/sara.jpg';
+
+export const team: TeamMember[] = [
+  { name: 'Sara Example', role: 'President', study: 'Computer Science, 2027', photo: sara, linkedin: 'https://www.linkedin.com/in/...' },
+];
+```
+
+`study`, `photo` and `linkedin` are optional. Without a photo, the card shows the person's initials. Use square photos of at least 320 pixels, and only with the person's permission. While the list is empty, the section shows only the "Help run AI Journey" invitation.
+
 ## Community photo gallery
 
 The homepage and community page share a gallery of original club recap images. Add image files to `src/assets/community/gallery/`, import them in `src/data/gallery.ts`, and provide a caption, event, alt text, and original post URL. Record the source and credit in `src/assets/community/gallery/sources.json`. Use an optional `frame` in source pixels to show a clean photograph from a published collage; cards and the full-photo viewer share that framing. Keep the original image unchanged and avoid enlarging beyond its native resolution.

@@ -1,0 +1,75 @@
+---
+import { Image } from 'astro:assets';
+import Icon from './Icon.astro';
+import { links } from '../config';
+import { team } from '../data/team';
+
+const initials = (name: string) => name.split(/\s+/).filter(Boolean).map((part) => part[0]).slice(0, 2).join('').toUpperCase();
+---
+
+<section id="team" class="team-section" aria-labelledby="team-title">
+  <div class="team-heading">
+    <p class="eyebrow">The people behind it</p>
+    <h2 id="team-title" class="display team-title">{team.length > 0 ? 'Meet the team.' : 'Run by students, for students.'}</h2>
+    <p>{team.length > 0 ? 'The students who plan the sessions, write the blogs, and keep the conversation going.' : 'Every session, post, and gathering is planned by AUB students who volunteer their time.'}</p>
+  </div>
+
+  <ul class="team-grid">
+    {team.map((member) => (
+      <li class="member">
+        <div class="member-photo">
+          {member.photo ? (
+            <Image src={member.photo} alt="" widths={[160, 320]} sizes="5rem" format="webp" quality={82} loading="lazy" />
+          ) : (
+            <span aria-hidden="true">{initials(member.name)}</span>
+          )}
+        </div>
+        <div class="member-copy">
+          <h3 class="member-name">{member.name}</h3>
+          <p class="member-role">{member.role}</p>
+          {member.study && <p class="member-study">{member.study}</p>}
+        </div>
+        {member.linkedin && (
+          <a href={member.linkedin} class="icon-btn member-link" target="_blank" rel="noopener" aria-label={`${member.name} on LinkedIn`}><Icon name="linkedin" size={20} /></a>
+        )}
+      </li>
+    ))}
+    <li class="member member--join">
+      <span class="join-icon"><Icon name="users" size={24} /></span>
+      <div class="member-copy">
+        <h3 class="member-name">Help run AI Journey</h3>
+        <p class="join-text">Organize sessions, write for the blog, design, or teach a topic you know. No experience needed, just curiosity.</p>
+      </div>
+      <a href={links.whatsapp} class="editorial-link" target="_blank" rel="noopener">Tell us you are in <Icon name="arrow-right" size={17} /></a>
+    </li>
+  </ul>
+</section>
+
+<style>
+  .team-section { padding-block: 2.5rem; border-block-start: 1px solid var(--border); scroll-margin-top: calc(var(--header-h) + 1rem); }
+  .team-heading { max-inline-size: 38rem; margin-block-end: 1.75rem; }
+  .team-title { margin-block-start: 0.75rem; font-size: clamp(1.5rem, 1.1rem + 1.5vw, 2.125rem); font-weight: 700; line-height: 1.3; letter-spacing: -0.035em; }
+  .team-heading > p:last-child { margin-block-start: 0.875rem; color: var(--muted); line-height: 1.75; }
+  .team-grid { display: grid; gap: 1rem; }
+  .member { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 1rem; padding: 1rem; border: 1px solid var(--border); border-radius: 1rem; background: var(--surface); }
+  .member-photo { display: flex; align-items: center; justify-content: center; overflow: hidden; inline-size: 4rem; block-size: 4rem; border-radius: 999px; background: var(--btn-bg); color: var(--btn-fg); font-family: var(--font-display); font-size: 1.125rem; font-weight: 750; }
+  .member-photo :global(img) { inline-size: 100%; block-size: 100%; object-fit: cover; }
+  .member-copy { min-inline-size: 0; }
+  .member-name { color: var(--heading); font-family: var(--font-display); font-size: 1.0625rem; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; }
+  .member-role { margin-block-start: 0.25rem; color: var(--accent); font-size: 0.8125rem; font-weight: 600; }
+  .member-study { margin-block-start: 0.125rem; color: var(--muted); font-size: 0.8125rem; }
+  .member-link { color: var(--muted); }
+  .member-link:hover { color: var(--heading); }
+  .member--join { grid-template-columns: minmax(0, 1fr); align-items: start; gap: 0.875rem; border-style: dashed; border-color: var(--border-strong); background: var(--bg-alt); }
+  .join-icon { display: inline-flex; align-items: center; justify-content: center; inline-size: 3rem; block-size: 3rem; border-radius: 0.75rem; background: var(--surface); color: var(--accent); }
+  .join-text { margin-block-start: 0.5rem; color: var(--muted); font-size: 0.9375rem; line-height: 1.7; }
+  .member--join .editorial-link { font-size: 0.875rem; }
+  @media (min-width: 40rem) {
+    .team-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .member--join { grid-column: 1 / -1; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 1.25rem; padding: 1.25rem 1.5rem; }
+  }
+  @media (min-width: 64rem) {
+    .team-section { padding-block: 3rem; }
+    .team-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  }
+</style>
