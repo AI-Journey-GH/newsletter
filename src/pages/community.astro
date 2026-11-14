@@ -1,4 +1,5 @@
 ---
+import shareGroup from '../assets/community/share-group.jpg';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Breadcrumb from '../components/Breadcrumb.astro';
 import CommunityPhoto from '../components/CommunityPhoto.astro';
@@ -16,7 +17,7 @@ const entryPoints = [
 ];
 ---
 
-<BaseLayout title="Our community" description="Meet AI Journey, a student AI community at the American University of Beirut. A place to learn, connect, and explore what comes next together.">
+<BaseLayout image={shareGroup.src} imageAlt="AI Journey students and speakers together on stage at AUB" title="Our community" description="Meet AI Journey, a student AI community at the American University of Beirut. A place to learn, connect, and explore what comes next together.">
   <div class="wrap community-page">
     <Breadcrumb items={[{ label: 'Home', href: u('/') }, { label: 'Community' }]} />
     <section class="community-hero" aria-labelledby="community-title">

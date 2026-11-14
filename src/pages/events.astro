@@ -1,4 +1,5 @@
 ---
+import shareGroup from '../assets/community/share-group.jpg';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ActivityCard from '../components/ActivityCard.astro';
 import Breadcrumb from '../components/Breadcrumb.astro';
@@ -13,7 +14,7 @@ const featured = activities.find((activity) => activity.featured);
 const categoryCount = (category: string) => category === 'All' ? activities.length : activities.filter((activity) => activity.category === category).length;
 ---
 
-<BaseLayout title="Our activities" description="Explore the talks, bootcamps, and learning series hosted by AI Journey at AUB. A look back at our community, with original event posts and recaps.">
+<BaseLayout image={shareGroup.src} imageAlt="AI Journey students and speakers together on stage at AUB" title="Our activities" description="Explore the talks, bootcamps, and learning series hosted by AI Journey at AUB. A look back at our community, with original event posts and recaps.">
   <div class="wrap activities-page">
     <Breadcrumb items={[{ label: 'Home', href: u('/') }, { label: 'Activities' }]} />
     <section class="activities-intro" aria-labelledby="activities-title">

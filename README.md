@@ -87,7 +87,15 @@ materials: [
 ],
 ```
 
-They show on the activity page and on `/learn`. The Learn page steps and their recommended reading live in `src/data/learn.ts`. Each step points to one activity by its `id`.
+They show on the activity page and on `/learn`.
+
+**Share images.** When an activity link is shared on WhatsApp or LinkedIn, the preview uses the activity's `share` image, or a crop of its `cover` if there is none. For a poster, make a branded preview (logo on the left, the full poster on the right) with:
+
+```bash
+node scripts/make-share-image.mjs src/assets/community/my-poster.jpg src/assets/share/my-poster.jpg
+```
+
+Then add `share: { src: myPosterShare, alt: 'The AI Journey logo next to the ... poster' }` to the activity. The Learn page steps and their recommended reading live in `src/data/learn.ts`. Each step points to one activity by its `id`.
 
 ## Team
 

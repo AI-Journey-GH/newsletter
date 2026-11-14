@@ -1,5 +1,9 @@
 import type { ImageMetadata } from 'astro';
 import frontierCover from '../assets/community/two-labs-one-frontier.jpg';
+import shareGroup from '../assets/community/share-group.jpg';
+import bootcampShare from '../assets/share/bootcamp-poster.jpg';
+import fundamentalsShare from '../assets/share/ml-fundamentals.jpg';
+import transformersShare from '../assets/share/transformers.jpg';
 import bootcampCover from '../assets/community/bootcamp-poster.jpg';
 import fundamentalsCover from '../assets/community/ml-fundamentals.webp';
 import transformersCover from '../assets/community/transformers.webp';
@@ -19,6 +23,7 @@ export type Activity = {
   speakers?: { name: string; role: string }[];
   materials?: { kind: 'Slides' | 'Notebook' | 'Recording'; label: string; href: string }[];
   galleryEvent?: string;
+  share?: { src: ImageMetadata; alt: string };
 };
 
 export const activityCategories = ['All', 'Talks', 'Bootcamps', 'Learning series'] as const;
@@ -41,6 +46,7 @@ export const activities: Activity[] = [
       { name: 'Mohamad El Hajj', role: 'Security Researcher, Anthropic' },
     ],
     galleryEvent: 'Two Labs, One Frontier',
+    share: { src: shareGroup, alt: 'AI Journey students and speakers together on stage after Two Labs, One Frontier' },
   },
   {
     id: 'summer-ai-bootcamp',
@@ -51,6 +57,7 @@ export const activities: Activity[] = [
     sourceKind: 'announcement',
     periodLabel: 'Summer program',
     cover: { src: bootcampCover, alt: 'AI Journey Summer Bootcamp poster listing four sessions from an introduction to AI to neural networks' },
+    share: { src: bootcampShare, alt: 'The AI Journey logo next to the Summer AI Bootcamp poster' },
     topics: ['Introduction to AI', 'Supervised learning', 'Unsupervised learning', 'Neural networks'],
   },
   {
@@ -63,6 +70,7 @@ export const activities: Activity[] = [
     date: '2026-02-27',
     periodLabel: '27 Feb 2026',
     cover: { src: fundamentalsCover, alt: 'Machine Learning Fundamentals lecture four poster for February 27, 2026, covering LDA, penalized regression, and KNN classification' },
+    share: { src: fundamentalsShare, alt: 'The AI Journey logo next to the Machine Learning Fundamentals poster' },
     topics: ['Linear discriminant analysis', 'Penalized regression', 'KNN classification'],
   },
   {
@@ -75,6 +83,7 @@ export const activities: Activity[] = [
     date: '2026-02-24',
     periodLabel: '24 Feb 2026',
     cover: { src: transformersCover, alt: 'AI Journey advanced series lecture one poster introducing transformers and attention on February 24, 2026' },
+    share: { src: transformersShare, alt: 'The AI Journey logo next to the Inside Transformers poster' },
     topics: ['Transformers', 'Attention', 'Self-attention', 'Large language models'],
   },
 ];
