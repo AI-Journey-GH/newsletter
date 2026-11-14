@@ -129,7 +129,6 @@ The gallery sweeps continuously in a seamless loop, without playback controls. K
 | Community gallery photos and captions | `src/data/gallery.ts` |
 | Upcoming events | `src/data/upcoming.ts` |
 | Learn page steps and reading | `src/data/learn.ts` |
-| Homepage numbers (add real figures like community size to `extraStats`) | `src/data/stats.ts` |
 | Pages | `src/pages/` |
 | Issue fields (the content schema) | `src/content.config.ts` |
 
