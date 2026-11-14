@@ -46,7 +46,7 @@ const topicsLabel = activity.category === 'Bootcamps' ? 'The sessions' : 'What w
           <a href={activity.sourceUrl} class="btn btn-primary" target="_blank" rel="noopener"><Icon name="instagram" size={19} />{isRecap ? 'See the recap' : 'See the original post'}</a>
         </div>
       </div>
-      <figure class:list={['head-media', !isRecap && 'head-media--poster']}>
+      <figure class:list={['head-media', !isRecap && 'head-media--poster']} style={`view-transition-name: activity-${activity.id}`}>
         {isRecap ? (
           <CommunityPhoto priority />
         ) : (

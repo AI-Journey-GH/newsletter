@@ -10,6 +10,7 @@ export default defineConfig({
   site: process.env.SITE_URL || 'https://ai-journey-newsletter.vercel.app',
   base: process.env.BASE_PATH || '/',
   trailingSlash: 'ignore',
+  prefetch: { prefetchAll: true, defaultStrategy: 'hover' },
   // Pictures in issues get responsive sizes (smaller files on phones)
   image: { layout: 'constrained' },
   integrations: [sitemap({ filter: (page) => !page.includes('/styleguide') })],
