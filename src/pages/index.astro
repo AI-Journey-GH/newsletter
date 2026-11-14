@@ -83,7 +83,6 @@ const programs = activities.filter((activity) => !activity.featured);
   .hero-secondary:hover { text-decoration: underline; text-underline-offset: 0.3em; }
   .hero-photo { min-inline-size: 0; }
   .hero-photo :global(.community-photo) { aspect-ratio: 2.75; border-radius: 0.875rem; }
-  .hero-photo :global(.community-photo-image) { inline-size: 100%; inset-inline-start: 0; }
   figcaption { margin-block-start: 0.75rem; color: var(--muted); font-size: 0.75rem; line-height: 1.6; }
   .club-activities { padding-block: 2.5rem 4rem; }
   .section-heading { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 1rem; margin-block-end: 1.75rem; }
@@ -121,5 +120,5 @@ const programs = activities.filter((activity) => !activity.featured);
     .community-band-actions { min-inline-size: 14rem; }
   }
   @media (min-width: 64rem) { .club-hero { grid-template-columns: 1fr 1.1fr; gap: 3rem; padding-block: 3rem; } }
-  @media (max-width: 39.99rem) { .club-hero { gap: 1.5rem; } .hero-actions { gap: 0.5rem 1rem; } .hero-actions .btn { inline-size: 100%; } .hero-photo :global(.community-photo) { aspect-ratio: 1.8; } .hero-photo :global(.community-photo-image) { inline-size: 149%; inset-inline-start: -24.5%; } }
+  @media (max-width: 39.99rem) { .club-hero { gap: 1.5rem; } .hero-actions { gap: 0.5rem 1rem; } .hero-actions .btn { inline-size: 100%; } .hero-photo :global(.community-photo) { aspect-ratio: 1.8; } }
 </style>

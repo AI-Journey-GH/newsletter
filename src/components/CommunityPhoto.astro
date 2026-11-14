@@ -1,13 +1,16 @@
 ---
 import { Image } from 'astro:assets';
-import eventPhoto from '../assets/community/two-labs-one-frontier.jpg';
+import panelPhoto from '../assets/community/frontier-panel.jpg';
+import crowdPhoto from '../assets/community/frontier-crowd.jpg';
 
 interface Props {
   view?: 'panel' | 'community';
   priority?: boolean;
+  sizes?: string;
 }
 
-const { view = 'panel', priority = false } = Astro.props;
+const { view = 'panel', priority = false, sizes = '(min-width: 1024px) 50vw, (min-width: 640px) 90vw, 150vw' } = Astro.props;
+const src = view === 'panel' ? panelPhoto : crowdPhoto;
 const alt = view === 'panel'
   ? 'Researchers and student moderators in conversation at the Two Labs, One Frontier event at AUB'
   : 'AI Journey students and speakers together after Two Labs, One Frontier at AUB';
@@ -15,12 +18,12 @@ const alt = view === 'panel'
 
 <div class:list={['community-photo', `community-photo--${view}`]}>
   <Image
-    src={eventPhoto}
+    src={src}
     alt={alt}
     widths={[640, 960, 1440, 1920]}
-    sizes="(min-width: 768px) 65vw, 120vw"
+    sizes={sizes}
     format="webp"
-    quality={85}
+    quality={82}
     loading={priority ? 'eager' : 'lazy'}
     fetchpriority={priority ? 'high' : 'auto'}
     class="community-photo-image"
@@ -29,7 +32,6 @@ const alt = view === 'panel'
 
 <style>
   .community-photo { position: relative; overflow: hidden; aspect-ratio: 2.42; background: var(--surface-2); }
-  .community-photo :global(.community-photo-image) { position: absolute; inset-inline-start: -5.5%; inline-size: 111%; max-inline-size: none; block-size: auto; }
-  .community-photo--panel :global(.community-photo-image) { inset-block-start: 0; }
-  .community-photo--community :global(.community-photo-image) { inset-block-end: 0; }
+  .community-photo :global(.community-photo-image) { display: block; inline-size: 100%; block-size: 100%; object-fit: cover; object-position: center; }
+  .community-photo--community :global(.community-photo-image) { object-position: center 70%; }
 </style>
